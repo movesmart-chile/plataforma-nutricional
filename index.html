@@ -198,29 +198,134 @@ function getOffNutrition(product){
   if(!kcal && (p||c||f)) kcal=p*4+c*4+f*9;
   return{kcal,p,c,f};
 }
+let selectedLocalProduct=null;
+
+function selectLocalProduct(i){
+  const p=(window._localSearchProducts||[])[i];
+  if(!p) return;
+
+  selectedLocalProduct=p;
+  selectedOffProduct=null;
+
+  document.getElementById('foodName').value=p.name;
+  document.getElementById('foodBarcode').value='';
+  document.getElementById('foodKcal').value=p.kcal;
+  document.getElementById('foodP').value=p.p;
+  document.getElementById('foodC').value=p.c;
+  document.getElementById('foodF').value=p.f;
+
+  const selected=document.getElementById('selectedProduct');
+  selected.className='selected-product show';
+  selected.innerHTML=`<b>Seleccionado:</b> ${escapeHtml(p.name)}<br>${p.kcal} kcal · ${p.p.toFixed(1)} P · ${p.c.toFixed(1)} CH · ${p.f.toFixed(1)} G por 100 g · Base MoveSmart`;
+
+  document.getElementById('offResults').innerHTML='';
+  document.getElementById('searchStatus').textContent=`Seleccionado desde Base MoveSmart: ${p.name}`;
+  previewFood();
+}
+
 async function searchFood(){
   const q=document.getElementById('foodName').value.trim();
-  const status=document.getElementById('searchStatus'),root=document.getElementById('offResults'),btn=document.getElementById('searchFoodBtn');
-  if(q.length<2){status.textContent='Escribe al menos 2 caracteres para buscar.';root.innerHTML='';return}
-  btn.disabled=true;btn.textContent='Buscando…';status.textContent='Buscando en Open Food Facts…';root.innerHTML='';
+  const status=document.getElementById('searchStatus');
+  const root=document.getElementById('offResults');
+  const btn=document.getElementById('searchFoodBtn');
+
+  if(q.length<2){
+    status.textContent='Escribe al menos 2 caracteres para buscar.';
+    root.innerHTML='';
+    return;
+  }
+
+  // 1) Buscar primero en la base interna MoveSmart
+  const local=buscarLocalFood(q);
+
+  if(local.length){
+    window._localSearchProducts=local;
+    status.textContent=`Encontré ${local.length} coincidencia${local.length===1?'':'s'} en la Base MoveSmart. Toca la que corresponda.`;
+
+    root.innerHTML=local.map((p,i)=>`
+      <button type="button" class="off-result" onclick="selectLocalProduct(${i})">
+        <div class="noimg">MS</div>
+        <span>
+          <b>${escapeHtml(p.name)}</b>
+          <small>${p.kcal} kcal · ${p.p.toFixed(1)} P · ${p.c.toFixed(1)} CH · ${p.f.toFixed(1)} G / 100 g · Base MoveSmart</small>
+        </span>
+        <span class="choose">Elegir</span>
+      </button>
+    `).join('');
+    return;
+  }
+
+  // 2) Si no está en MoveSmart, buscar en Open Food Facts
+  btn.disabled=true;
+  btn.textContent='Buscando…';
+  status.textContent='No está en la Base MoveSmart. Buscando en Open Food Facts…';
+  root.innerHTML='';
+
   try{
-    const params=new URLSearchParams({search_terms:q,search_simple:'1',action:'process',json:'1',page_size:'12',lc:'es',cc:'cl',fields:'code,product_name,product_name_es,generic_name,brands,nutriments,image_front_small_url'});
-    const res=await fetch('https://world.openfoodfacts.org/cgi/search.pl?'+params.toString(),{method:'GET',headers:{'Accept':'application/json'}});
-    if(!res.ok)throw new Error('HTTP '+res.status);
+    const params=new URLSearchParams({
+      search_terms:q,
+      search_simple:'1',
+      action:'process',
+      json:'1',
+      page_size:'12',
+      lc:'es',
+      cc:'cl',
+      fields:'code,product_name,product_name_es,generic_name,brands,nutriments,image_front_small_url'
+    });
+
+    const res=await fetch(
+      'https://world.openfoodfacts.org/cgi/search.pl?'+params.toString(),
+      {method:'GET',headers:{'Accept':'application/json'}}
+    );
+
+    if(!res.ok) throw new Error('HTTP '+res.status);
+
     const data=await res.json();
-    const products=(data.products||[]).filter(p=>{const m=getOffNutrition(p);return (p.product_name||p.product_name_es||p.generic_name)&&(m.kcal||m.p||m.c||m.f)});
-    if(!products.length){status.textContent='No encontré resultados con información nutricional. Prueba otro nombre o completa los valores manualmente.';return}
-    status.textContent=`Encontré ${products.length} opciones. Toca la que corresponda a tu producto.`;
-    root.innerHTML=products.map((p,i)=>{const name=escapeHtml(p.product_name_es||p.product_name||p.generic_name||'Producto');const brand=escapeHtml(p.brands||'Sin marca');const m=getOffNutrition(p);const img=p.image_front_small_url?`<img src="${escapeHtml(p.image_front_small_url)}" alt="">`:'<div class="noimg">sin foto</div>';return `<button type="button" class="off-result" onclick="selectOffProduct(${i})">${img}<span><b>${name}</b><small>${brand} · ${Math.round(m.kcal)} kcal · ${m.p.toFixed(1)} P · ${m.c.toFixed(1)} CH · ${m.f.toFixed(1)} G / 100 g</small></span><span class="choose">Elegir</span></button>`}).join('');
+    const products=(data.products||[]).filter(p=>{
+      const m=getOffNutrition(p);
+      return (p.product_name||p.product_name_es||p.generic_name)&&(m.kcal||m.p||m.c||m.f);
+    });
+
+    if(!products.length){
+      status.textContent='No encontré resultados. Puedes completar los valores manualmente.';
+      return;
+    }
+
+    status.textContent=`Encontré ${products.length} opciones en Open Food Facts. Toca la que corresponda.`;
+
+    root.innerHTML=products.map((p,i)=>{
+      const name=escapeHtml(p.product_name_es||p.product_name||p.generic_name||'Producto');
+      const brand=escapeHtml(p.brands||'Sin marca');
+      const m=getOffNutrition(p);
+      const img=p.image_front_small_url
+        ? `<img src="${escapeHtml(p.image_front_small_url)}" alt="">`
+        : '<div class="noimg">sin foto</div>';
+
+      return `<button type="button" class="off-result" onclick="selectOffProduct(${i})">
+        ${img}
+        <span>
+          <b>${name}</b>
+          <small>${brand} · ${Math.round(m.kcal)} kcal · ${m.p.toFixed(1)} P · ${m.c.toFixed(1)} CH · ${m.f.toFixed(1)} G / 100 g</small>
+        </span>
+        <span class="choose">Elegir</span>
+      </button>`;
+    }).join('');
+
     window._offSearchProducts=products;
+
   }catch(err){
-    console.error(err);status.textContent='No pude conectar con Open Food Facts. Puedes ingresar los datos manualmente y continuar.';
-  }finally{btn.disabled=false;btn.textContent='Buscar'}
+    console.error(err);
+    status.textContent='No pude conectar con Open Food Facts. Puedes ingresar los datos manualmente.';
+  }finally{
+    btn.disabled=false;
+    btn.textContent='Buscar';
+  }
 }
+
 function selectOffProduct(i){
   const p=(window._offSearchProducts||[])[i];if(!p)return;
   const m=getOffNutrition(p),name=p.product_name_es||p.product_name||p.generic_name||'Producto';
-  selectedOffProduct={code:p.code||'',name,brands:p.brands||'',...m};
+  selectedOffProduct={code:p.code||'',name,brands:p.brands||'',...m}; selectedLocalProduct=null;
   document.getElementById('foodName').value=name;
   document.getElementById('foodBarcode').value=p.code||'';
   document.getElementById('foodKcal').value=m.kcal?m.kcal.toFixed(1):'';
@@ -241,7 +346,7 @@ function currentFoods(){return Array.isArray(foodLog[selected])?foodLog[selected
 function n(id){return parseFloat(document.getElementById(id).value)||0}
 function portionData(){const q=n('foodQty'),factor=q/100;const p100=n('foodP'),c100=n('foodC'),f100=n('foodF');let kcal100=n('foodKcal');if(!kcal100&&(p100||c100||f100))kcal100=p100*4+c100*4+f100*9;return{qty:q,kcal:kcal100*factor,p:p100*factor,c:c100*factor,f:f100*factor,kcal100,p100,c100,f100}}
 function previewFood(){const x=portionData(),el=document.getElementById('foodPreview');if(!x.qty){el.innerHTML='<strong>Importante:</strong> escribe la cantidad consumida y los valores reales por 100 g. Los números grises son solo ejemplos.';return}if(!(x.kcal100||x.p100||x.c100||x.f100)){el.innerHTML='<strong>Faltan los datos nutricionales.</strong> Los números grises son ejemplos, no valores ingresados. Escribe kcal y/o macros por 100 g.';return}el.innerHTML=`Esta porción aporta aproximadamente <strong>${Math.round(x.kcal)} kcal</strong> · <strong>${x.p.toFixed(1)} g P</strong> · <strong>${x.c.toFixed(1)} g CH</strong> · <strong>${x.f.toFixed(1)} g G</strong>.`}
-function addFood(){const name=document.getElementById('foodName').value.trim(),x=portionData();if(!name){alert('Escribe el nombre del alimento.');return}if(!x.qty){alert('Indica la cantidad consumida en gramos.');return}if(!(x.kcal100||x.p100||x.c100||x.f100)){alert('Faltan los datos nutricionales por 100 g. Los números grises son solo ejemplos.');return}if(!foodLog[selected])foodLog[selected]=[];foodLog[selected].push({id:Date.now()+Math.random(),name,qty:x.qty,kcal:x.kcal,p:x.p,c:x.c,f:x.f,barcode:document.getElementById('foodBarcode').value||'',source:selectedOffProduct?'Open Food Facts':'Manual'});saveFoodLog();['foodName','foodQty','foodKcal','foodP','foodC','foodF','foodBarcode'].forEach(id=>document.getElementById(id).value='');selectedOffProduct=null;document.getElementById('selectedProduct').className='selected-product';document.getElementById('selectedProduct').innerHTML='';document.getElementById('offResults').innerHTML='';document.getElementById('searchStatus').textContent='Escribe al menos 2 caracteres y presiona Buscar.';previewFood();renderFood()}
+function addFood(){const name=document.getElementById('foodName').value.trim(),x=portionData();if(!name){alert('Escribe el nombre del alimento.');return}if(!x.qty){alert('Indica la cantidad consumida en gramos.');return}if(!(x.kcal100||x.p100||x.c100||x.f100)){alert('Faltan los datos nutricionales por 100 g. Los números grises son solo ejemplos.');return}if(!foodLog[selected])foodLog[selected]=[];foodLog[selected].push({id:Date.now()+Math.random(),name,qty:x.qty,kcal:x.kcal,p:x.p,c:x.c,f:x.f,barcode:document.getElementById('foodBarcode').value||'',source:selectedLocalProduct?'Base MoveSmart':(selectedOffProduct?'Open Food Facts':'Manual')});saveFoodLog();['foodName','foodQty','foodKcal','foodP','foodC','foodF','foodBarcode'].forEach(id=>document.getElementById(id).value='');selectedOffProduct=null;selectedLocalProduct=null;document.getElementById('selectedProduct').className='selected-product';document.getElementById('selectedProduct').innerHTML='';document.getElementById('offResults').innerHTML='';document.getElementById('searchStatus').textContent='Escribe al menos 2 caracteres y presiona Buscar.';previewFood();renderFood()}
 function deleteFood(id){foodLog[selected]=currentFoods().filter(x=>x.id!==id);saveFoodLog();renderFood()}
 function foodTotals(){return currentFoods().reduce((a,x)=>({kcal:a.kcal+x.kcal,p:a.p+x.p,c:a.c+x.c,f:a.f+x.f}),{kcal:0,p:0,c:0,f:0})}
 function pct(v,max){return Math.max(0,Math.min(100,max? v/max*100:0))}
@@ -336,45 +441,5 @@ function applyFoodToForm(food, source="MoveSmart"){
   if(typeof actualizarPreviewAlimento === "function") actualizarPreviewAlimento();
 }
 
-
-async function buscarAlimentoCombinado(){
-  const qEl = document.getElementById("foodSearch") || document.getElementById("foodName");
-  const q = qEl ? qEl.value.trim() : "";
-  if(!q){
-    alert("Escribe un alimento o producto para buscar.");
-    return;
-  }
-
-  const resultsBox = document.getElementById("searchResults");
-  const statusBox = document.getElementById("searchStatus");
-  const local = buscarLocalFood(q);
-
-  if(local.length){
-    if(statusBox) statusBox.textContent = `Encontré ${local.length} coincidencia${local.length===1?"":"s"} en la base MoveSmart.`;
-    if(resultsBox){
-      resultsBox.innerHTML = local.map((food,i)=>`
-        <button type="button" class="food-result local-result" data-local-index="${i}">
-          <strong>${food.name}</strong>
-          <span>${food.kcal} kcal · ${food.p} P · ${food.c} CH · ${food.f} G / 100 g</span>
-          <small>Base MoveSmart</small>
-        </button>
-      `).join("");
-      resultsBox.querySelectorAll("[data-local-index]").forEach(btn=>{
-        btn.addEventListener("click",()=>{
-          const food = local[Number(btn.dataset.localIndex)];
-          applyFoodToForm(food,"Base MoveSmart");
-          resultsBox.innerHTML = "";
-          if(statusBox) statusBox.textContent = `Seleccionado: ${food.name}`;
-        });
-      });
-    }
-    return;
-  }
-
-  if(statusBox) statusBox.textContent = "No está en la base MoveSmart. Buscando en Open Food Facts…";
-  if(typeof buscarOpenFoodFacts === "function"){
-    return buscarOpenFoodFacts();
-  }
-}
 
 </script></body></html>
