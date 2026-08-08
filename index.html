@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -38,7 +39,7 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 @media(max-width:900px){.week,.tabs{grid-template-columns:repeat(4,1fr)}.summary,.food-layout{grid-template-columns:1fr}.principles{grid-template-columns:1fr}.profile{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){:root{--container:min(100% - 28px,100%)}.nav{min-height:68px}.brand{font-size:1.35rem}.wrap{padding-bottom:46px}.hero{padding:50px 0 34px}.card{padding:18px}.week,.tabs{grid-template-columns:repeat(2,1fr)}.profile{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.macrogrid,.reparto,.food-grid,.food-macros{grid-template-columns:1fr}.actions{grid-template-columns:1fr}th:nth-child(2),td:nth-child(2){display:none}}
 
-/* Open Food Facts search */
+/* FatSecret search */
 .search-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
 .search-btn{min-height:44px;padding:0 18px;border:0;border-radius:12px;background:linear-gradient(180deg,var(--accent2),var(--accent));color:#fff;font-weight:900;cursor:pointer;white-space:nowrap}
 .search-btn:disabled{opacity:.55;cursor:wait}
@@ -284,7 +285,7 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
       </div>
     </div>
     <div class="search-row">
-      <div class="field"><label>Buscar alimento o producto</label><input id="foodName" placeholder="Ej: yogur proteico, leche, arroz..." onkeydown="if(event.key==='Enter'){event.preventDefault();searchFood();}"></div>
+      <div class="field"><label>Buscar alimento o producto</label><input id="foodName" placeholder="Ej: yogur Colun, leche, arroz, pollo..." onkeydown="if(event.key==='Enter'){event.preventDefault();searchFood();}"></div>
       <button class="search-btn" id="searchFoodBtn" type="button" onclick="searchFood()">Buscar</button>
     </div>
     <div class="search-status" id="searchStatus">Escribe al menos 2 caracteres y presiona Buscar.</div>
@@ -292,7 +293,7 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
     <div class="selected-product" id="selectedProduct"></div>
     <div class="food-grid" style="margin-top:12px">
       <div class="field"><label>Cantidad consumida (g)</label><input id="foodQty" type="number" min="0" step="1" placeholder="200" oninput="previewFood()"></div>
-      <div class="field"><label>Código de barras (si existe)</label><input id="foodBarcode" placeholder="Se completa al elegir" readonly></div>
+      <div class="field"><label>ID / referencia</label><input id="foodBarcode" placeholder="Se completa al elegir" readonly></div>
     </div>
     <div class="food-macros">
       <div class="field"><label>kcal / 100 g</label><input id="foodKcal" type="number" min="0" step="0.1" placeholder="130" oninput="previewFood()"></div>
@@ -312,7 +313,7 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
       </div>
     </div>
 
-<div class="source-note">Fuente automática: Open Food Facts. Los datos provienen de etiquetas aportadas a su base de datos y pueden estar incompletos; revisa el envase cuando necesites máxima precisión.</div>
+<div class="source-note">Fuente automática: FatSecret a través de MoveSmart Nutrition API. Revisa la porción seleccionada y el envase cuando necesites máxima precisión. Datos nutricionales proporcionados por FatSecret.</div>
     <button class="add-food" id="addFoodBtn" onclick="addFood()">+ Agregar a mi desayuno</button>
     <div class="food-list" id="foodList"></div>
   </div>
@@ -358,23 +359,18 @@ function renderTabs(){const t=document.getElementById('tabs');t.innerHTML='';day
 function showDay(i){if(!results.length)return;const r=results[i];document.getElementById('dDay').textContent=r.day;document.getElementById('dSession').textContent=r.label;document.getElementById('dKcal').textContent=r.kcal+' kcal';document.getElementById('dP').textContent=r.p+' g';document.getElementById('dC').textContent=r.c+' g';document.getElementById('dF').textContent=r.f+' g';document.getElementById('dReason').textContent=r.reason;document.getElementById('ringKcal').textContent=r.kcal;const pk=r.p*4,ck=r.c*4,fk=r.f*9,total=pk+ck+fk,p1=pk/total*100,p2=(pk+ck)/total*100;document.getElementById('ring').style.background=`conic-gradient(var(--protein) 0 ${p1}%,var(--carbs) ${p1}% ${p2}%,var(--fat) ${p2}% 100%)`;renderFood();}
 function renderTable(){const b=document.getElementById('body');b.innerHTML='';results.forEach(r=>{const tr=document.createElement('tr');tr.innerHTML=`<td><strong>${r.day}</strong></td><td>${r.label}</td><td class="mono">${r.kcal}</td><td class="mono">${r.p} g</td><td class="mono">${r.c} g</td><td class="mono">${r.f} g</td>`;b.appendChild(tr)})}
 
-let selectedOffProduct=null;
-function offNum(v){const x=Number(v);return Number.isFinite(x)?x:0}
-function getOffNutrition(product){
-  const n=product&&product.nutriments?product.nutriments:{};
-  let kcal=offNum(n['energy-kcal_100g']);
-  const p=offNum(n.proteins_100g),c=offNum(n.carbohydrates_100g),f=offNum(n.fat_100g);
-  if(!kcal && (p||c||f)) kcal=p*4+c*4+f*9;
-  return{kcal,p,c,f};
-}
-let selectedLocalProduct=null;
+
+const FATSECRET_API = "https://movesmart-nutrition-api.movesmartchile.workers.dev";
+
+let selectedFatSecretProduct = null;
+let selectedLocalProduct = null;
 
 function selectLocalProduct(i){
   const p=(window._localSearchProducts||[])[i];
   if(!p) return;
 
   selectedLocalProduct=p;
-  selectedOffProduct=null;
+  selectedFatSecretProduct=null;
 
   document.getElementById('foodName').value=p.name;
   document.getElementById('foodBarcode').value='';
@@ -385,11 +381,27 @@ function selectLocalProduct(i){
 
   const selected=document.getElementById('selectedProduct');
   selected.className='selected-product show';
-  selected.innerHTML=`<b>Seleccionado:</b> ${escapeHtml(p.name)}<br>${p.kcal} kcal · ${p.p.toFixed(1)} P · ${p.c.toFixed(1)} CH · ${p.f.toFixed(1)} G por 100 g · Base MoveSmart`;
+  selected.innerHTML=
+    `<b>Seleccionado:</b> ${escapeHtml(p.name)}<br>`+
+    `${p.kcal} kcal · ${p.p.toFixed(1)} P · ${p.c.toFixed(1)} CH · ${p.f.toFixed(1)} G por 100 g · Base MoveSmart`;
 
   document.getElementById('offResults').innerHTML='';
   document.getElementById('searchStatus').textContent=`Seleccionado desde Base MoveSmart: ${p.name}`;
+
   previewFood();
+  if(typeof updatePortionPreview==='function') updatePortionPreview();
+  document.getElementById('foodQty').focus();
+}
+
+function normalizeFatSecretFoods(data){
+  let foods=data?.foods?.food||[];
+  if(!Array.isArray(foods)) foods=foods?[foods]:[];
+  return foods;
+}
+
+function fatSecretTitle(food){
+  const brand=food.brand_name ? `${food.brand_name} · ` : '';
+  return `${brand}${food.food_name||'Alimento'}`;
 }
 
 async function searchFood(){
@@ -404,12 +416,15 @@ async function searchFood(){
     return;
   }
 
-  // 1) Buscar primero en la base interna MoveSmart
-  const local=buscarLocalFood(q);
+  selectedFatSecretProduct=null;
+  selectedLocalProduct=null;
+
+  const local=typeof buscarLocalFood==='function' ? buscarLocalFood(q) : [];
 
   if(local.length){
     window._localSearchProducts=local;
-    status.textContent=`Encontré ${local.length} coincidencia${local.length===1?'':'s'} en la Base MoveSmart. Toca la que corresponda.`;
+    status.textContent=
+      `Encontré ${local.length} coincidencia${local.length===1?'':'s'} en la Base MoveSmart. Toca la que corresponda.`;
 
     root.innerHTML=local.map((p,i)=>`
       <button type="button" class="off-result" onclick="selectLocalProduct(${i})">
@@ -424,89 +439,150 @@ async function searchFood(){
     return;
   }
 
-  // 2) Si no está en MoveSmart, buscar en Open Food Facts
   btn.disabled=true;
   btn.textContent='Buscando…';
-  status.textContent='No está en la Base MoveSmart. Buscando en Open Food Facts…';
+  status.textContent='Buscando en FatSecret…';
   root.innerHTML='';
 
   try{
-    const params=new URLSearchParams({
-      search_terms:q,
-      search_simple:'1',
-      action:'process',
-      json:'1',
-      page_size:'12',
-      lc:'es',
-      cc:'cl',
-      fields:'code,product_name,product_name_es,generic_name,brands,nutriments,image_front_small_url'
-    });
-
     const res=await fetch(
-      'https://world.openfoodfacts.org/cgi/search.pl?'+params.toString(),
-      {method:'GET',headers:{'Accept':'application/json'}}
+      `${FATSECRET_API}/?q=${encodeURIComponent(q)}`,
+      {headers:{'Accept':'application/json'}}
     );
 
-    if(!res.ok) throw new Error('HTTP '+res.status);
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const data=await res.json();
-    const products=(data.products||[]).filter(p=>{
-      const m=getOffNutrition(p);
-      return (p.product_name||p.product_name_es||p.generic_name)&&(m.kcal||m.p||m.c||m.f);
-    });
+    const foods=normalizeFatSecretFoods(data);
 
-    if(!products.length){
-      status.textContent='No encontré resultados. Puedes completar los valores manualmente.';
+    if(!foods.length){
+      status.textContent='No encontré resultados en FatSecret. Puedes completar los valores manualmente.';
       return;
     }
 
-    status.textContent=`Encontré ${products.length} opciones en Open Food Facts. Toca la que corresponda.`;
+    window._fatSecretSearchProducts=foods;
 
-    root.innerHTML=products.map((p,i)=>{
-      const name=escapeHtml(p.product_name_es||p.product_name||p.generic_name||'Producto');
-      const brand=escapeHtml(p.brands||'Sin marca');
-      const m=getOffNutrition(p);
-      const img=p.image_front_small_url
-        ? `<img src="${escapeHtml(p.image_front_small_url)}" alt="">`
-        : '<div class="noimg">sin foto</div>';
+    status.textContent=
+      `Encontré ${foods.length} resultado${foods.length===1?'':'s'} en FatSecret. Toca el alimento que corresponda.`;
 
-      return `<button type="button" class="off-result" onclick="selectOffProduct(${i})">
-        ${img}
-        <span>
-          <b>${name}</b>
-          <small>${brand} · ${Math.round(m.kcal)} kcal · ${m.p.toFixed(1)} P · ${m.c.toFixed(1)} CH · ${m.f.toFixed(1)} G / 100 g</small>
-        </span>
-        <span class="choose">Elegir</span>
-      </button>`;
+    root.innerHTML=foods.map((food,i)=>{
+      const title=escapeHtml(fatSecretTitle(food));
+      const type=escapeHtml(food.food_type||'');
+      const desc=escapeHtml(food.food_description||'');
+
+      return `
+        <button type="button" class="off-result" onclick="selectFatSecretProduct(${i})">
+          <div class="noimg">FS</div>
+          <span>
+            <b>${title}</b>
+            <small>${type}${type?' · ':''}${desc}</small>
+          </span>
+          <span class="choose">Elegir</span>
+        </button>
+      `;
     }).join('');
-
-    window._offSearchProducts=products;
 
   }catch(err){
     console.error(err);
-    status.textContent='No pude conectar con Open Food Facts. Puedes ingresar los datos manualmente.';
+    status.textContent='No pude conectar con FatSecret. Puedes intentar nuevamente o ingresar los datos manualmente.';
   }finally{
     btn.disabled=false;
     btn.textContent='Buscar';
   }
 }
 
-function selectOffProduct(i){
-  const p=(window._offSearchProducts||[])[i];if(!p)return;
-  const m=getOffNutrition(p),name=p.product_name_es||p.product_name||p.generic_name||'Producto';
-  selectedOffProduct={code:p.code||'',name,brands:p.brands||'',...m}; selectedLocalProduct=null;
-  document.getElementById('foodName').value=name;
-  document.getElementById('foodBarcode').value=p.code||'';
-  document.getElementById('foodKcal').value=m.kcal?m.kcal.toFixed(1):'';
-  document.getElementById('foodP').value=m.p?m.p.toFixed(2):'0';
-  document.getElementById('foodC').value=m.c?m.c.toFixed(2):'0';
-  document.getElementById('foodF').value=m.f?m.f.toFixed(2):'0';
-  document.getElementById('selectedProduct').className='selected-product show';
-  document.getElementById('selectedProduct').innerHTML=`<b>Seleccionado:</b> ${escapeHtml(name)}${p.brands?' · '+escapeHtml(p.brands):''}<br>${Math.round(m.kcal)} kcal · ${m.p.toFixed(1)} P · ${m.c.toFixed(1)} CH · ${m.f.toFixed(1)} G por 100 g`;
-  document.getElementById('offResults').innerHTML='';document.getElementById('searchStatus').textContent='Producto cargado. Ahora indica la cantidad que comiste.';
-  document.getElementById('foodQty').focus();previewFood();
-}
+async function selectFatSecretProduct(i){
+  const food=(window._fatSecretSearchProducts||[])[i];
+  if(!food) return;
 
+  const status=document.getElementById('searchStatus');
+  const root=document.getElementById('offResults');
+  const selected=document.getElementById('selectedProduct');
+
+  status.textContent='Cargando porciones y valores nutricionales…';
+  root.innerHTML='';
+
+  try{
+    const res=await fetch(
+      `${FATSECRET_API}/?food_id=${encodeURIComponent(food.food_id)}`,
+      {headers:{'Accept':'application/json'}}
+    );
+
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const detail=await res.json();
+
+    if(!detail?.ok){
+      throw new Error(detail?.error || 'No se pudo cargar el alimento.');
+    }
+
+    let base=detail.per_100g || null;
+    let converted=false;
+
+    if(!base){
+      const serving=(detail.servings||[]).find(s=>Number(s.grams)>0);
+      if(serving){
+        const factor=100/Number(serving.grams);
+        base={
+          label:'100 g (calculado)',
+          grams:100,
+          unit:'g',
+          kcal:Number(serving.kcal||0)*factor,
+          protein:Number(serving.protein||0)*factor,
+          carbs:Number(serving.carbs||0)*factor,
+          fat:Number(serving.fat||0)*factor
+        };
+        converted=true;
+      }
+    }
+
+    if(!base){
+      throw new Error('FatSecret no entregó una porción convertible a gramos.');
+    }
+
+    selectedFatSecretProduct={
+      food_id:detail.food_id,
+      name:detail.name || food.food_name || 'Alimento',
+      brand:food.brand_name || '',
+      type:detail.type || food.food_type || '',
+      base,
+      servings:detail.servings || [],
+      converted
+    };
+
+    selectedLocalProduct=null;
+
+    const fullName=
+      `${selectedFatSecretProduct.brand ? selectedFatSecretProduct.brand+' · ' : ''}${selectedFatSecretProduct.name}`;
+
+    document.getElementById('foodName').value=fullName;
+    document.getElementById('foodBarcode').value=detail.food_id||'';
+    document.getElementById('foodKcal').value=Number(base.kcal||0).toFixed(1);
+    document.getElementById('foodP').value=Number(base.protein||0).toFixed(2);
+    document.getElementById('foodC').value=Number(base.carbs||0).toFixed(2);
+    document.getElementById('foodF').value=Number(base.fat||0).toFixed(2);
+
+    selected.className='selected-product show';
+    selected.innerHTML=
+      `<b>Seleccionado:</b> ${escapeHtml(fullName)}<br>`+
+      `${Math.round(base.kcal)} kcal · ${Number(base.protein).toFixed(1)} P · `+
+      `${Number(base.carbs).toFixed(1)} CH · ${Number(base.fat).toFixed(1)} G por 100 g`+
+      `${converted ? ' · convertido desde una porción FatSecret' : ' · FatSecret'}`;
+
+    status.textContent=
+      converted
+        ? 'Producto cargado. MoveSmart convirtió una porción de FatSecret a valores por 100 g.'
+        : 'Producto cargado desde FatSecret. Ahora indica la cantidad que consumiste.';
+
+    previewFood();
+    if(typeof updatePortionPreview==='function') updatePortionPreview();
+    document.getElementById('foodQty').focus();
+
+  }catch(err){
+    console.error(err);
+    status.textContent=`No pude cargar el detalle del alimento: ${err.message}`;
+  }
+}
 
 const MEALS={
   desayuno:{label:'Desayuno',icon:'☕'},
@@ -556,12 +632,12 @@ function addFood(){
     c:x.c,
     f:x.f,
     barcode:document.getElementById('foodBarcode').value||'',
-    source:selectedLocalProduct?'Base MoveSmart':(selectedOffProduct?'Open Food Facts':'Manual')
+    source:selectedLocalProduct?'Base MoveSmart':(selectedFatSecretProduct?'FatSecret':'Manual')
   });
 
   saveFoodLog();
   ['foodName','foodQty','foodKcal','foodP','foodC','foodF','foodBarcode'].forEach(id=>document.getElementById(id).value='');
-  selectedOffProduct=null;
+  selectedFatSecretProduct=null;
   selectedLocalProduct=null;
   document.getElementById('selectedProduct').className='selected-product';
   document.getElementById('selectedProduct').innerHTML='';
