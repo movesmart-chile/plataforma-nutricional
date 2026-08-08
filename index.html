@@ -290,6 +290,54 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
     </div>
     <div class="search-status" id="searchStatus">Escribe al menos 2 caracteres y presiona Buscar.</div>
     <div class="off-results" id="offResults"></div>
+    <button type="button" class="custom-food-toggle" id="customFoodToggle" onclick="toggleCustomFood()">＋ No encuentro mi producto</button>
+
+    <div class="custom-food-panel" id="customFoodPanel">
+      <h4>Agregar producto desde su etiqueta</h4>
+      <p class="custom-help">Ingresa los valores tal como aparecen en el envase. MoveSmart los convertirá automáticamente a 100 g y, si quieres, guardará el producto para futuras búsquedas.</p>
+
+      <div class="custom-food-grid">
+        <div class="field">
+          <label>Nombre del producto</label>
+          <input id="customFoodName" placeholder="Ej: Yogur Protein Colun">
+        </div>
+        <div class="field">
+          <label>Marca (opcional)</label>
+          <input id="customFoodBrand" placeholder="Ej: Colun">
+        </div>
+      </div>
+
+      <div class="custom-food-grid" style="margin-top:10px">
+        <div class="field">
+          <label>Gramos de la porción de la etiqueta</label>
+          <input id="customFoodGrams" type="number" min="0.1" step="0.1" placeholder="150" oninput="previewCustomFood()">
+        </div>
+        <div class="field">
+          <label>Descripción de porción (opcional)</label>
+          <input id="customFoodServing" placeholder="Ej: 1 pote">
+        </div>
+      </div>
+
+      <div class="custom-food-macros">
+        <div class="field"><label>kcal / porción</label><input id="customFoodKcal" type="number" min="0" step="0.1" placeholder="100" oninput="previewCustomFood()"></div>
+        <div class="field"><label>Proteína / porción</label><input id="customFoodP" type="number" min="0" step="0.1" placeholder="12" oninput="previewCustomFood()"></div>
+        <div class="field"><label>CH / porción</label><input id="customFoodC" type="number" min="0" step="0.1" placeholder="8" oninput="previewCustomFood()"></div>
+        <div class="field"><label>Grasas / porción</label><input id="customFoodF" type="number" min="0" step="0.1" placeholder="2" oninput="previewCustomFood()"></div>
+      </div>
+
+      <div class="custom-preview" id="customFoodPreview">Completa los gramos de la porción y los valores de la etiqueta para calcular la equivalencia por 100 g.</div>
+
+      <label class="custom-check">
+        <input id="customFoodSave" type="checkbox" checked>
+        <span><strong>Guardar en mi Base MoveSmart.</strong> La próxima vez que busques este producto aparecerá antes que FatSecret en este dispositivo.</span>
+      </label>
+
+      <div class="custom-actions">
+        <button type="button" class="custom-save" onclick="useCustomFood()">Usar este producto</button>
+        <button type="button" class="custom-cancel" onclick="toggleCustomFood(false)">Cancelar</button>
+      </div>
+    </div>
+
     <div class="selected-product" id="selectedProduct"></div>
     <div class="food-grid" style="margin-top:12px">
       <div class="field"><label>Cantidad consumida (g)</label><input id="foodQty" type="number" min="0" step="1" placeholder="200" oninput="previewFood()"></div>
@@ -424,14 +472,14 @@ async function searchFood(){
   if(local.length){
     window._localSearchProducts=local;
     status.textContent=
-      `Encontré ${local.length} coincidencia${local.length===1?'':'s'} en la Base MoveSmart. Toca la que corresponda.`;
+      `Encontré ${local.length} coincidencia${local.length===1?'':'s'} en tu Base MoveSmart. Toca la que corresponda.`;
 
     root.innerHTML=local.map((p,i)=>`
       <button type="button" class="off-result" onclick="selectLocalProduct(${i})">
         <div class="noimg">MS</div>
         <span>
           <b>${escapeHtml(p.name)}</b>
-          <small>${p.kcal} kcal · ${p.p.toFixed(1)} P · ${p.c.toFixed(1)} CH · ${p.f.toFixed(1)} G / 100 g · Base MoveSmart</small>
+          <small>${p.kcal.toFixed ? p.kcal.toFixed(0) : p.kcal} kcal · ${Number(p.p).toFixed(1)} P · ${Number(p.c).toFixed(1)} CH · ${Number(p.f).toFixed(1)} G / 100 g · ${p.custom?'Mi Base MoveSmart':'Base MoveSmart'}</small>
         </span>
         <span class="choose">Elegir</span>
       </button>
@@ -632,7 +680,7 @@ function addFood(){
     c:x.c,
     f:x.f,
     barcode:document.getElementById('foodBarcode').value||'',
-    source:selectedLocalProduct?'Base MoveSmart':(selectedFatSecretProduct?'FatSecret':'Manual')
+    source:selectedLocalProduct?(selectedLocalProduct.custom?'Mi Base MoveSmart':'Base MoveSmart'):(selectedFatSecretProduct?'FatSecret':'Manual')
   });
 
   saveFoodLog();
@@ -642,6 +690,7 @@ function addFood(){
   document.getElementById('selectedProduct').className='selected-product';
   document.getElementById('selectedProduct').innerHTML='';
   document.getElementById('offResults').innerHTML='';
+  toggleCustomFood(false);
   document.getElementById('searchStatus').textContent='Escribe al menos 2 caracteres y presiona Buscar.';
   previewFood();
   if(typeof updatePortionPreview==='function') updatePortionPreview();
@@ -731,6 +780,146 @@ function copyWeek(){if(!results.length)return;const lines=results.map(r=>`${r.da
 try{const saved=JSON.parse(localStorage.getItem('ms_camila_postop_week')||'null');if(Array.isArray(saved)&&saved.length===7)week=saved}catch(e){}
 build();calculate();
 
+
+const CUSTOM_FOODS_STORAGE = 'ms_movesmart_custom_foods_v1';
+
+function getCustomFoods(){
+  try{
+    const data=JSON.parse(localStorage.getItem(CUSTOM_FOODS_STORAGE)||'[]');
+    return Array.isArray(data)?data:[];
+  }catch(e){
+    return [];
+  }
+}
+
+function saveCustomFoods(list){
+  localStorage.setItem(CUSTOM_FOODS_STORAGE,JSON.stringify(list));
+}
+
+function toggleCustomFood(force){
+  const panel=document.getElementById('customFoodPanel');
+  if(!panel) return;
+  const open=typeof force==='boolean' ? force : !panel.classList.contains('show');
+  panel.classList.toggle('show',open);
+
+  if(open){
+    const mainName=document.getElementById('foodName')?.value.trim()||'';
+    const customName=document.getElementById('customFoodName');
+    if(customName && !customName.value) customName.value=mainName;
+    setTimeout(()=>customName?.focus(),30);
+    previewCustomFood();
+  }
+}
+
+function customNum(id){
+  const n=Number(document.getElementById(id)?.value||0);
+  return Number.isFinite(n)?n:0;
+}
+
+function getCustomPer100(){
+  const grams=customNum('customFoodGrams');
+  if(!grams) return null;
+  const factor=100/grams;
+  return {
+    grams,
+    kcal:customNum('customFoodKcal')*factor,
+    p:customNum('customFoodP')*factor,
+    c:customNum('customFoodC')*factor,
+    f:customNum('customFoodF')*factor
+  };
+}
+
+function previewCustomFood(){
+  const el=document.getElementById('customFoodPreview');
+  if(!el) return;
+  const x=getCustomPer100();
+  if(!x){
+    el.innerHTML='Completa los <strong>gramos de la porción</strong> y los valores de la etiqueta para calcular la equivalencia por 100 g.';
+    return;
+  }
+  el.innerHTML=
+    `Equivalencia estimada por <strong>100 g</strong>: `+
+    `<strong>${Math.round(x.kcal)} kcal</strong> · `+
+    `<strong>${x.p.toFixed(1)} g P</strong> · `+
+    `<strong>${x.c.toFixed(1)} g CH</strong> · `+
+    `<strong>${x.f.toFixed(1)} g G</strong>.`;
+}
+
+function useCustomFood(){
+  const name=(document.getElementById('customFoodName')?.value||'').trim();
+  const brand=(document.getElementById('customFoodBrand')?.value||'').trim();
+  const serving=(document.getElementById('customFoodServing')?.value||'').trim();
+  const per100=getCustomPer100();
+
+  if(!name){
+    alert('Escribe el nombre del producto.');
+    return;
+  }
+  if(!per100 || per100.grams<=0){
+    alert('Indica cuántos gramos tiene la porción de la etiqueta.');
+    return;
+  }
+  if(!(per100.kcal||per100.p||per100.c||per100.f)){
+    alert('Ingresa los valores nutricionales de la etiqueta.');
+    return;
+  }
+
+  const fullName=brand && !normalizeText(name).includes(normalizeText(brand))
+    ? `${brand} · ${name}`
+    : name;
+
+  const product={
+    name:fullName,
+    brand,
+    aliases:[name,fullName,brand].filter(Boolean),
+    kcal:per100.kcal,
+    p:per100.p,
+    c:per100.c,
+    f:per100.f,
+    custom:true,
+    serving_grams:per100.grams,
+    serving_label:serving
+  };
+
+  if(document.getElementById('customFoodSave')?.checked){
+    const list=getCustomFoods();
+    const key=normalizeText(fullName);
+    const idx=list.findIndex(x=>normalizeText(x.name)===key);
+    if(idx>=0) list[idx]=product;
+    else list.unshift(product);
+    saveCustomFoods(list.slice(0,250));
+  }
+
+  selectedLocalProduct=product;
+  selectedFatSecretProduct=null;
+
+  document.getElementById('foodName').value=fullName;
+  document.getElementById('foodBarcode').value='';
+  document.getElementById('foodKcal').value=per100.kcal.toFixed(1);
+  document.getElementById('foodP').value=per100.p.toFixed(2);
+  document.getElementById('foodC').value=per100.c.toFixed(2);
+  document.getElementById('foodF').value=per100.f.toFixed(2);
+
+  const selected=document.getElementById('selectedProduct');
+  selected.className='selected-product show';
+  selected.innerHTML=
+    `<b>Seleccionado:</b> ${escapeHtml(fullName)}<br>`+
+    `${Math.round(per100.kcal)} kcal · ${per100.p.toFixed(1)} P · `+
+    `${per100.c.toFixed(1)} CH · ${per100.f.toFixed(1)} G por 100 g · Mi Base MoveSmart`;
+
+  document.getElementById('searchStatus').textContent=
+    document.getElementById('customFoodSave')?.checked
+      ? 'Producto cargado y guardado en tu Base MoveSmart.'
+      : 'Producto cargado para esta ocasión.';
+
+  document.getElementById('offResults').innerHTML='';
+  toggleCustomFood(false);
+  previewFood();
+  updatePortionPreview();
+  document.getElementById('foodQty').focus();
+}
+
+
 const MOVESMART_FOODS = [
   {name:"Arroz blanco crudo", aliases:["arroz blanco crudo","arroz crudo","arroz blanco"], kcal:365, p:7.1, c:80.0, f:0.7},
   {name:"Arroz blanco cocido", aliases:["arroz blanco cocido","arroz cocido"], kcal:130, p:2.7, c:28.2, f:0.3},
@@ -774,25 +963,29 @@ function normalizeText(s){
 function buscarLocalFood(query){
   const q = normalizeText(query);
   if(!q) return [];
-  return MOVESMART_FOODS
+
+  const custom=getCustomFoods().map(x=>({...x,_customPriority:true}));
+  const all=[...custom,...MOVESMART_FOODS];
+
+  return all
     .map(food=>{
-      const candidates = [food.name, ...(food.aliases||[])].map(normalizeText);
-      let score = 0;
+      const candidates = [food.name, ...(food.aliases||[])].filter(Boolean).map(normalizeText);
+      let score = food._customPriority ? 8 : 0;
       for(const cand of candidates){
-        if(cand === q) score = Math.max(score, 100);
-        else if(cand.startsWith(q) || q.startsWith(cand)) score = Math.max(score, 80);
-        else if(cand.includes(q) || q.includes(cand)) score = Math.max(score, 60);
+        if(cand === q) score = Math.max(score, 120 + (food._customPriority?10:0));
+        else if(cand.startsWith(q) || q.startsWith(cand)) score = Math.max(score, 90 + (food._customPriority?10:0));
+        else if(cand.includes(q) || q.includes(cand)) score = Math.max(score, 70 + (food._customPriority?10:0));
         else {
           const parts = q.split(/\s+/).filter(Boolean);
           const hits = parts.filter(p=>cand.includes(p)).length;
-          if(hits) score = Math.max(score, hits*15);
+          if(hits) score = Math.max(score, hits*18 + (food._customPriority?10:0));
         }
       }
       return {food, score};
     })
-    .filter(x=>x.score>0)
+    .filter(x=>x.score>10)
     .sort((a,b)=>b.score-a.score)
-    .slice(0,8)
+    .slice(0,10)
     .map(x=>x.food);
 }
 
