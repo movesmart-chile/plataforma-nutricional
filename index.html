@@ -82,6 +82,57 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 }
 </style>
 
+
+<style>
+.portion-preview{
+  margin-top:18px;
+  padding:18px;
+  border-radius:18px;
+  border:1px solid rgba(243,107,42,.28);
+  background:
+    linear-gradient(180deg,rgba(243,107,42,.10),rgba(243,107,42,.045)),
+    rgba(255,255,255,.025);
+}
+.portion-preview-kicker{
+  color:#ff8b4f;
+  font-size:.72rem;
+  font-weight:900;
+  letter-spacing:.12em;
+  margin-bottom:6px;
+}
+.portion-preview-title{
+  color:#fff;
+  font-weight:800;
+  font-size:1rem;
+  margin-bottom:14px;
+}
+.portion-preview-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+.portion-preview-grid div{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:14px;
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+.portion-preview-grid strong{
+  color:#fff;
+  font-size:1.15rem;
+}
+.portion-preview-grid span{
+  color:#bfb2c8;
+  font-size:.72rem;
+}
+@media(max-width:600px){
+  .portion-preview-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+
 </head>
 <body>
 <div class="site-glow"></div>
@@ -143,7 +194,19 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
       <div class="field"><label>CH / 100 g</label><input id="foodC" type="number" min="0" step="0.1" placeholder="28" oninput="previewFood()"></div>
       <div class="field"><label>Grasas / 100 g</label><input id="foodF" type="number" min="0" step="0.1" placeholder="0.3" oninput="previewFood()"></div>
     </div>
-    <div class="food-preview" id="foodPreview"><strong>Busca y selecciona un producto</strong> para cargar sus macros automáticamente, o escribe manualmente los valores nutricionales por 100 g.</div><div class="source-note">Fuente automática: Open Food Facts. Los datos provienen de etiquetas aportadas a su base de datos y pueden estar incompletos; revisa el envase cuando necesites máxima precisión.</div>
+    <div class="food-preview" id="foodPreview"><strong>Busca y selecciona un producto</strong> para cargar sus macros automáticamente, o escribe manualmente los valores nutricionales por 100 g.</div>
+    <div class="portion-preview" id="portionPreview">
+      <div class="portion-preview-kicker">TU PORCIÓN</div>
+      <div class="portion-preview-title" id="portionPreviewTitle">Indica la cantidad que vas a consumir</div>
+      <div class="portion-preview-grid">
+        <div><strong id="portionKcal">—</strong><span>kcal</span></div>
+        <div><strong id="portionP">—</strong><span>proteína</span></div>
+        <div><strong id="portionC">—</strong><span>CH</span></div>
+        <div><strong id="portionF">—</strong><span>grasas</span></div>
+      </div>
+    </div>
+
+<div class="source-note">Fuente automática: Open Food Facts. Los datos provienen de etiquetas aportadas a su base de datos y pueden estar incompletos; revisa el envase cuando necesites máxima precisión.</div>
     <button class="add-food" onclick="addFood()">+ Agregar a mi día</button>
     <div class="food-list" id="foodList"></div>
   </div>
@@ -441,5 +504,75 @@ function applyFoodToForm(food, source="MoveSmart"){
   if(typeof actualizarPreviewAlimento === "function") actualizarPreviewAlimento();
 }
 
+
+
+
+function updatePortionPreview(){
+  const qty = parseFloat(document.getElementById('foodQty')?.value || 0);
+  const kcal100 = parseFloat(document.getElementById('foodKcal')?.value || 0);
+  const p100 = parseFloat(document.getElementById('foodP')?.value || 0);
+  const c100 = parseFloat(document.getElementById('foodC')?.value || 0);
+  const f100 = parseFloat(document.getElementById('foodF')?.value || 0);
+
+  const title = document.getElementById('portionPreviewTitle');
+  const kcalEl = document.getElementById('portionKcal');
+  const pEl = document.getElementById('portionP');
+  const cEl = document.getElementById('portionC');
+  const fEl = document.getElementById('portionF');
+
+  if(!title || !kcalEl || !pEl || !cEl || !fEl) return;
+
+  if(!qty || (!kcal100 && !p100 && !c100 && !f100)){
+    title.textContent = 'Indica la cantidad que vas a consumir';
+    kcalEl.textContent = '—';
+    pEl.textContent = '—';
+    cEl.textContent = '—';
+    fEl.textContent = '—';
+    return;
+  }
+
+  const factor = qty / 100;
+  const kcal = kcal100 * factor;
+  const p = p100 * factor;
+  const c = c100 * factor;
+  const f = f100 * factor;
+
+  title.textContent = `Aporte de ${qty} g`;
+  kcalEl.textContent = `${Math.round(kcal)}`;
+  pEl.textContent = `${p.toFixed(1)} g`;
+  cEl.textContent = `${c.toFixed(1)} g`;
+  fEl.textContent = `${f.toFixed(1)} g`;
+}
+
+// Mantener sincronizada la vista previa con cantidad y macros.
+['foodQty','foodKcal','foodP','foodC','foodF'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el){
+    el.addEventListener('input',()=>{
+      if(typeof previewFood==='function') previewFood();
+      updatePortionPreview();
+    });
+    el.addEventListener('change',updatePortionPreview);
+  }
+});
+
+// Refrescar también después de elegir un producto.
+const _oldSelectLocalProduct = typeof selectLocalProduct === 'function' ? selectLocalProduct : null;
+if(_oldSelectLocalProduct){
+  selectLocalProduct = function(i){
+    _oldSelectLocalProduct(i);
+    updatePortionPreview();
+  };
+}
+
+const _oldSelectOffProduct = typeof selectOffProduct === 'function' ? selectOffProduct : null;
+if(_oldSelectOffProduct){
+  selectOffProduct = function(i){
+    _oldSelectOffProduct(i);
+    updatePortionPreview();
+  };
+}
+
+updatePortionPreview();
 
 </script></body></html>
