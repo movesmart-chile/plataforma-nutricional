@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -55,6 +56,32 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 @media(max-width:600px){.search-row{grid-template-columns:1fr}.search-btn{width:100%}.off-result{grid-template-columns:42px 1fr}.off-result img,.off-result .noimg{width:42px;height:42px}.off-result .choose{display:none}}
 
 </style>
+
+<style>
+.food-result{
+  width:100%;
+  text-align:left;
+  display:grid;
+  gap:4px;
+  margin-top:8px;
+  padding:14px 16px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.045);
+  color:#fff;
+}
+.food-result:hover{
+  border-color:rgba(243,107,42,.35);
+  background:rgba(243,107,42,.08);
+}
+.food-result span,.food-result small{
+  color:#cfc5d6;
+}
+.food-result small{
+  font-size:.72rem;
+}
+</style>
+
 </head>
 <body>
 <div class="site-glow"></div>
@@ -225,4 +252,129 @@ function resetWeek(){week=[...original];selected=0;build();calculate();localStor
 function copyWeek(){if(!results.length)return;const lines=results.map(r=>`${r.day}: ${r.label} — ${r.kcal} kcal | ${r.p} P | ${r.c} CH | ${r.f} G`);const text=`MOVESMART — Semana 10–16 agosto · postcirugía\n\n${lines.join('\n')}\n\nObjetivo: mantener peso y masa muscular durante reducción temporal de carga.`;navigator.clipboard.writeText(text).then(()=>alert('Semana copiada ✓'))}
 try{const saved=JSON.parse(localStorage.getItem('ms_camila_postop_week')||'null');if(Array.isArray(saved)&&saved.length===7)week=saved}catch(e){}
 build();calculate();
+
+const MOVESMART_FOODS = [
+  {name:"Arroz blanco crudo", aliases:["arroz blanco crudo","arroz crudo","arroz blanco"], kcal:365, p:7.1, c:80.0, f:0.7},
+  {name:"Arroz blanco cocido", aliases:["arroz blanco cocido","arroz cocido"], kcal:130, p:2.7, c:28.2, f:0.3},
+  {name:"Pechuga de pollo cocida", aliases:["pechuga de pollo","pollo cocido","pollo"], kcal:165, p:31.0, c:0.0, f:3.6},
+  {name:"Huevo entero", aliases:["huevo","huevo entero","huevo cocido"], kcal:143, p:12.6, c:0.7, f:9.5},
+  {name:"Papa cocida", aliases:["papa cocida","papas cocidas","papa"], kcal:87, p:1.9, c:20.1, f:0.1},
+  {name:"Avena cruda", aliases:["avena","avena cruda"], kcal:389, p:16.9, c:66.3, f:6.9},
+  {name:"Lentejas cocidas", aliases:["lentejas","lentejas cocidas"], kcal:116, p:9.0, c:20.1, f:0.4},
+  {name:"Garbanzos cocidos", aliases:["garbanzos","garbanzos cocidos"], kcal:164, p:8.9, c:27.4, f:2.6},
+  {name:"Porotos cocidos", aliases:["porotos","frijoles","porotos cocidos"], kcal:127, p:8.7, c:22.8, f:0.5},
+  {name:"Pasta cocida", aliases:["pasta","fideos","pasta cocida","fideos cocidos"], kcal:157, p:5.8, c:30.9, f:0.9},
+  {name:"Pan blanco", aliases:["pan blanco","pan"], kcal:266, p:8.9, c:49.4, f:3.2},
+  {name:"Pan integral", aliases:["pan integral"], kcal:247, p:13.0, c:41.0, f:4.2},
+  {name:"Leche descremada", aliases:["leche descremada","leche baja en grasa"], kcal:34, p:3.4, c:5.0, f:0.1},
+  {name:"Yogur natural", aliases:["yogur natural","yoghurt natural","yogurt natural"], kcal:61, p:3.5, c:4.7, f:3.3},
+  {name:"Quesillo", aliases:["quesillo","queso fresco"], kcal:145, p:18.0, c:3.0, f:7.0},
+  {name:"Atún al agua", aliases:["atun","atún","atun al agua","atún al agua"], kcal:116, p:25.5, c:0.0, f:0.8},
+  {name:"Salmón cocido", aliases:["salmon","salmón","salmon cocido","salmón cocido"], kcal:206, p:22.0, c:0.0, f:12.0},
+  {name:"Manzana", aliases:["manzana"], kcal:52, p:0.3, c:13.8, f:0.2},
+  {name:"Naranja", aliases:["naranja"], kcal:47, p:0.9, c:11.8, f:0.1},
+  {name:"Frutilla", aliases:["frutilla","fresa"], kcal:32, p:0.7, c:7.7, f:0.3},
+  {name:"Uvas", aliases:["uvas","uva"], kcal:69, p:0.7, c:18.1, f:0.2},
+  {name:"Palta", aliases:["palta","aguacate"], kcal:160, p:2.0, c:8.5, f:14.7},
+  {name:"Tomate", aliases:["tomate"], kcal:18, p:0.9, c:3.9, f:0.2},
+  {name:"Zanahoria", aliases:["zanahoria"], kcal:41, p:0.9, c:9.6, f:0.2},
+  {name:"Brócoli cocido", aliases:["brocoli","brócoli","brocoli cocido","brócoli cocido"], kcal:35, p:2.4, c:7.2, f:0.4},
+  {name:"Aceite de oliva", aliases:["aceite de oliva","aceite oliva"], kcal:884, p:0.0, c:0.0, f:100.0},
+  {name:"Miel", aliases:["miel"], kcal:304, p:0.3, c:82.4, f:0.0},
+  {name:"Azúcar", aliases:["azucar","azúcar"], kcal:387, p:0.0, c:100.0, f:0.0},
+  {name:"Whey protein", aliases:["whey","whey protein","proteina whey","proteína whey"], kcal:400, p:80.0, c:8.0, f:6.0}
+];
+
+function normalizeText(s){
+  return String(s||"")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .trim();
+}
+
+function buscarLocalFood(query){
+  const q = normalizeText(query);
+  if(!q) return [];
+  return MOVESMART_FOODS
+    .map(food=>{
+      const candidates = [food.name, ...(food.aliases||[])].map(normalizeText);
+      let score = 0;
+      for(const cand of candidates){
+        if(cand === q) score = Math.max(score, 100);
+        else if(cand.startsWith(q) || q.startsWith(cand)) score = Math.max(score, 80);
+        else if(cand.includes(q) || q.includes(cand)) score = Math.max(score, 60);
+        else {
+          const parts = q.split(/\s+/).filter(Boolean);
+          const hits = parts.filter(p=>cand.includes(p)).length;
+          if(hits) score = Math.max(score, hits*15);
+        }
+      }
+      return {food, score};
+    })
+    .filter(x=>x.score>0)
+    .sort((a,b)=>b.score-a.score)
+    .slice(0,8)
+    .map(x=>x.food);
+}
+
+function applyFoodToForm(food, source="MoveSmart"){
+  const nameEl = document.getElementById("foodName");
+  const kcalEl = document.getElementById("foodKcal");
+  const pEl = document.getElementById("foodP");
+  const cEl = document.getElementById("foodC");
+  const fEl = document.getElementById("foodF");
+  const barcodeEl = document.getElementById("foodBarcode");
+  if(nameEl) nameEl.value = food.name || "";
+  if(kcalEl) kcalEl.value = food.kcal ?? "";
+  if(pEl) pEl.value = food.p ?? "";
+  if(cEl) cEl.value = food.c ?? "";
+  if(fEl) fEl.value = food.f ?? "";
+  if(barcodeEl) barcodeEl.value = food.code || "";
+  const sourceEl = document.getElementById("foodSource");
+  if(sourceEl) sourceEl.textContent = `Fuente: ${source}`;
+  if(typeof actualizarPreviewAlimento === "function") actualizarPreviewAlimento();
+}
+
+
+async function buscarAlimentoCombinado(){
+  const qEl = document.getElementById("foodSearch") || document.getElementById("foodName");
+  const q = qEl ? qEl.value.trim() : "";
+  if(!q){
+    alert("Escribe un alimento o producto para buscar.");
+    return;
+  }
+
+  const resultsBox = document.getElementById("searchResults");
+  const statusBox = document.getElementById("searchStatus");
+  const local = buscarLocalFood(q);
+
+  if(local.length){
+    if(statusBox) statusBox.textContent = `Encontré ${local.length} coincidencia${local.length===1?"":"s"} en la base MoveSmart.`;
+    if(resultsBox){
+      resultsBox.innerHTML = local.map((food,i)=>`
+        <button type="button" class="food-result local-result" data-local-index="${i}">
+          <strong>${food.name}</strong>
+          <span>${food.kcal} kcal · ${food.p} P · ${food.c} CH · ${food.f} G / 100 g</span>
+          <small>Base MoveSmart</small>
+        </button>
+      `).join("");
+      resultsBox.querySelectorAll("[data-local-index]").forEach(btn=>{
+        btn.addEventListener("click",()=>{
+          const food = local[Number(btn.dataset.localIndex)];
+          applyFoodToForm(food,"Base MoveSmart");
+          resultsBox.innerHTML = "";
+          if(statusBox) statusBox.textContent = `Seleccionado: ${food.name}`;
+        });
+      });
+    }
+    return;
+  }
+
+  if(statusBox) statusBox.textContent = "No está en la base MoveSmart. Buscando en Open Food Facts…";
+  if(typeof buscarOpenFoodFacts === "function"){
+    return buscarOpenFoodFacts();
+  }
+}
+
 </script></body></html>
