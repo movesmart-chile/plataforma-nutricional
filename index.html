@@ -635,10 +635,58 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 }
 </style>
 
+
+<style>
+.firebase-sync-bar{
+  width:var(--container);
+  margin:10px auto 0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:10px 12px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  background:rgba(255,255,255,.035);
+  color:var(--dim);
+  font-size:.76rem;
+}
+.firebase-sync-left{display:flex;align-items:center;gap:8px;min-width:0}
+.firebase-dot{width:8px;height:8px;border-radius:50%;background:#9f92a8;flex:0 0 8px}
+.firebase-dot.ok{background:#5bc86b}
+.firebase-dot.warn{background:#f3a62a}
+.firebase-dot.err{background:#ff6b6b}
+.firebase-sync-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.firebase-auth-btn{
+  border:1px solid rgba(243,107,42,.26);
+  background:rgba(243,107,42,.10);
+  color:var(--accent2);
+  border-radius:10px;
+  padding:8px 10px;
+  font-size:.7rem;
+  font-weight:900;
+  cursor:pointer;
+  white-space:nowrap;
+}
+@media(max-width:600px){
+  .firebase-sync-bar{margin-top:8px;padding:9px 10px;font-size:.68rem}
+  .firebase-auth-btn{padding:7px 9px;font-size:.64rem}
+}
+</style>
+
 </head>
 <body>
 <div class="site-glow"></div>
 <header class="topbar"><div class="nav"><a class="brand" href="#">Move<span>Smart</span></a><span class="nav-badge">Nutrición · Postcirugía</span></div></header>
+
+<div class="firebase-sync-bar" id="firebaseSyncBar">
+  <div class="firebase-sync-left">
+    <span class="firebase-dot" id="firebaseDot"></span>
+    <span class="firebase-sync-text" id="firebaseSyncText">Conectando con Firebase…</span>
+  </div>
+  <button type="button" class="firebase-auth-btn" id="firebaseAuthBtn">Entrar con Google</button>
+</div>
+
 <div class="wrap">
 <header class="hero">
 <div class="eyebrow">MoveSmart · Semana 10–16 agosto</div>
@@ -785,6 +833,14 @@ function kcal(x){return x.p*4+x.c*4+x.f*9}
 function calculate(){results=week.map((k,i)=>({...types[k],key:k,day:days[i],kcal:kcal(types[k])}));const ak=Math.round(results.reduce((s,x)=>s+x.kcal,0)/7);const ap=Math.round(results.reduce((s,x)=>s+x.p,0)/7);const ac=Math.round(results.reduce((s,x)=>s+x.c,0)/7);const af=Math.round(results.reduce((s,x)=>s+x.f,0)/7);document.getElementById('avg').textContent=ak;document.getElementById('avgP').textContent=ap+' g';document.getElementById('avgC').textContent=ac+' g';document.getElementById('avgF').textContent=af+' g';renderTabs();showDay(selected);document.getElementById('results').style.display='block';document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});localStorage.setItem('ms_camila_postop_week',JSON.stringify(week));}
 function renderTabs(){const t=document.getElementById('tabs');t.innerHTML='';days.forEach((d,i)=>{const b=document.createElement('button');b.textContent=d.slice(0,3).toUpperCase();b.className=i===selected?'active':'';b.onclick=()=>{selected=i;renderTabs();showDay(i)};t.appendChild(b)})}
 function showDay(i){if(!results.length)return;const r=results[i];document.getElementById('dDay').textContent=r.day;document.getElementById('dSession').textContent=r.label;document.getElementById('dKcal').textContent=r.kcal+' kcal';document.getElementById('dP').textContent=r.p+' g';document.getElementById('dC').textContent=r.c+' g';document.getElementById('dF').textContent=r.f+' g';document.getElementById('dReason').textContent=r.reason;document.getElementById('ringKcal').textContent=r.kcal;const pk=r.p*4,ck=r.c*4,fk=r.f*9,total=pk+ck+fk,p1=pk/total*100,p2=(pk+ck)/total*100;document.getElementById('ring').style.background=`conic-gradient(var(--protein) 0 ${p1}%,var(--carbs) ${p1}% ${p2}%,var(--fat) ${p2}% 100%)`;renderFood();}
+const _msOriginalShowDay = showDay;
+showDay = function(i){
+  _msOriginalShowDay(i);
+  if(window.movesmartFirebaseSync){
+    window.movesmartFirebaseSync.subscribeSelectedDay();
+  }
+};
+
 function renderTable(){const b=document.getElementById('body');if(!b)return;}
 const FATSECRET_API = "https://movesmart-nutrition-api.movesmartchile.workers.dev";
 let selectedFatSecretProduct = null;
@@ -1010,7 +1066,27 @@ const FOOD_STORAGE='ms_camila_food_log_v1';
 let foodLog={};
 try{foodLog=JSON.parse(localStorage.getItem(FOOD_STORAGE)||'{}')||{}}catch(e){foodLog={}}
 function saveFoodLog(){localStorage.setItem(FOOD_STORAGE,JSON.stringify(foodLog))}
+const _msOriginalSaveFoodLog = saveFoodLog;
+saveFoodLog = function(){
+  _msOriginalSaveFoodLog();
+  if(window.movesmartFirebaseSync){
+    window.movesmartFirebaseSync.scheduleSync();
+  }
+};
+
 function currentFoods(){return Array.isArray(foodLog[selected])?foodLog[selected]:[]}
+window.msNutritionBridge = {
+  getSelected: () => selected,
+  getDays: () => days,
+  getResults: () => results,
+  getFoods: () => currentFoods(),
+  replaceFoods: (items) => {
+    foodLog[selected] = Array.isArray(items) ? items : [];
+    _msOriginalSaveFoodLog();
+    renderFood();
+  }
+};
+
 function n(id){return parseFloat(document.getElementById(id).value)||0}
 function portionData(){const q=n('foodQty'),factor=q/100;const p100=n('foodP'),c100=n('foodC'),f100=n('foodF');let kcal100=n('foodKcal');if(!kcal100&&(p100||c100||f100))kcal100=p100*4+c100*4+f100*9;return{qty:q,kcal:kcal100*factor,p:p100*factor,c:c100*factor,f:f100*factor,kcal100,p100,c100,f100}}
 function previewFood(){const x=portionData(),el=document.getElementById('foodPreview');if(!x.qty){el.innerHTML='<strong>Importante:</strong> escribe la cantidad consumida y los valores reales por 100 g. Los números grises son solo ejemplos.';return}if(!(x.kcal100||x.p100||x.c100||x.f100)){el.innerHTML='<strong>Faltan los datos nutricionales.</strong> Los números grises son ejemplos, no valores ingresados. Escribe kcal y/o macros por 100 g.';return}el.innerHTML=`Esta porción aporta aproximadamente <strong>${Math.round(x.kcal)} kcal</strong> · <strong>${x.p.toFixed(1)} g P</strong> · <strong>${x.c.toFixed(1)} g CH</strong> · <strong>${x.f.toFixed(1)} g G</strong>.`}
@@ -1594,5 +1670,183 @@ updatePortionPreview();
 
 
 </div>
+
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged,
+  setPersistence,
+  browserLocalPersistence
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  onSnapshot,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDhbiXajp-1oRJAK9YSjmD75DQ1vHPJJPQ",
+  authDomain: "movesmart-contenido.firebaseapp.com",
+  projectId: "movesmart-contenido",
+  storageBucket: "movesmart-contenido.firebasestorage.app",
+  messagingSenderId: "633222851467",
+  appId: "1:633222851467:web:990cac1c1a91c0ffdedd8e",
+  measurementId: "G-65EVM1NCPQ"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
+const provider = new GoogleAuthProvider();
+
+const dot = document.getElementById("firebaseDot");
+const text = document.getElementById("firebaseSyncText");
+const authBtn = document.getElementById("firebaseAuthBtn");
+
+let currentUser = null;
+let unsubscribeDay = null;
+let remoteApply = false;
+let syncTimer = null;
+
+function setSyncStatus(message, state=""){
+  if(text) text.textContent = message;
+  if(dot){
+    dot.className = "firebase-dot";
+    if(state) dot.classList.add(state);
+  }
+}
+
+function isoDateForSelectedDay(){
+  const now = new Date();
+  const monday = new Date(now);
+  const dow = (now.getDay()+6)%7;
+  monday.setDate(now.getDate()-dow);
+  const d = new Date(monday);
+  d.setDate(monday.getDate() + window.msNutritionBridge.getSelected());
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,"0");
+  const day=String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+
+function recordRef(){
+  if(!currentUser) return null;
+  return doc(db,"usuarios",currentUser.uid,"registros_nutricion",isoDateForSelectedDay());
+}
+
+async function pushCurrentDayToFirestore(){
+  if(!currentUser || remoteApply) return;
+  const ref = recordRef();
+  if(!ref) return;
+
+  const foods = window.msNutritionBridge?.getFoods?.() || [];
+
+  const target = window.msNutritionBridge.getResults()?.[window.msNutritionBridge.getSelected()] || null;
+
+  setSyncStatus("Guardando…","warn");
+
+  try{
+    await setDoc(ref,{
+      fecha: isoDateForSelectedDay(),
+      dia: window.msNutritionBridge.getDays()?.[window.msNutritionBridge.getSelected()] || "",
+      alimentos: foods,
+      objetivo: target ? {
+        kcal: Number(target.kcal)||0,
+        proteina: Number(target.p)||0,
+        carbohidratos: Number(target.c)||0,
+        grasas: Number(target.f)||0
+      } : null,
+      actualizadoEn: serverTimestamp()
+    }, { merge:true });
+
+    setSyncStatus("Sincronizado con Firebase","ok");
+  }catch(err){
+    console.error("Error guardando en Firestore:", err);
+    setSyncStatus("No se pudo sincronizar","err");
+  }
+}
+
+function scheduleSync(){
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(pushCurrentDayToFirestore, 250);
+}
+
+function subscribeSelectedDay(){
+  if(unsubscribeDay){
+    unsubscribeDay();
+    unsubscribeDay = null;
+  }
+  if(!currentUser) return;
+
+  const ref = recordRef();
+  if(!ref) return;
+
+  unsubscribeDay = onSnapshot(ref, snap=>{
+    if(!snap.exists()){
+      setSyncStatus("Firebase listo · sin registros en este día","ok");
+      return;
+    }
+
+    const data = snap.data();
+    if(!Array.isArray(data.alimentos)) return;
+
+    const localFoods = window.msNutritionBridge?.getFoods?.() || [];
+    if(JSON.stringify(data.alimentos) === JSON.stringify(localFoods)){
+      setSyncStatus("Sincronizado con Firebase","ok");
+      return;
+    }
+
+    remoteApply = true;
+    window.msNutritionBridge?.replaceFoods?.(data.alimentos);
+
+    remoteApply = false;
+    setSyncStatus("Actualizado desde Firebase","ok");
+  }, err=>{
+    console.error("Error leyendo Firestore:", err);
+    setSyncStatus("Error leyendo Firebase","err");
+  });
+}
+
+window.movesmartFirebaseSync = { scheduleSync, subscribeSelectedDay };
+
+await setPersistence(auth, browserLocalPersistence);
+
+authBtn?.addEventListener("click", async ()=>{
+  try{
+    if(currentUser){
+      await signOut(auth);
+    }else{
+      await signInWithPopup(auth, provider);
+    }
+  }catch(err){
+    console.error("Error de autenticación:", err);
+    setSyncStatus("No se pudo iniciar sesión","err");
+  }
+});
+
+onAuthStateChanged(auth, user=>{
+  currentUser = user || null;
+
+  if(currentUser){
+    authBtn.textContent = "Cerrar sesión";
+    setSyncStatus(`Conectado como ${currentUser.email || "usuario"}`,"ok");
+    subscribeSelectedDay();
+  }else{
+    authBtn.textContent = "Entrar con Google";
+    setSyncStatus("Inicia sesión para sincronizar entre dispositivos","warn");
+    if(unsubscribeDay){
+      unsubscribeDay();
+      unsubscribeDay = null;
+    }
+  }
+});
+</script>
 
 </body></html>
