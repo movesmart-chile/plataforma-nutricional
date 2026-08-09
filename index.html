@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -372,6 +375,35 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 }
 </style>
 
+
+<style>
+.ms-main-tabs{
+  position:sticky;top:74px;z-index:40;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  margin:-16px 0 22px;padding:8px;
+  border:1px solid rgba(255,255,255,.08);border-radius:16px;
+  background:rgba(15,10,20,.88);backdrop-filter:blur(12px);
+  box-shadow:0 12px 30px rgba(0,0,0,.18)
+}
+.ms-main-tab{
+  min-height:46px;border:0;border-radius:12px;background:transparent;
+  color:var(--dim);font-weight:900;font-size:.84rem;cursor:pointer;transition:.18s ease
+}
+.ms-main-tab:hover{background:rgba(255,255,255,.045);color:#fff}
+.ms-main-tab.active{
+  background:linear-gradient(180deg,var(--accent2),var(--accent));
+  color:#fff;box-shadow:0 8px 20px rgba(243,107,42,.20)
+}
+.ms-tab-hidden{display:none!important}
+.hero{padding-bottom:28px!important}
+.ms-tab-section .n{display:none}
+.ms-tab-section h2{margin-bottom:16px}
+@media(max-width:600px){
+  .ms-main-tabs{top:68px;margin-top:-8px}
+  .ms-main-tab{min-height:44px;font-size:.78rem}
+}
+</style>
+
 </head>
 <body>
 <div class="site-glow"></div>
@@ -383,6 +415,13 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 <p class="sub">Esta versión está construida para tu semana postcirugía: menos impacto y volumen que una semana normal de trail, proteína estable para proteger masa muscular y carbohidratos que cambian según la carga de cada día.</p>
 <div class="chips"><span class="chip">Postcirugía</span><span class="chip">Mantener peso</span><span class="chip">Proteger masa muscular</span><span class="chip">Carga reducida temporal</span></div>
 </header>
+
+
+<nav class="ms-main-tabs" id="msMainTabs" aria-label="Secciones de nutrición">
+  <button type="button" class="ms-main-tab active" data-tab="hoy" onclick="showMainTab('hoy')">Hoy</button>
+  <button type="button" class="ms-main-tab" data-tab="semana" onclick="showMainTab('semana')">Semana</button>
+  <button type="button" class="ms-main-tab" data-tab="plan" onclick="showMainTab('plan')">Plan</button>
+</nav>
 
 <section class="card"><h2><span class="n">01</span> Tu contexto esta semana</h2>
 <div class="profile"><div class="box"><div class="k">Edad</div><div class="v">36 años</div></div><div class="box"><div class="k">Peso de referencia</div><div class="v">60 kg</div></div><div class="box"><div class="k">Altura</div><div class="v">158 cm</div></div></div>
@@ -1477,6 +1516,44 @@ updatePortionPreview();
 
   // Precarga silenciosa.
   loadSharedFoods().catch(err=>console.warn("Firestore no pudo precargarse:", err));
+</script>
+
+
+<script>
+function setupMainTabs(){
+  const cards=[...document.querySelectorAll('section.card')];
+  cards.forEach(card=>{
+    const h2=card.querySelector('h2');
+    if(!h2) return;
+    const text=(h2.textContent||'').toLowerCase();
+    card.classList.add('ms-tab-section');
+    if(text.includes('tu contexto esta semana') || text.includes('las reglas de esta semana')){
+      card.dataset.mainTab='plan';
+    }else if(text.includes('ajusta tu semana real') || text.includes('semana completa')){
+      card.dataset.mainTab='semana';
+    }else if(text.includes('tu semana nutricional') || text.includes('registra lo que comiste')){
+      card.dataset.mainTab='hoy';
+    }
+  });
+  showMainTab('hoy', false);
+}
+
+function showMainTab(tab, scroll=true){
+  document.querySelectorAll('.ms-main-tab').forEach(btn=>{
+    btn.classList.toggle('active',btn.dataset.tab===tab);
+  });
+  document.querySelectorAll('.ms-tab-section').forEach(section=>{
+    section.classList.toggle('ms-tab-hidden',section.dataset.mainTab!==tab);
+  });
+  const resultsEl=document.getElementById('results');
+  if(resultsEl && typeof results!=='undefined' && results.length){
+    resultsEl.style.display='block';
+  }
+  if(scroll){
+    document.getElementById('msMainTabs')?.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+}
+document.addEventListener('DOMContentLoaded',setupMainTabs);
 </script>
 
 </body></html>
