@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -294,7 +295,7 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 
     <div class="custom-food-panel" id="customFoodPanel">
       <h4>Agregar producto desde su etiqueta</h4>
-      <p class="custom-help">Ingresa los valores tal como aparecen en el envase. MoveSmart los convertirá automáticamente a 100 g y, si quieres, guardará el producto para futuras búsquedas.</p>
+      <p class="custom-help">Ingresa los valores tal como aparecen en el envase. MoveSmart los convertirá automáticamente a 100 g y, si quieres, guardará el producto en la base compartida para futuras búsquedas.</p>
 
       <div class="custom-food-grid">
         <div class="field">
@@ -329,7 +330,7 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 
       <label class="custom-check">
         <input id="customFoodSave" type="checkbox" checked>
-        <span><strong>Guardar en mi Base MoveSmart.</strong> La próxima vez que busques este producto aparecerá antes que FatSecret en este dispositivo.</span>
+        <span><strong>Guardar en la Base MoveSmart compartida.</strong> El producto quedará disponible para otras personas que usen MoveSmart.</span>
       </label>
 
       <div class="custom-actions">
@@ -431,10 +432,10 @@ function selectLocalProduct(i){
   selected.className='selected-product show';
   selected.innerHTML=
     `<b>Seleccionado:</b> ${escapeHtml(p.name)}<br>`+
-    `${p.kcal} kcal · ${p.p.toFixed(1)} P · ${p.c.toFixed(1)} CH · ${p.f.toFixed(1)} G por 100 g · Base MoveSmart`;
+    `${Number(p.kcal).toFixed(0)} kcal · ${Number(p.p).toFixed(1)} P · ${Number(p.c).toFixed(1)} CH · ${Number(p.f).toFixed(1)} G por 100 g · ${p.shared?'Base MoveSmart compartida':(p.custom?'Mi Base MoveSmart':'Base MoveSmart')}`;
 
   document.getElementById('offResults').innerHTML='';
-  document.getElementById('searchStatus').textContent=`Seleccionado desde Base MoveSmart: ${p.name}`;
+  document.getElementById('searchStatus').textContent=`Seleccionado desde ${p.shared?'Base MoveSmart compartida':'Base MoveSmart'}: ${p.name}`;
 
   previewFood();
   if(typeof updatePortionPreview==='function') updatePortionPreview();
@@ -467,53 +468,61 @@ async function searchFood(){
   selectedFatSecretProduct=null;
   selectedLocalProduct=null;
 
-  const local=typeof buscarLocalFood==='function' ? buscarLocalFood(q) : [];
+  btn.disabled=true;
+  btn.textContent='Buscando…';
+  status.textContent='Buscando en la Base MoveSmart compartida y en FatSecret…';
+  root.innerHTML='';
 
-  if(local.length){
-    window._localSearchProducts=local;
-    status.textContent=
-      `Encontré ${local.length} coincidencia${local.length===1?'':'s'} en tu Base MoveSmart. Toca la que corresponda.`;
+  try{
+    const local=typeof buscarLocalFood==='function' ? buscarLocalFood(q) : [];
 
-    root.innerHTML=local.map((p,i)=>`
+    let shared=[];
+    try{
+      if(typeof window.msSearchSharedFoods==='function'){
+        shared=await window.msSearchSharedFoods(q);
+      }
+    }catch(err){
+      console.warn('No se pudo consultar Firestore:',err);
+    }
+
+    // Evitar duplicados entre base compartida y base local.
+    const seen=new Set();
+    const moveSmartResults=[...shared,...local].filter(p=>{
+      const key=normalizeText(p.name);
+      if(!key || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    window._localSearchProducts=moveSmartResults;
+
+    let fatFoods=[];
+    try{
+      const res=await fetch(
+        `${FATSECRET_API}/?q=${encodeURIComponent(q)}`,
+        {headers:{'Accept':'application/json'}}
+      );
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data=await res.json();
+      fatFoods=normalizeFatSecretFoods(data);
+    }catch(err){
+      console.warn('No se pudo consultar FatSecret:',err);
+    }
+
+    window._fatSecretSearchProducts=fatFoods;
+
+    const msHtml=moveSmartResults.map((p,i)=>`
       <button type="button" class="off-result" onclick="selectLocalProduct(${i})">
-        <div class="noimg">MS</div>
+        <div class="noimg">${p.shared?'CL':'MS'}</div>
         <span>
           <b>${escapeHtml(p.name)}</b>
-          <small>${p.kcal.toFixed ? p.kcal.toFixed(0) : p.kcal} kcal · ${Number(p.p).toFixed(1)} P · ${Number(p.c).toFixed(1)} CH · ${Number(p.f).toFixed(1)} G / 100 g · ${p.custom?'Mi Base MoveSmart':'Base MoveSmart'}</small>
+          <small>${Number(p.kcal).toFixed(0)} kcal · ${Number(p.p).toFixed(1)} P · ${Number(p.c).toFixed(1)} CH · ${Number(p.f).toFixed(1)} G / 100 g · ${p.shared?'Base MoveSmart compartida':(p.custom?'Mi Base MoveSmart':'Base MoveSmart')}</small>
         </span>
         <span class="choose">Elegir</span>
       </button>
     `).join('');
-    return;
-  }
 
-  btn.disabled=true;
-  btn.textContent='Buscando…';
-  status.textContent='Buscando en FatSecret…';
-  root.innerHTML='';
-
-  try{
-    const res=await fetch(
-      `${FATSECRET_API}/?q=${encodeURIComponent(q)}`,
-      {headers:{'Accept':'application/json'}}
-    );
-
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-
-    const data=await res.json();
-    const foods=normalizeFatSecretFoods(data);
-
-    if(!foods.length){
-      status.textContent='No encontré resultados en FatSecret. Puedes completar los valores manualmente.';
-      return;
-    }
-
-    window._fatSecretSearchProducts=foods;
-
-    status.textContent=
-      `Encontré ${foods.length} resultado${foods.length===1?'':'s'} en FatSecret. Toca el alimento que corresponda.`;
-
-    root.innerHTML=foods.map((food,i)=>{
+    const fatHtml=fatFoods.map((food,i)=>{
       const title=escapeHtml(fatSecretTitle(food));
       const type=escapeHtml(food.food_type||'');
       const desc=escapeHtml(food.food_description||'');
@@ -530,9 +539,21 @@ async function searchFood(){
       `;
     }).join('');
 
+    root.innerHTML=msHtml+fatHtml;
+
+    const total=moveSmartResults.length+fatFoods.length;
+    if(!total){
+      status.textContent='No encontré resultados. Usa “No encuentro mi producto” para agregarlo desde su etiqueta.';
+    }else{
+      const parts=[];
+      if(moveSmartResults.length) parts.push(`${moveSmartResults.length} de MoveSmart`);
+      if(fatFoods.length) parts.push(`${fatFoods.length} de FatSecret`);
+      status.textContent=`Encontré ${parts.join(' y ')}. Los productos de la Base MoveSmart aparecen primero.`;
+    }
+
   }catch(err){
     console.error(err);
-    status.textContent='No pude conectar con FatSecret. Puedes intentar nuevamente o ingresar los datos manualmente.';
+    status.textContent='No pude completar la búsqueda. Puedes agregar el producto manualmente.';
   }finally{
     btn.disabled=false;
     btn.textContent='Buscar';
@@ -680,7 +701,7 @@ function addFood(){
     c:x.c,
     f:x.f,
     barcode:document.getElementById('foodBarcode').value||'',
-    source:selectedLocalProduct?(selectedLocalProduct.custom?'Mi Base MoveSmart':'Base MoveSmart'):(selectedFatSecretProduct?'FatSecret':'Manual')
+    source:selectedLocalProduct?(selectedLocalProduct.shared?'Base MoveSmart compartida':(selectedLocalProduct.custom?'Mi Base MoveSmart':'Base MoveSmart')):(selectedFatSecretProduct?'FatSecret':'Manual')
   });
 
   saveFoodLog();
@@ -845,21 +866,27 @@ function previewCustomFood(){
     `<strong>${x.f.toFixed(1)} g G</strong>.`;
 }
 
-function useCustomFood(){
+async function useCustomFood(){
   const name=(document.getElementById('customFoodName')?.value||'').trim();
   const brand=(document.getElementById('customFoodBrand')?.value||'').trim();
   const serving=(document.getElementById('customFoodServing')?.value||'').trim();
   const per100=getCustomPer100();
 
+  const grams=customNum('customFoodGrams');
+  const kcalPortion=customNum('customFoodKcal');
+  const pPortion=customNum('customFoodP');
+  const cPortion=customNum('customFoodC');
+  const fPortion=customNum('customFoodF');
+
   if(!name){
     alert('Escribe el nombre del producto.');
     return;
   }
-  if(!per100 || per100.grams<=0){
+  if(!per100 || grams<=0){
     alert('Indica cuántos gramos tiene la porción de la etiqueta.');
     return;
   }
-  if(!(per100.kcal||per100.p||per100.c||per100.f)){
+  if(!(kcalPortion||pPortion||cPortion||fPortion)){
     alert('Ingresa los valores nutricionales de la etiqueta.');
     return;
   }
@@ -877,17 +904,47 @@ function useCustomFood(){
     c:per100.c,
     f:per100.f,
     custom:true,
-    serving_grams:per100.grams,
+    serving_grams:grams,
     serving_label:serving
   };
 
-  if(document.getElementById('customFoodSave')?.checked){
-    const list=getCustomFoods();
-    const key=normalizeText(fullName);
-    const idx=list.findIndex(x=>normalizeText(x.name)===key);
-    if(idx>=0) list[idx]=product;
-    else list.unshift(product);
-    saveCustomFoods(list.slice(0,250));
+  const saveShared=document.getElementById('customFoodSave')?.checked;
+  let sharedSaved=false;
+
+  if(saveShared){
+    const status=document.getElementById('searchStatus');
+    status.textContent='Guardando producto en la Base MoveSmart compartida…';
+
+    try{
+      if(typeof window.msSaveSharedFood!=='function'){
+        throw new Error('Firebase todavía no está disponible.');
+      }
+
+      await window.msSaveSharedFood({
+        nombre:name,
+        marca:brand,
+        porcion:grams,
+        calorias:kcalPortion,
+        proteinas:pPortion,
+        carbohidratos:cPortion,
+        grasas:fPortion
+      });
+
+      sharedSaved=true;
+      product.shared=true;
+    }catch(err){
+      console.error('Error al guardar en Firestore:',err);
+
+      // Conservamos copia local como respaldo si Firebase falla.
+      const list=getCustomFoods();
+      const key=normalizeText(fullName);
+      const idx=list.findIndex(x=>normalizeText(x.name)===key);
+      if(idx>=0) list[idx]=product;
+      else list.unshift(product);
+      saveCustomFoods(list.slice(0,250));
+
+      alert('El producto se puede usar, pero no pude guardarlo en la base compartida. Quedó guardado en este dispositivo como respaldo.');
+    }
   }
 
   selectedLocalProduct=product;
@@ -905,11 +962,12 @@ function useCustomFood(){
   selected.innerHTML=
     `<b>Seleccionado:</b> ${escapeHtml(fullName)}<br>`+
     `${Math.round(per100.kcal)} kcal · ${per100.p.toFixed(1)} P · `+
-    `${per100.c.toFixed(1)} CH · ${per100.f.toFixed(1)} G por 100 g · Mi Base MoveSmart`;
+    `${per100.c.toFixed(1)} CH · ${per100.f.toFixed(1)} G por 100 g · `+
+    `${sharedSaved?'Base MoveSmart compartida':'Producto manual'}`;
 
   document.getElementById('searchStatus').textContent=
-    document.getElementById('customFoodSave')?.checked
-      ? 'Producto cargado y guardado en tu Base MoveSmart.'
+    sharedSaved
+      ? 'Producto cargado y guardado en la Base MoveSmart compartida. Ya podrá aparecerle a otras personas.'
       : 'Producto cargado para esta ocasión.';
 
   document.getElementById('offResults').innerHTML='';
@@ -1078,4 +1136,143 @@ if(_oldSelectOffProduct){
 
 updatePortionPreview();
 
-</script></body></html>
+</script>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js';
+  import { getFirestore, collection, getDocs, addDoc } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDhbiXajp-1oRJAK9YSjmD75DQ1VHPJJPQ",
+    authDomain: "movesmart-contenido.firebaseapp.com",
+    projectId: "movesmart-contenido",
+    storageBucket: "movesmart-contenido.firebasestorage.app",
+    messagingSenderId: "633222851467",
+    appId: "1:633222851467:web:990cac1c1a91c0ffded8e",
+    measurementId: "G-65EVM1NCPQ"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  let sharedCache = [];
+  let sharedCacheAt = 0;
+  const CACHE_MS = 5 * 60 * 1000;
+
+  function norm(s){
+    return String(s || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g,"")
+      .trim();
+  }
+
+  function convertSharedDoc(docSnap){
+    const d = docSnap.data() || {};
+    const grams = Number(d.porcion || 0);
+    const kcal = Number(d.calorias || 0);
+    const p = Number(d.proteinas || 0);
+    const c = Number(d.carbohidratos || 0);
+    const f = Number(d.grasas || 0);
+
+    // Ignora documentos incompletos (por ejemplo, un documento de prueba).
+    if(!d.nombre || !grams || grams <= 0) return null;
+    if(!Number.isFinite(kcal) || !Number.isFinite(p) || !Number.isFinite(c) || !Number.isFinite(f)) return null;
+
+    const factor = 100 / grams;
+    const brand = String(d.marca || "").trim();
+    const baseName = String(d.nombre || "").trim();
+    const fullName = brand && !norm(baseName).includes(norm(brand))
+      ? `${brand} · ${baseName}`
+      : baseName;
+
+    return {
+      firestoreId: docSnap.id,
+      name: fullName,
+      brand,
+      aliases: [baseName, brand, fullName].filter(Boolean),
+      kcal: kcal * factor,
+      p: p * factor,
+      c: c * factor,
+      f: f * factor,
+      shared: true,
+      serving_grams: grams
+    };
+  }
+
+  async function loadSharedFoods(force=false){
+    const now = Date.now();
+    if(!force && sharedCache.length && (now - sharedCacheAt) < CACHE_MS){
+      return sharedCache;
+    }
+
+    const snap = await getDocs(collection(db, "productos"));
+    sharedCache = snap.docs.map(convertSharedDoc).filter(Boolean);
+    sharedCacheAt = now;
+    return sharedCache;
+  }
+
+  window.msSearchSharedFoods = async function(queryText){
+    const foods = await loadSharedFoods(false);
+    const q = norm(queryText);
+    if(!q) return [];
+
+    const parts = q.split(/\s+/).filter(Boolean);
+
+    return foods
+      .map(food=>{
+        const candidates=[food.name,...(food.aliases||[])].map(norm);
+        let score=0;
+
+        for(const cand of candidates){
+          if(cand===q) score=Math.max(score,150);
+          else if(cand.startsWith(q)||q.startsWith(cand)) score=Math.max(score,115);
+          else if(cand.includes(q)||q.includes(cand)) score=Math.max(score,90);
+          else{
+            const hits=parts.filter(part=>cand.includes(part)).length;
+            if(hits) score=Math.max(score,hits*25);
+          }
+        }
+
+        return {food,score};
+      })
+      .filter(x=>x.score>0)
+      .sort((a,b)=>b.score-a.score)
+      .slice(0,12)
+      .map(x=>x.food);
+  };
+
+  window.msSaveSharedFood = async function(food){
+    const payload = {
+      nombre: String(food.nombre || "").trim(),
+      marca: String(food.marca || "").trim(),
+      porcion: Number(food.porcion),
+      calorias: Number(food.calorias),
+      proteinas: Number(food.proteinas),
+      carbohidratos: Number(food.carbohidratos),
+      grasas: Number(food.grasas)
+    };
+
+    if(!payload.nombre) throw new Error("Falta el nombre.");
+    if(!Number.isFinite(payload.porcion) || payload.porcion <= 0) throw new Error("Porción inválida.");
+
+    for(const key of ["calorias","proteinas","carbohidratos","grasas"]){
+      if(!Number.isFinite(payload[key]) || payload[key] < 0){
+        throw new Error(`Valor inválido: ${key}`);
+      }
+    }
+
+    const ref = await addDoc(collection(db, "productos"), payload);
+
+    // Forzar refresco para que el producto aparezca en la siguiente búsqueda.
+    sharedCache = [];
+    sharedCacheAt = 0;
+
+    return ref.id;
+  };
+
+  // Precarga silenciosa.
+  loadSharedFoods().catch(err=>console.warn("Firestore no pudo precargarse:", err));
+</script>
+
+</body></html>
