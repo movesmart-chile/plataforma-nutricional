@@ -299,6 +299,202 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 }
 </style>
 
+
+<style>
+/* ===== Resumen automático después de agregar alimento ===== */
+.macro-modal-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:22px;
+  background:rgba(7,5,11,.78);
+  backdrop-filter:blur(8px);
+}
+.macro-modal-backdrop.show{display:flex}
+
+.macro-modal{
+  width:min(720px,100%);
+  max-height:calc(100vh - 44px);
+  overflow:auto;
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:24px;
+  background:linear-gradient(180deg,#211b2a 0%,#17121f 100%);
+  box-shadow:0 28px 80px rgba(0,0,0,.58);
+  padding:24px;
+}
+.macro-modal-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+.macro-modal-title{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-size:1.35rem;
+  font-weight:900;
+  color:#fff;
+}
+.macro-modal-check{
+  width:42px;
+  height:42px;
+  flex:0 0 42px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#52ba5c;
+  color:#fff;
+  font-size:1.4rem;
+  font-weight:900;
+}
+.macro-modal-close{
+  width:40px;
+  height:40px;
+  border:0;
+  background:transparent;
+  color:#bdb3c5;
+  font-size:1.8rem;
+  cursor:pointer;
+  border-radius:10px;
+}
+.macro-modal-close:hover{background:rgba(255,255,255,.06);color:#fff}
+
+.macro-added-food{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  margin-top:20px;
+  padding:16px 0 18px;
+  border-bottom:1px solid rgba(255,255,255,.10);
+}
+.macro-added-food-name{
+  font-size:1.02rem;
+  font-weight:850;
+  color:#fff;
+}
+.macro-added-food-meta{
+  margin-top:4px;
+  color:var(--dim);
+  font-size:.82rem;
+}
+.macro-added-food-kcal{
+  white-space:nowrap;
+  font-size:1.35rem;
+  font-weight:900;
+  color:#fff;
+}
+.macro-modal-subtitle{
+  margin:20px 0 12px;
+  color:#fff;
+  font-size:1rem;
+  font-weight:850;
+}
+
+.macro-remaining-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+.macro-remaining-card{
+  min-width:0;
+  padding:16px 10px;
+  text-align:center;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:16px;
+  background:rgba(255,255,255,.035);
+}
+.macro-remaining-card .icon{
+  display:block;
+  margin-bottom:7px;
+  font-size:1.25rem;
+}
+.macro-remaining-card .label{
+  color:#e9e1ee;
+  font-size:.72rem;
+  font-weight:800;
+}
+.macro-remaining-card .value{
+  display:block;
+  margin-top:8px;
+  color:var(--accent2);
+  font-size:1.35rem;
+  line-height:1;
+  font-weight:950;
+  font-variant-numeric:tabular-nums;
+}
+.macro-remaining-card .unit{
+  display:block;
+  margin-top:4px;
+  color:var(--dim);
+  font-size:.68rem;
+}
+.macro-remaining-card.done{
+  border-color:rgba(82,186,92,.28);
+  background:rgba(82,186,92,.07);
+}
+.macro-remaining-card.done .value{color:#70d279}
+
+.macro-modal-progress{
+  margin-top:20px;
+  padding-top:18px;
+  border-top:1px solid rgba(255,255,255,.09);
+}
+.macro-modal-progress-top{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  color:#eee7f2;
+  font-size:.82rem;
+}
+.macro-modal-track{
+  height:10px;
+  margin-top:10px;
+  overflow:hidden;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+}
+.macro-modal-track span{
+  display:block;
+  width:0;
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:width .25s ease;
+}
+.macro-modal-note{
+  margin-top:12px;
+  color:var(--dim);
+  font-size:.76rem;
+  line-height:1.5;
+}
+.macro-modal-action{
+  width:100%;
+  min-height:50px;
+  margin-top:18px;
+  border:0;
+  border-radius:14px;
+  background:linear-gradient(180deg,var(--accent2),var(--accent));
+  color:#fff;
+  font-size:.92rem;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 12px 28px rgba(243,107,42,.20);
+}
+.macro-modal-action:hover{transform:translateY(-1px)}
+
+@media(max-width:650px){
+  .macro-modal{padding:19px;border-radius:20px}
+  .macro-remaining-grid{grid-template-columns:repeat(2,1fr)}
+  .macro-added-food{align-items:flex-start}
+  .macro-added-food-kcal{font-size:1.1rem}
+}
+</style>
+
 </head>
 <body>
 <div class="site-glow"></div>
@@ -684,7 +880,7 @@ function addFood(){
   if(!x.qty){alert('Indica la cantidad consumida en gramos.');return}
   if(!(x.kcal100||x.p100||x.c100||x.f100)){alert('Faltan los datos nutricionales por 100 g. Los números grises son solo ejemplos.');return}
   if(!foodLog[selected])foodLog[selected]=[];
-  foodLog[selected].push({
+  const addedFood={
     id:Date.now()+Math.random(),
     name,
     meal:selectedMeal,
@@ -695,7 +891,8 @@ function addFood(){
     f:x.f,
     barcode:document.getElementById('foodBarcode').value||'',
     source:selectedLocalProduct?(selectedLocalProduct.shared?'Base MoveSmart compartida':(selectedLocalProduct.custom?'Mi Base MoveSmart':'Base MoveSmart')):(selectedFatSecretProduct?'FatSecret':'Manual')
-  });
+  };
+  foodLog[selected].push(addedFood);
   saveFoodLog();
   ['foodName','foodQty','foodKcal','foodP','foodC','foodF','foodBarcode'].forEach(id=>document.getElementById(id).value='');
   selectedFatSecretProduct=null;
@@ -708,6 +905,7 @@ function addFood(){
   previewFood();
   if(typeof updatePortionPreview==='function') updatePortionPreview();
   renderFood();
+  showAddedFoodModal(addedFood);
 }
 
 function editFood(id){
@@ -830,6 +1028,91 @@ function resetWeek(){week=[...original];selected=0;build();calculate();localStor
 function copyWeek(){if(!results.length)return;const lines=results.map(r=>`${r.day}: ${r.label} — ${r.kcal} kcal | ${r.p} P | ${r.c} CH | ${r.f} G`);const text=`MOVESMART — Semana 10–16 agosto · postcirugía\n\n${lines.join('\n')}\n\nObjetivo: mantener peso y masa muscular durante reducción temporal de carga.`;navigator.clipboard.writeText(text).then(()=>alert('Semana copiada ✓'))}
 try{const saved=JSON.parse(localStorage.getItem('ms_camila_postop_week')||'null');if(Array.isArray(saved)&&saved.length===7)week=saved}catch(e){}
 build();calculate();
+
+function formatRemaining(value, unit, valueId, unitId, cardId){
+  const valueEl=document.getElementById(valueId);
+  const unitEl=document.getElementById(unitId);
+  const card=document.getElementById(cardId);
+  if(!valueEl || !unitEl || !card) return;
+
+  card.classList.remove('done');
+
+  if(value > 0.05){
+    valueEl.textContent=unit==='kcal' ? Math.round(value) : value.toFixed(1);
+    unitEl.textContent=unit;
+  }else{
+    valueEl.textContent='✓';
+    unitEl.textContent='Objetivo cumplido';
+    card.classList.add('done');
+  }
+}
+
+function showAddedFoodModal(item){
+  if(!item || !results.length) return;
+
+  const target=results[selected];
+  const totals=foodTotals();
+
+  const remainKcal=Math.max(0,target.kcal-totals.kcal);
+  const remainP=Math.max(0,target.p-totals.p);
+  const remainC=Math.max(0,target.c-totals.c);
+  const remainF=Math.max(0,target.f-totals.f);
+
+  document.getElementById('macroAddedName').textContent=item.name;
+  document.getElementById('macroAddedMeta').textContent=
+    `${Math.round(item.qty)} g · ${item.p.toFixed(1)} P · ${item.c.toFixed(1)} CH · ${item.f.toFixed(1)} G`;
+  document.getElementById('macroAddedKcal').textContent=`${Math.round(item.kcal)} kcal`;
+
+  formatRemaining(remainKcal,'kcal','macroRemainKcal','macroRemainKcalUnit','macroRemainKcalCard');
+  formatRemaining(remainP,'g','macroRemainP','macroRemainPUnit','macroRemainPCard');
+  formatRemaining(remainC,'g','macroRemainC','macroRemainCUnit','macroRemainCCard');
+  formatRemaining(remainF,'g','macroRemainF','macroRemainFUnit','macroRemainFCard');
+
+  const energyPct=Math.max(0,Math.min(100,target.kcal ? totals.kcal/target.kcal*100 : 0));
+  document.getElementById('macroModalPct').textContent=`${Math.round(energyPct)}% completado`;
+  document.getElementById('macroModalBar').style.width=`${energyPct}%`;
+
+  const completed=[
+    totals.p>=target.p ? 'proteína' : '',
+    totals.c>=target.c ? 'carbohidratos' : '',
+    totals.f>=target.f ? 'grasas' : ''
+  ].filter(Boolean);
+
+  document.getElementById('macroModalNote').textContent=
+    completed.length
+      ? `Ya alcanzaste tu objetivo de ${completed.join(', ')}. Los valores restantes se actualizan con cada alimento que registres.`
+      : 'Los valores restantes se actualizan automáticamente con cada alimento que registres.';
+
+  const modal=document.getElementById('macroAddedModal');
+  modal.classList.add('show');
+  modal.setAttribute('aria-hidden','false');
+  document.body.style.overflow='hidden';
+}
+
+function closeAddedFoodModal(){
+  const modal=document.getElementById('macroAddedModal');
+  if(!modal) return;
+  modal.classList.remove('show');
+  modal.setAttribute('aria-hidden','true');
+  document.body.style.overflow='';
+}
+
+document.getElementById('macroModalClose')?.addEventListener('click',closeAddedFoodModal);
+
+document.getElementById('macroAddedModal')?.addEventListener('click',e=>{
+  if(e.target.id==='macroAddedModal') closeAddedFoodModal();
+});
+
+document.getElementById('macroModalSummary')?.addEventListener('click',()=>{
+  closeAddedFoodModal();
+  const target=document.querySelector('.progress-panel') || document.getElementById('foodSection');
+  target?.scrollIntoView({behavior:'smooth',block:'center'});
+});
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') closeAddedFoodModal();
+});
+
 const CUSTOM_FOODS_STORAGE = 'ms_movesmart_custom_foods_v1';
 function getCustomFoods(){
   try{
@@ -1234,4 +1517,67 @@ updatePortionPreview();
   // Precarga silenciosa.
   loadSharedFoods().catch(err=>console.warn("Firestore no pudo precargarse:", err));
 </script>
+
+<div class="macro-modal-backdrop" id="macroAddedModal" aria-hidden="true">
+  <div class="macro-modal" role="dialog" aria-modal="true" aria-labelledby="macroModalTitle">
+    <div class="macro-modal-head">
+      <div class="macro-modal-title" id="macroModalTitle">
+        <span class="macro-modal-check">✓</span>
+        <span>Alimento agregado</span>
+      </div>
+      <button type="button" class="macro-modal-close" id="macroModalClose" aria-label="Cerrar">×</button>
+    </div>
+
+    <div class="macro-added-food">
+      <div>
+        <div class="macro-added-food-name" id="macroAddedName">—</div>
+        <div class="macro-added-food-meta" id="macroAddedMeta">—</div>
+      </div>
+      <div class="macro-added-food-kcal" id="macroAddedKcal">—</div>
+    </div>
+
+    <div class="macro-modal-subtitle">Te falta para llegar a tu objetivo del día</div>
+
+    <div class="macro-remaining-grid">
+      <div class="macro-remaining-card" id="macroRemainKcalCard">
+        <span class="icon">🔥</span>
+        <span class="label">Calorías</span>
+        <strong class="value" id="macroRemainKcal">—</strong>
+        <span class="unit" id="macroRemainKcalUnit">kcal</span>
+      </div>
+      <div class="macro-remaining-card" id="macroRemainPCard">
+        <span class="icon">💪</span>
+        <span class="label">Proteína</span>
+        <strong class="value" id="macroRemainP">—</strong>
+        <span class="unit" id="macroRemainPUnit">g</span>
+      </div>
+      <div class="macro-remaining-card" id="macroRemainCCard">
+        <span class="icon">🌾</span>
+        <span class="label">Carbohidratos</span>
+        <strong class="value" id="macroRemainC">—</strong>
+        <span class="unit" id="macroRemainCUnit">g</span>
+      </div>
+      <div class="macro-remaining-card" id="macroRemainFCard">
+        <span class="icon">💧</span>
+        <span class="label">Grasas</span>
+        <strong class="value" id="macroRemainF">—</strong>
+        <span class="unit" id="macroRemainFUnit">g</span>
+      </div>
+    </div>
+
+    <div class="macro-modal-progress">
+      <div class="macro-modal-progress-top">
+        <span>Progreso energético del día</span>
+        <strong id="macroModalPct">0%</strong>
+      </div>
+      <div class="macro-modal-track"><span id="macroModalBar"></span></div>
+      <div class="macro-modal-note" id="macroModalNote"></div>
+    </div>
+
+    <button type="button" class="macro-modal-action" id="macroModalSummary">
+      Ver resumen del día
+    </button>
+  </div>
+</div>
+
 </body></html>
