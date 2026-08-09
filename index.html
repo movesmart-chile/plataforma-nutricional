@@ -232,6 +232,95 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 }
 </style>
 
+
+<style>
+.custom-food-toggle{
+  display:inline-flex;
+  width:max-content;
+  margin-top:12px;
+  min-height:44px;
+  padding:0 18px;
+  border:0;
+  border-radius:12px;
+  background:linear-gradient(180deg,var(--accent2),var(--accent));
+  color:#fff;
+  font-weight:900;
+  font-size:.88rem;
+  cursor:pointer;
+  white-space:nowrap;
+  box-shadow:0 8px 20px rgba(243,107,42,.18);
+  transition:.18s ease;
+  align-items:center;
+  justify-content:center;
+}
+.custom-food-toggle.show{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.custom-food-toggle:hover{
+  transform:translateY(-1px);
+  box-shadow:0 12px 26px rgba(243,107,42,.24);
+}
+.custom-food-panel{
+  display:none;
+  margin-top:14px;
+  padding:18px;
+  border-radius:16px;
+  border:1px solid rgba(243,107,42,.22);
+  background:linear-gradient(180deg,rgba(243,107,42,.08),rgba(255,255,255,.025));
+}
+.custom-food-panel.show{display:block}
+.custom-food-panel h4{margin:0 0 6px;font-size:1rem}
+.custom-food-panel .custom-help{margin:0 0 14px;color:var(--dim);font-size:.78rem;line-height:1.5}
+.custom-food-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:10px}
+.custom-food-macros{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
+.custom-check{display:flex;gap:9px;align-items:flex-start;margin-top:12px;color:var(--dim);font-size:.76rem;line-height:1.45}
+.custom-check input{margin-top:2px;accent-color:var(--accent)}
+.custom-actions{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:13px}
+.custom-save{min-height:44px;border:0;border-radius:12px;background:linear-gradient(180deg,var(--accent2),var(--accent));color:white;font-weight:900;cursor:pointer}
+.custom-cancel{min-height:44px;padding:0 18px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);color:#fff;font-weight:800;cursor:pointer}
+.custom-preview{margin-top:12px;color:var(--dim);font-size:.76rem;line-height:1.5}
+.custom-preview strong{color:#fff}
+@media(max-width:700px){
+  .custom-food-grid,.custom-food-macros,.custom-actions{grid-template-columns:1fr}
+  .custom-food-toggle{width:100%}
+}
+</style>
+
+
+<style>
+#customFoodToggle{
+  display:inline-flex !important;
+  align-items:center;
+  justify-content:center;
+  width:max-content;
+  min-height:52px;
+  margin-top:14px;
+  padding:0 24px;
+  border:none !important;
+  border-radius:14px;
+  background:linear-gradient(180deg,var(--accent2),var(--accent)) !important;
+  color:#fff !important;
+  font-size:.95rem;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 10px 24px rgba(243,107,42,.22);
+  transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+#customFoodToggle:hover{
+  transform:translateY(-1px);
+  box-shadow:0 14px 30px rgba(243,107,42,.28);
+  filter:brightness(1.03);
+}
+#customFoodToggle:active{
+  transform:translateY(0);
+}
+@media(max-width:600px){
+  #customFoodToggle{width:100%;}
+}
+</style>
+
 </head>
 <body>
 <div class="site-glow"></div>
@@ -286,7 +375,7 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
       </div>
     </div>
     <div class="search-row">
-      <div class="field"><label>Buscar alimento o producto</label><input id="foodName" placeholder="Ej: yogur Colun, leche, arroz, pollo..." onkeydown="if(event.key==='Enter'){event.preventDefault();searchFood();}"></div>
+      <div class="field"><label>Buscar alimento o producto</label><input id="foodName" placeholder="Ej: yogur Colun, leche, arroz, pollo..." oninput="updateCustomFoodToggle()" onkeydown="if(event.key==='Enter'){event.preventDefault();searchFood();}"></div>
       <button class="search-btn" id="searchFoodBtn" type="button" onclick="searchFood()">Buscar</button>
     </div>
     <div class="search-status" id="searchStatus">Escribe al menos 2 caracteres y presiona Buscar.</div>
@@ -675,6 +764,7 @@ document.querySelectorAll('.meal-choice').forEach(btn=>{
   btn.addEventListener('click',()=>setMeal(btn.dataset.meal));
 });
 setMeal('desayuno');
+updateCustomFoodToggle();
 
 const FOOD_STORAGE='ms_camila_food_log_v1';
 let foodLog={};
@@ -713,6 +803,7 @@ function addFood(){
   document.getElementById('offResults').innerHTML='';
   toggleCustomFood(false);
   document.getElementById('searchStatus').textContent='Escribe al menos 2 caracteres y presiona Buscar.';
+  updateCustomFoodToggle();
   previewFood();
   if(typeof updatePortionPreview==='function') updatePortionPreview();
   renderFood();
@@ -815,6 +906,16 @@ function getCustomFoods(){
 
 function saveCustomFoods(list){
   localStorage.setItem(CUSTOM_FOODS_STORAGE,JSON.stringify(list));
+}
+
+
+function updateCustomFoodToggle(){
+  const panel=document.getElementById('customFoodPanel');
+  // El botón "No encuentro mi producto" permanece visible siempre.
+  // El formulario manual solo se abre al hacer clic en ese botón.
+  if(panel && !document.getElementById('foodName').value.trim()){
+    panel.classList.remove('show');
+  }
 }
 
 function toggleCustomFood(force){
