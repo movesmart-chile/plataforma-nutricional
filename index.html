@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -300,452 +301,336 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 </style>
 
 
-<style>
-/* ===== Resumen automático después de agregar alimento ===== */
-.macro-modal-backdrop{
-  position:fixed;
-  inset:0;
-  z-index:9999;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:22px;
-  background:rgba(7,5,11,.78);
-  backdrop-filter:blur(8px);
-}
-.macro-modal-backdrop.show{display:flex}
 
-.macro-modal{
-  width:min(720px,100%);
-  max-height:calc(100vh - 44px);
-  overflow:auto;
-  border:1px solid rgba(255,255,255,.11);
-  border-radius:24px;
-  background:linear-gradient(180deg,#211b2a 0%,#17121f 100%);
-  box-shadow:0 28px 80px rgba(0,0,0,.58);
-  padding:24px;
-}
-.macro-modal-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:16px;
-}
-.macro-modal-title{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  font-size:1.35rem;
-  font-weight:900;
-  color:#fff;
-}
-.macro-modal-check{
-  width:42px;
-  height:42px;
-  flex:0 0 42px;
-  display:grid;
-  place-items:center;
-  border-radius:50%;
-  background:#52ba5c;
-  color:#fff;
-  font-size:1.4rem;
-  font-weight:900;
-}
-.macro-modal-close{
-  width:40px;
-  height:40px;
-  border:0;
-  background:transparent;
-  color:#bdb3c5;
-  font-size:1.8rem;
-  cursor:pointer;
-  border-radius:10px;
-}
-.macro-modal-close:hover{background:rgba(255,255,255,.06);color:#fff}
 
-.macro-added-food{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:16px;
-  margin-top:20px;
-  padding:16px 0 18px;
-  border-bottom:1px solid rgba(255,255,255,.10);
-}
-.macro-added-food-name{
-  font-size:1.02rem;
-  font-weight:850;
-  color:#fff;
-}
-.macro-added-food-meta{
-  margin-top:4px;
-  color:var(--dim);
-  font-size:.82rem;
-}
-.macro-added-food-kcal{
-  white-space:nowrap;
-  font-size:1.35rem;
-  font-weight:900;
-  color:#fff;
-}
-.macro-modal-subtitle{
-  margin:20px 0 12px;
-  color:#fff;
-  font-size:1rem;
-  font-weight:850;
-}
 
-.macro-remaining-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-}
-.macro-remaining-card{
-  min-width:0;
-  padding:16px 10px;
-  text-align:center;
-  border:1px solid rgba(255,255,255,.09);
-  border-radius:16px;
-  background:rgba(255,255,255,.035);
-}
-.macro-remaining-card .icon{
-  display:block;
-  margin-bottom:7px;
-  font-size:1.25rem;
-}
-.macro-remaining-card .label{
-  color:#e9e1ee;
-  font-size:.72rem;
-  font-weight:800;
-}
-.macro-remaining-card .value{
-  display:block;
-  margin-top:8px;
-  color:var(--accent2);
-  font-size:1.35rem;
-  line-height:1;
-  font-weight:950;
-  font-variant-numeric:tabular-nums;
-}
-.macro-remaining-card .unit{
-  display:block;
-  margin-top:4px;
-  color:var(--dim);
-  font-size:.68rem;
-}
-.macro-remaining-card.done{
-  border-color:rgba(82,186,92,.28);
-  background:rgba(82,186,92,.07);
-}
-.macro-remaining-card.done .value{color:#70d279}
 
-.macro-modal-progress{
-  margin-top:20px;
-  padding-top:18px;
-  border-top:1px solid rgba(255,255,255,.09);
-}
-.macro-modal-progress-top{
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  color:#eee7f2;
-  font-size:.82rem;
-}
-.macro-modal-track{
-  height:10px;
-  margin-top:10px;
-  overflow:hidden;
-  border-radius:999px;
-  background:rgba(255,255,255,.08);
-}
-.macro-modal-track span{
-  display:block;
-  width:0;
-  height:100%;
-  border-radius:inherit;
-  background:linear-gradient(90deg,var(--accent),var(--accent2));
-  transition:width .25s ease;
-}
-.macro-modal-note{
-  margin-top:12px;
-  color:var(--dim);
-  font-size:.76rem;
-  line-height:1.5;
-}
-.macro-modal-action{
-  width:100%;
-  min-height:50px;
-  margin-top:18px;
-  border:0;
-  border-radius:14px;
-  background:linear-gradient(180deg,var(--accent2),var(--accent));
-  color:#fff;
-  font-size:.92rem;
-  font-weight:900;
-  cursor:pointer;
-  box-shadow:0 12px 28px rgba(243,107,42,.20);
-}
-.macro-modal-action:hover{transform:translateY(-1px)}
 
-@media(max-width:650px){
-  .macro-modal{padding:19px;border-radius:20px}
-  .macro-remaining-grid{grid-template-columns:repeat(2,1fr)}
-  .macro-added-food{align-items:flex-start}
-  .macro-added-food-kcal{font-size:1.1rem}
-}
-</style>
+
+
 
 
 <style>
-/* ===== Notificación compacta de macros ===== */
-.macro-modal-backdrop{
-  position:fixed !important;
-  inset:0 !important;
-  z-index:9999 !important;
-  display:none !important;
-  align-items:flex-end !important;
-  justify-content:flex-end !important;
-  padding:18px !important;
-  background:transparent !important;
-  backdrop-filter:none !important;
-  pointer-events:none !important;
-}
-.macro-modal-backdrop.show{
-  display:flex !important;
-}
+/* =========================================================
+   MOVESMART — EXPERIENCIA MÓVIL
+   Solo modifica la vista en celulares. Escritorio se mantiene.
+   ========================================================= */
+@media (max-width: 600px){
 
-.macro-modal{
-  width:min(430px,calc(100vw - 28px)) !important;
-  max-height:none !important;
-  overflow:visible !important;
-  padding:17px !important;
-  border-radius:18px !important;
-  background:linear-gradient(180deg,#211a29 0%,#17121e 100%) !important;
-  border:1px solid rgba(255,255,255,.11) !important;
-  box-shadow:0 18px 55px rgba(0,0,0,.50) !important;
-  pointer-events:auto !important;
-  animation:macroToastIn .22s ease-out;
-}
-
-@keyframes macroToastIn{
-  from{opacity:0;transform:translateY(12px) scale(.98)}
-  to{opacity:1;transform:translateY(0) scale(1)}
-}
-@keyframes macroToastOut{
-  from{opacity:1;transform:translateY(0)}
-  to{opacity:0;transform:translateY(10px)}
-}
-.macro-modal.closing{
-  animation:macroToastOut .2s ease-in forwards;
-}
-
-.macro-modal-head{
-  gap:10px !important;
-}
-.macro-modal-title{
-  gap:9px !important;
-  font-size:1rem !important;
-}
-.macro-modal-check{
-  width:30px !important;
-  height:30px !important;
-  flex-basis:30px !important;
-  font-size:1rem !important;
-}
-.macro-modal-close{
-  width:30px !important;
-  height:30px !important;
-  font-size:1.25rem !important;
-}
-
-.macro-added-food{
-  margin-top:12px !important;
-  padding:10px 0 12px !important;
-}
-.macro-added-food-name{
-  font-size:.9rem !important;
-}
-.macro-added-food-meta{
-  margin-top:2px !important;
-  font-size:.69rem !important;
-}
-.macro-added-food-kcal{
-  font-size:1rem !important;
-}
-
-.macro-modal-subtitle{
-  margin:12px 0 8px !important;
-  font-size:.78rem !important;
-}
-
-.macro-remaining-grid{
-  grid-template-columns:repeat(4,1fr) !important;
-  gap:6px !important;
-}
-.macro-remaining-card{
-  padding:9px 5px !important;
-  border-radius:11px !important;
-}
-.macro-remaining-card .icon{
-  margin-bottom:3px !important;
-  font-size:.9rem !important;
-}
-.macro-remaining-card .label{
-  font-size:.58rem !important;
-}
-.macro-remaining-card .value{
-  margin-top:5px !important;
-  font-size:.95rem !important;
-}
-.macro-remaining-card .unit{
-  margin-top:2px !important;
-  font-size:.55rem !important;
-}
-
-.macro-modal-progress{
-  margin-top:12px !important;
-  padding-top:10px !important;
-}
-.macro-modal-progress-top{
-  font-size:.67rem !important;
-}
-.macro-modal-track{
-  height:6px !important;
-  margin-top:6px !important;
-}
-.macro-modal-note{
-  display:none !important;
-}
-.macro-modal-action{
-  display:none !important;
-}
-
-/* cuenta regresiva visual */
-.macro-toast-timer{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  margin-top:9px;
-  color:#a99db1;
-  font-size:.62rem;
-}
-.macro-toast-timer-track{
-  flex:1;
-  height:3px;
-  overflow:hidden;
-  border-radius:999px;
-  background:rgba(255,255,255,.08);
-}
-.macro-toast-timer-track span{
-  display:block;
-  height:100%;
-  width:100%;
-  border-radius:inherit;
-  background:linear-gradient(90deg,var(--accent),var(--accent2));
-  transform-origin:left center;
-}
-
-@media(max-width:600px){
-  .macro-modal-backdrop{
-    padding:10px !important;
+  :root{
+    --container: calc(100% - 24px);
+    --radius: 18px;
   }
-  .macro-modal{
-    width:100% !important;
-    padding:14px !important;
+
+  body{
+    overflow-x:hidden;
   }
-  .macro-remaining-grid{
-    grid-template-columns:repeat(2,1fr) !important;
+
+  /* Barra superior más limpia */
+  .nav{
+    min-height:58px;
+    gap:10px;
   }
-}
-</style>
+  .brand{
+    font-size:1.2rem;
+  }
+  .nav-badge{
+    padding:6px 9px;
+    font-size:.62rem;
+  }
+
+  /* Hero mucho más corto */
+  .hero{
+    padding:28px 0 22px;
+  }
+  .eyebrow{
+    font-size:.66rem;
+    margin-bottom:9px;
+  }
+  h1{
+    font-size:2rem;
+    line-height:1.03;
+  }
+  .sub{
+    margin-top:12px;
+    font-size:.88rem;
+    line-height:1.5;
+  }
+  .chips{
+    margin-top:14px;
+    gap:6px;
+  }
+  .chip{
+    padding:6px 8px;
+    font-size:.63rem;
+  }
+
+  /* Tarjetas generales */
+  .card{
+    padding:15px;
+    margin-bottom:12px;
+    border-radius:18px;
+  }
+  .card h2{
+    margin-bottom:14px;
+    font-size:1.18rem;
+  }
+
+  /* Contexto y reglas: más compactos */
+  .profile{
+    grid-template-columns:repeat(3,1fr);
+    gap:7px;
+  }
+  .box{
+    padding:10px 8px;
+    text-align:center;
+  }
+  .box .k{
+    font-size:.56rem;
+  }
+  .box .v{
+    font-size:.88rem;
+  }
+  .goal{
+    padding:12px;
+    font-size:.76rem;
+  }
+  .principles{
+    gap:8px;
+  }
+  .principle{
+    padding:12px;
+  }
+  .principle .value{
+    font-size:1rem;
+  }
+  .principle p{
+    display:none;
+  }
+
+  /* Resumen semanal: solo lo esencial */
+  .summary{
+    grid-template-columns:1fr;
+    gap:8px;
+  }
+  .summaryMain{
+    padding:14px;
+  }
+  .visual{
+    display:none;
+  }
+  .big{
+    font-size:2.15rem;
+  }
+  .macrogrid{
+    grid-template-columns:repeat(3,1fr);
+    gap:7px;
+    margin-top:12px;
+  }
+  .macro{
+    padding:10px 6px;
+    text-align:center;
+  }
+  .macro .small{
+    font-size:.55rem;
+    letter-spacing:0;
+  }
+  .macro .val{
+    font-size:.9rem;
+  }
+
+  /* Días: scroll horizontal en lugar de 2 columnas */
+  .tabs{
+    display:flex;
+    overflow-x:auto;
+    gap:7px;
+    margin:12px -3px;
+    padding:2px 3px 6px;
+    scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{
+    display:none;
+  }
+  .tabs button{
+    flex:0 0 auto;
+    min-width:58px;
+    padding:9px 12px;
+  }
+
+  /* Detalle del día más compacto */
+  .detail{
+    padding:14px;
+  }
+  .detail h3{
+    font-size:1.35rem;
+  }
+  .session{
+    font-size:.76rem;
+  }
+  .pill{
+    font-size:.6rem;
+    padding:6px 8px;
+  }
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+    gap:7px;
+    margin-top:12px;
+  }
+  .stat{
+    padding:10px;
+  }
+  .reason{
+    font-size:.76rem;
+  }
+  .reparto{
+    display:none;
+  }
+
+  /* Registro: el progreso aparece primero */
+  .food-layout{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .progress-panel{
+    order:1;
+    padding:14px;
+  }
+  .food-form{
+    order:2;
+    padding:14px;
+  }
+
+  .progress-head{
+    align-items:center;
+  }
+  .progress-head h3{
+    font-size:1rem;
+  }
+  .progress-kcal{
+    font-size:.95rem;
+  }
+  .progress-list{
+    margin-top:12px;
+    gap:9px;
+  }
+  .progress-row-top{
+    font-size:.72rem;
+  }
+  .remaining{
+    margin-top:11px;
+    padding-top:11px;
+    font-size:.73rem;
+  }
+
+  /* Selector de comida grande y táctil */
+  .meal-selector{
+    grid-template-columns:repeat(2,1fr);
+    gap:7px;
+  }
+  .meal-choice{
+    min-height:48px;
+    font-size:.76rem;
+  }
+
+  /* Búsqueda cómoda */
+  .search-row{
+    grid-template-columns:1fr;
+    gap:7px;
+  }
+  .field input{
+    min-height:46px;
+    font-size:16px; /* evita zoom automático en iPhone */
+  }
+  .search-btn,
+  .custom-food-toggle,
+  .add-food{
+    min-height:48px;
+    width:100%;
+    font-size:.84rem;
+  }
+
+  .search-status{
+    font-size:.67rem;
+  }
+
+  /* Resultados de búsqueda */
+  .off-results{
+    max-height:260px;
+  }
+  .off-result{
+    grid-template-columns:42px 1fr;
+    padding:9px;
+  }
+
+  /* Macros del producto: 2 x 2 en vez de columna larga */
+  .food-grid{
+    grid-template-columns:1fr;
+  }
+  .food-macros{
+    grid-template-columns:repeat(2,1fr);
+    gap:7px;
+  }
+  .portion-preview{
+    padding:13px;
+    margin-top:12px;
+  }
+  .portion-preview-grid{
+    grid-template-columns:repeat(2,1fr);
+    gap:7px;
+  }
+
+  /* Producto manual también 2x2 */
+  .custom-food-grid{
+    grid-template-columns:1fr;
+  }
+  .custom-food-macros{
+    grid-template-columns:repeat(2,1fr);
+    gap:7px;
+  }
+
+  /* Alimentos registrados compactos */
+  .food-list{
+    gap:7px;
+  }
+  .meal-group{
+    margin-top:10px;
+  }
+  .meal-group-head{
+    padding:10px 11px;
+  }
+  .meal-group-body{
+    padding:7px;
+  }
+  .food-item{
+    grid-template-columns:1fr auto;
+    gap:8px;
+    padding:10px;
+  }
+  .food-item b{
+    font-size:.78rem;
+  }
+  .food-item small{
+    font-size:.65rem;
+  }
+  .food-item-actions{
+    gap:5px;
+    justify-content:flex-end;
+  }
+  .edit-food{
+    height:34px;
+    padding:0 9px;
+    font-size:.65rem;
+  }
+  .delete-food{
+    width:34px;
+    height:34px;
+  }
 
 
-<style>
-/* ===== Toast compacto 5 segundos ===== */
-.macro-modal-backdrop{
-  align-items:flex-start !important;
-  justify-content:flex-end !important;
-  padding:18px !important;
-  pointer-events:none !important;
-}
-.macro-modal{
-  width:min(380px,calc(100vw - 28px)) !important;
-  padding:14px !important;
-  border-radius:16px !important;
-}
-.macro-modal-title{
-  font-size:.92rem !important;
-}
-.macro-modal-check{
-  width:28px !important;
-  height:28px !important;
-  flex-basis:28px !important;
-  font-size:.9rem !important;
-}
-.macro-added-food{
-  margin-top:8px !important;
-  padding:8px 0 9px !important;
-}
-.macro-added-food-name{
-  font-size:.82rem !important;
-}
-.macro-added-food-meta{
-  font-size:.62rem !important;
-}
-.macro-added-food-kcal{
-  font-size:.92rem !important;
-}
-.macro-modal-subtitle{
-  margin:9px 0 7px !important;
-  font-size:.7rem !important;
-}
-.macro-remaining-grid{
-  gap:5px !important;
-}
-.macro-remaining-card{
-  padding:7px 4px !important;
-  border-radius:10px !important;
-}
-.macro-remaining-card .icon{
-  font-size:.78rem !important;
-  margin-bottom:2px !important;
-}
-.macro-remaining-card .label{
-  font-size:.52rem !important;
-}
-.macro-remaining-card .value{
-  font-size:.85rem !important;
-  margin-top:3px !important;
-}
-.macro-remaining-card .unit{
-  font-size:.5rem !important;
-}
-.macro-modal-progress{
-  margin-top:9px !important;
-  padding-top:8px !important;
-}
-.macro-modal-progress-top{
-  font-size:.6rem !important;
-}
-.macro-modal-track{
-  height:4px !important;
-  margin-top:5px !important;
-}
-.macro-toast-timer{
-  margin-top:7px !important;
-  font-size:.56rem !important;
-}
-.macro-toast-timer-track{
-  height:2px !important;
-}
-
-@media(max-width:600px){
-  .macro-modal-backdrop{
-    padding:8px !important;
-  }
-  .macro-modal{
-    width:min(360px,100%) !important;
+  footer{
+    margin-top:18px;
+    font-size:.64rem;
   }
 }
 </style>
@@ -1160,7 +1045,6 @@ function addFood(){
   previewFood();
   if(typeof updatePortionPreview==='function') updatePortionPreview();
   renderFood();
-  showAddedFoodModal(addedFood);
 }
 
 function editFood(id){
@@ -1302,109 +1186,6 @@ function formatRemaining(value, unit, valueId, unitId, cardId){
   }
 }
 
-
-let macroToastTimeout=null;
-let macroToastInterval=null;
-let macroToastStartedAt=0;
-const MACRO_TOAST_DURATION=5000;
-
-function formatRemaining(value, unit, valueId, unitId, cardId){
-  const valueEl=document.getElementById(valueId);
-  const unitEl=document.getElementById(unitId);
-  const card=document.getElementById(cardId);
-  if(!valueEl || !unitEl || !card) return;
-
-  card.classList.remove('done');
-
-  if(value > 0.05){
-    valueEl.textContent=unit==='kcal' ? Math.round(value) : value.toFixed(1);
-    unitEl.textContent=unit;
-  }else{
-    valueEl.textContent='✓';
-    unitEl.textContent='Cumplido';
-    card.classList.add('done');
-  }
-}
-
-function updateMacroToastTimer(){
-  const elapsed=Date.now()-macroToastStartedAt;
-  const remaining=Math.max(0,MACRO_TOAST_DURATION-elapsed);
-  const seconds=Math.max(0,Math.ceil(remaining/1000));
-  const text=document.getElementById('macroToastTimerText');
-  const bar=document.getElementById('macroToastTimerBar');
-
-  if(text) text.textContent=`Se cierra en ${seconds} s`;
-  if(bar){
-    const pct=(remaining/MACRO_TOAST_DURATION)*100;
-    bar.style.width=`${pct}%`;
-  }
-}
-
-function showAddedFoodModal(item){
-  if(!item || !results.length) return;
-
-  const target=results[selected];
-  const totals=foodTotals();
-
-  const remainKcal=Math.max(0,target.kcal-totals.kcal);
-  const remainP=Math.max(0,target.p-totals.p);
-  const remainC=Math.max(0,target.c-totals.c);
-  const remainF=Math.max(0,target.f-totals.f);
-
-  document.getElementById('macroAddedName').textContent=item.name;
-  document.getElementById('macroAddedMeta').textContent=
-    `${Math.round(item.qty)} g · ${item.p.toFixed(1)} P · ${item.c.toFixed(1)} CH · ${item.f.toFixed(1)} G`;
-  document.getElementById('macroAddedKcal').textContent=`${Math.round(item.kcal)} kcal`;
-
-  formatRemaining(remainKcal,'kcal','macroRemainKcal','macroRemainKcalUnit','macroRemainKcalCard');
-  formatRemaining(remainP,'g','macroRemainP','macroRemainPUnit','macroRemainPCard');
-  formatRemaining(remainC,'g','macroRemainC','macroRemainCUnit','macroRemainCCard');
-  formatRemaining(remainF,'g','macroRemainF','macroRemainFUnit','macroRemainFCard');
-
-  const energyPct=Math.max(0,Math.min(100,target.kcal ? totals.kcal/target.kcal*100 : 0));
-  document.getElementById('macroModalPct').textContent=`${Math.round(energyPct)}%`;
-  document.getElementById('macroModalBar').style.width=`${energyPct}%`;
-
-  const modal=document.getElementById('macroAddedModal');
-  const box=modal?.querySelector('.macro-modal');
-  if(!modal || !box) return;
-
-  // Si ya estaba visible porque se agregó otro alimento, actualiza y reinicia los 10 s.
-  box.classList.remove('closing');
-  modal.classList.add('show');
-  modal.setAttribute('aria-hidden','false');
-
-  clearTimeout(macroToastTimeout);
-  clearInterval(macroToastInterval);
-
-  macroToastStartedAt=Date.now();
-  updateMacroToastTimer();
-  macroToastInterval=setInterval(updateMacroToastTimer,200);
-  macroToastTimeout=setTimeout(closeAddedFoodModal,MACRO_TOAST_DURATION);
-}
-
-function closeAddedFoodModal(){
-  clearTimeout(macroToastTimeout);
-  clearInterval(macroToastInterval);
-
-  const modal=document.getElementById('macroAddedModal');
-  const box=modal?.querySelector('.macro-modal');
-  if(!modal || !modal.classList.contains('show')) return;
-
-  if(box) box.classList.add('closing');
-
-  setTimeout(()=>{
-    modal.classList.remove('show');
-    modal.setAttribute('aria-hidden','true');
-    if(box) box.classList.remove('closing');
-  },190);
-}
-
-document.getElementById('macroModalClose')?.addEventListener('click',closeAddedFoodModal);
-
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape') closeAddedFoodModal();
-});
 
 const CUSTOM_FOODS_STORAGE = 'ms_movesmart_custom_foods_v1';
 function getCustomFoods(){
@@ -1811,72 +1592,7 @@ updatePortionPreview();
   loadSharedFoods().catch(err=>console.warn("Firestore no pudo precargarse:", err));
 </script>
 
-<div class="macro-modal-backdrop" id="macroAddedModal" aria-hidden="true">
-  <div class="macro-modal" role="dialog" aria-modal="true" aria-labelledby="macroModalTitle">
-    <div class="macro-modal-head">
-      <div class="macro-modal-title" id="macroModalTitle">
-        <span class="macro-modal-check">✓</span>
-        <span>Alimento agregado</span>
-      </div>
-      <button type="button" class="macro-modal-close" id="macroModalClose" aria-label="Cerrar">×</button>
-    </div>
 
-    <div class="macro-added-food">
-      <div>
-        <div class="macro-added-food-name" id="macroAddedName">—</div>
-        <div class="macro-added-food-meta" id="macroAddedMeta">—</div>
-      </div>
-      <div class="macro-added-food-kcal" id="macroAddedKcal">—</div>
-    </div>
-
-    <div class="macro-modal-subtitle">Te falta para llegar a tu objetivo del día</div>
-
-    <div class="macro-remaining-grid">
-      <div class="macro-remaining-card" id="macroRemainKcalCard">
-        <span class="icon">🔥</span>
-        <span class="label">Calorías</span>
-        <strong class="value" id="macroRemainKcal">—</strong>
-        <span class="unit" id="macroRemainKcalUnit">kcal</span>
-      </div>
-      <div class="macro-remaining-card" id="macroRemainPCard">
-        <span class="icon">💪</span>
-        <span class="label">Proteína</span>
-        <strong class="value" id="macroRemainP">—</strong>
-        <span class="unit" id="macroRemainPUnit">g</span>
-      </div>
-      <div class="macro-remaining-card" id="macroRemainCCard">
-        <span class="icon">🌾</span>
-        <span class="label">Carbohidratos</span>
-        <strong class="value" id="macroRemainC">—</strong>
-        <span class="unit" id="macroRemainCUnit">g</span>
-      </div>
-      <div class="macro-remaining-card" id="macroRemainFCard">
-        <span class="icon">💧</span>
-        <span class="label">Grasas</span>
-        <strong class="value" id="macroRemainF">—</strong>
-        <span class="unit" id="macroRemainFUnit">g</span>
-      </div>
-    </div>
-
-    <div class="macro-modal-progress">
-      <div class="macro-modal-progress-top">
-        <span>Progreso energético del día</span>
-        <strong id="macroModalPct">0%</strong>
-      </div>
-      <div class="macro-modal-track"><span id="macroModalBar"></span></div>
-      <div class="macro-modal-note" id="macroModalNote"></div>
-    </div>
-
-    <button type="button" class="macro-modal-action" id="macroModalSummary">
-      Ver resumen del día
-    </button>
-
-    <div class="macro-toast-timer">
-      <span id="macroToastTimerText">Se cierra en 5 s</span>
-      <div class="macro-toast-timer-track"><span id="macroToastTimerBar"></span></div>
-    </div>
-
-  </div>
 </div>
 
 </body></html>
