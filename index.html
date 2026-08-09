@@ -495,6 +495,261 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 }
 </style>
 
+
+<style>
+/* ===== Notificación compacta de macros ===== */
+.macro-modal-backdrop{
+  position:fixed !important;
+  inset:0 !important;
+  z-index:9999 !important;
+  display:none !important;
+  align-items:flex-end !important;
+  justify-content:flex-end !important;
+  padding:18px !important;
+  background:transparent !important;
+  backdrop-filter:none !important;
+  pointer-events:none !important;
+}
+.macro-modal-backdrop.show{
+  display:flex !important;
+}
+
+.macro-modal{
+  width:min(430px,calc(100vw - 28px)) !important;
+  max-height:none !important;
+  overflow:visible !important;
+  padding:17px !important;
+  border-radius:18px !important;
+  background:linear-gradient(180deg,#211a29 0%,#17121e 100%) !important;
+  border:1px solid rgba(255,255,255,.11) !important;
+  box-shadow:0 18px 55px rgba(0,0,0,.50) !important;
+  pointer-events:auto !important;
+  animation:macroToastIn .22s ease-out;
+}
+
+@keyframes macroToastIn{
+  from{opacity:0;transform:translateY(12px) scale(.98)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes macroToastOut{
+  from{opacity:1;transform:translateY(0)}
+  to{opacity:0;transform:translateY(10px)}
+}
+.macro-modal.closing{
+  animation:macroToastOut .2s ease-in forwards;
+}
+
+.macro-modal-head{
+  gap:10px !important;
+}
+.macro-modal-title{
+  gap:9px !important;
+  font-size:1rem !important;
+}
+.macro-modal-check{
+  width:30px !important;
+  height:30px !important;
+  flex-basis:30px !important;
+  font-size:1rem !important;
+}
+.macro-modal-close{
+  width:30px !important;
+  height:30px !important;
+  font-size:1.25rem !important;
+}
+
+.macro-added-food{
+  margin-top:12px !important;
+  padding:10px 0 12px !important;
+}
+.macro-added-food-name{
+  font-size:.9rem !important;
+}
+.macro-added-food-meta{
+  margin-top:2px !important;
+  font-size:.69rem !important;
+}
+.macro-added-food-kcal{
+  font-size:1rem !important;
+}
+
+.macro-modal-subtitle{
+  margin:12px 0 8px !important;
+  font-size:.78rem !important;
+}
+
+.macro-remaining-grid{
+  grid-template-columns:repeat(4,1fr) !important;
+  gap:6px !important;
+}
+.macro-remaining-card{
+  padding:9px 5px !important;
+  border-radius:11px !important;
+}
+.macro-remaining-card .icon{
+  margin-bottom:3px !important;
+  font-size:.9rem !important;
+}
+.macro-remaining-card .label{
+  font-size:.58rem !important;
+}
+.macro-remaining-card .value{
+  margin-top:5px !important;
+  font-size:.95rem !important;
+}
+.macro-remaining-card .unit{
+  margin-top:2px !important;
+  font-size:.55rem !important;
+}
+
+.macro-modal-progress{
+  margin-top:12px !important;
+  padding-top:10px !important;
+}
+.macro-modal-progress-top{
+  font-size:.67rem !important;
+}
+.macro-modal-track{
+  height:6px !important;
+  margin-top:6px !important;
+}
+.macro-modal-note{
+  display:none !important;
+}
+.macro-modal-action{
+  display:none !important;
+}
+
+/* cuenta regresiva visual */
+.macro-toast-timer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-top:9px;
+  color:#a99db1;
+  font-size:.62rem;
+}
+.macro-toast-timer-track{
+  flex:1;
+  height:3px;
+  overflow:hidden;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+}
+.macro-toast-timer-track span{
+  display:block;
+  height:100%;
+  width:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transform-origin:left center;
+}
+
+@media(max-width:600px){
+  .macro-modal-backdrop{
+    padding:10px !important;
+  }
+  .macro-modal{
+    width:100% !important;
+    padding:14px !important;
+  }
+  .macro-remaining-grid{
+    grid-template-columns:repeat(2,1fr) !important;
+  }
+}
+</style>
+
+
+<style>
+/* ===== Toast compacto 5 segundos ===== */
+.macro-modal-backdrop{
+  align-items:flex-start !important;
+  justify-content:flex-end !important;
+  padding:18px !important;
+  pointer-events:none !important;
+}
+.macro-modal{
+  width:min(380px,calc(100vw - 28px)) !important;
+  padding:14px !important;
+  border-radius:16px !important;
+}
+.macro-modal-title{
+  font-size:.92rem !important;
+}
+.macro-modal-check{
+  width:28px !important;
+  height:28px !important;
+  flex-basis:28px !important;
+  font-size:.9rem !important;
+}
+.macro-added-food{
+  margin-top:8px !important;
+  padding:8px 0 9px !important;
+}
+.macro-added-food-name{
+  font-size:.82rem !important;
+}
+.macro-added-food-meta{
+  font-size:.62rem !important;
+}
+.macro-added-food-kcal{
+  font-size:.92rem !important;
+}
+.macro-modal-subtitle{
+  margin:9px 0 7px !important;
+  font-size:.7rem !important;
+}
+.macro-remaining-grid{
+  gap:5px !important;
+}
+.macro-remaining-card{
+  padding:7px 4px !important;
+  border-radius:10px !important;
+}
+.macro-remaining-card .icon{
+  font-size:.78rem !important;
+  margin-bottom:2px !important;
+}
+.macro-remaining-card .label{
+  font-size:.52rem !important;
+}
+.macro-remaining-card .value{
+  font-size:.85rem !important;
+  margin-top:3px !important;
+}
+.macro-remaining-card .unit{
+  font-size:.5rem !important;
+}
+.macro-modal-progress{
+  margin-top:9px !important;
+  padding-top:8px !important;
+}
+.macro-modal-progress-top{
+  font-size:.6rem !important;
+}
+.macro-modal-track{
+  height:4px !important;
+  margin-top:5px !important;
+}
+.macro-toast-timer{
+  margin-top:7px !important;
+  font-size:.56rem !important;
+}
+.macro-toast-timer-track{
+  height:2px !important;
+}
+
+@media(max-width:600px){
+  .macro-modal-backdrop{
+    padding:8px !important;
+  }
+  .macro-modal{
+    width:min(360px,100%) !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="site-glow"></div>
@@ -1047,6 +1302,44 @@ function formatRemaining(value, unit, valueId, unitId, cardId){
   }
 }
 
+
+let macroToastTimeout=null;
+let macroToastInterval=null;
+let macroToastStartedAt=0;
+const MACRO_TOAST_DURATION=5000;
+
+function formatRemaining(value, unit, valueId, unitId, cardId){
+  const valueEl=document.getElementById(valueId);
+  const unitEl=document.getElementById(unitId);
+  const card=document.getElementById(cardId);
+  if(!valueEl || !unitEl || !card) return;
+
+  card.classList.remove('done');
+
+  if(value > 0.05){
+    valueEl.textContent=unit==='kcal' ? Math.round(value) : value.toFixed(1);
+    unitEl.textContent=unit;
+  }else{
+    valueEl.textContent='✓';
+    unitEl.textContent='Cumplido';
+    card.classList.add('done');
+  }
+}
+
+function updateMacroToastTimer(){
+  const elapsed=Date.now()-macroToastStartedAt;
+  const remaining=Math.max(0,MACRO_TOAST_DURATION-elapsed);
+  const seconds=Math.max(0,Math.ceil(remaining/1000));
+  const text=document.getElementById('macroToastTimerText');
+  const bar=document.getElementById('macroToastTimerBar');
+
+  if(text) text.textContent=`Se cierra en ${seconds} s`;
+  if(bar){
+    const pct=(remaining/MACRO_TOAST_DURATION)*100;
+    bar.style.width=`${pct}%`;
+  }
+}
+
 function showAddedFoodModal(item){
   if(!item || !results.length) return;
 
@@ -1069,45 +1362,45 @@ function showAddedFoodModal(item){
   formatRemaining(remainF,'g','macroRemainF','macroRemainFUnit','macroRemainFCard');
 
   const energyPct=Math.max(0,Math.min(100,target.kcal ? totals.kcal/target.kcal*100 : 0));
-  document.getElementById('macroModalPct').textContent=`${Math.round(energyPct)}% completado`;
+  document.getElementById('macroModalPct').textContent=`${Math.round(energyPct)}%`;
   document.getElementById('macroModalBar').style.width=`${energyPct}%`;
 
-  const completed=[
-    totals.p>=target.p ? 'proteína' : '',
-    totals.c>=target.c ? 'carbohidratos' : '',
-    totals.f>=target.f ? 'grasas' : ''
-  ].filter(Boolean);
-
-  document.getElementById('macroModalNote').textContent=
-    completed.length
-      ? `Ya alcanzaste tu objetivo de ${completed.join(', ')}. Los valores restantes se actualizan con cada alimento que registres.`
-      : 'Los valores restantes se actualizan automáticamente con cada alimento que registres.';
-
   const modal=document.getElementById('macroAddedModal');
+  const box=modal?.querySelector('.macro-modal');
+  if(!modal || !box) return;
+
+  // Si ya estaba visible porque se agregó otro alimento, actualiza y reinicia los 10 s.
+  box.classList.remove('closing');
   modal.classList.add('show');
   modal.setAttribute('aria-hidden','false');
-  document.body.style.overflow='hidden';
+
+  clearTimeout(macroToastTimeout);
+  clearInterval(macroToastInterval);
+
+  macroToastStartedAt=Date.now();
+  updateMacroToastTimer();
+  macroToastInterval=setInterval(updateMacroToastTimer,200);
+  macroToastTimeout=setTimeout(closeAddedFoodModal,MACRO_TOAST_DURATION);
 }
 
 function closeAddedFoodModal(){
+  clearTimeout(macroToastTimeout);
+  clearInterval(macroToastInterval);
+
   const modal=document.getElementById('macroAddedModal');
-  if(!modal) return;
-  modal.classList.remove('show');
-  modal.setAttribute('aria-hidden','true');
-  document.body.style.overflow='';
+  const box=modal?.querySelector('.macro-modal');
+  if(!modal || !modal.classList.contains('show')) return;
+
+  if(box) box.classList.add('closing');
+
+  setTimeout(()=>{
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden','true');
+    if(box) box.classList.remove('closing');
+  },190);
 }
 
 document.getElementById('macroModalClose')?.addEventListener('click',closeAddedFoodModal);
-
-document.getElementById('macroAddedModal')?.addEventListener('click',e=>{
-  if(e.target.id==='macroAddedModal') closeAddedFoodModal();
-});
-
-document.getElementById('macroModalSummary')?.addEventListener('click',()=>{
-  closeAddedFoodModal();
-  const target=document.querySelector('.progress-panel') || document.getElementById('foodSection');
-  target?.scrollIntoView({behavior:'smooth',block:'center'});
-});
 
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape') closeAddedFoodModal();
@@ -1577,6 +1870,12 @@ updatePortionPreview();
     <button type="button" class="macro-modal-action" id="macroModalSummary">
       Ver resumen del día
     </button>
+
+    <div class="macro-toast-timer">
+      <span id="macroToastTimerText">Se cierra en 5 s</span>
+      <div class="macro-toast-timer-track"><span id="macroToastTimerBar"></span></div>
+    </div>
+
   </div>
 </div>
 
