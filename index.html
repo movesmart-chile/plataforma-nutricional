@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -318,6 +321,60 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 }
 </style>
 
+
+<style>
+/* Registro simplificado */
+#foodBarcode{display:none!important}
+.food-grid .field:has(#foodBarcode){display:none!important}
+
+#technicalFields{display:none!important}
+
+.selected-food-compact{
+  display:none;
+  margin-top:14px;
+  padding:16px;
+  border-radius:16px;
+  border:1px solid rgba(243,107,42,.22);
+  background:linear-gradient(180deg,rgba(243,107,42,.10),rgba(243,107,42,.045));
+}
+.selected-food-compact.show{display:block}
+.selected-food-compact .compact-name{
+  color:#fff;
+  font-size:1rem;
+  font-weight:900;
+}
+.selected-food-compact .compact-source{
+  margin-top:5px;
+  color:var(--accent2);
+  font-size:.72rem;
+  font-weight:800;
+}
+.selected-food-compact .compact-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:12px;
+}
+.selected-food-compact .compact-grid div{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:12px;
+  padding:10px;
+}
+.selected-food-compact .compact-grid b{
+  display:block;
+  color:#fff;
+  font-size:1rem;
+}
+.selected-food-compact .compact-grid span{
+  color:var(--faint);
+  font-size:.68rem;
+}
+@media(max-width:600px){
+  .selected-food-compact .compact-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+
 </head>
 <body>
 <div class="site-glow"></div>
@@ -430,11 +487,21 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
       <div class="field"><label>Cantidad consumida (g)</label><input id="foodQty" type="number" min="0" step="1" placeholder="200" oninput="previewFood()"></div>
       <div class="field"><label>ID / referencia</label><input id="foodBarcode" placeholder="Se completa al elegir" readonly></div>
     </div>
-    <div class="food-macros">
+    <div class="food-macros" id="technicalFields">
       <div class="field"><label>kcal / 100 g</label><input id="foodKcal" type="number" min="0" step="0.1" placeholder="130" oninput="previewFood()"></div>
       <div class="field"><label>Proteína / 100 g</label><input id="foodP" type="number" min="0" step="0.1" placeholder="2.7" oninput="previewFood()"></div>
       <div class="field"><label>CH / 100 g</label><input id="foodC" type="number" min="0" step="0.1" placeholder="28" oninput="previewFood()"></div>
       <div class="field"><label>Grasas / 100 g</label><input id="foodF" type="number" min="0" step="0.1" placeholder="0.3" oninput="previewFood()"></div>
+    </div>
+    <div class="selected-food-compact" id="selectedFoodCompact">
+      <div class="compact-name" id="compactName">Producto seleccionado</div>
+      <div class="compact-source" id="compactSource"></div>
+      <div class="compact-grid">
+        <div><b id="compactKcal">—</b><span>kcal</span></div>
+        <div><b id="compactP">—</b><span>proteína</span></div>
+        <div><b id="compactC">—</b><span>carbohidratos</span></div>
+        <div><b id="compactF">—</b><span>grasas</span></div>
+      </div>
     </div>
     <div class="food-preview" id="foodPreview"><strong>Busca y selecciona un producto</strong> para cargar sus macros automáticamente, o escribe manualmente los valores nutricionales por 100 g.</div>
     <div class="portion-preview" id="portionPreview">
@@ -525,6 +592,7 @@ function selectLocalProduct(i){
 
   previewFood();
   if(typeof updatePortionPreview==='function') updatePortionPreview();
+  updateSelectedFoodCompact();
   document.getElementById('foodQty').focus();
 }
 
@@ -553,6 +621,7 @@ async function searchFood(){
 
   selectedFatSecretProduct=null;
   selectedLocalProduct=null;
+  const compact=document.getElementById('selectedFoodCompact'); if(compact) compact.classList.remove('show');
 
   btn.disabled=true;
   btn.textContent='Buscando…';
@@ -731,7 +800,8 @@ async function selectFatSecretProduct(i){
 
     previewFood();
     if(typeof updatePortionPreview==='function') updatePortionPreview();
-    document.getElementById('foodQty').focus();
+    updateSelectedFoodCompact();
+  document.getElementById('foodQty').focus();
 
   }catch(err){
     console.error(err);
@@ -770,7 +840,45 @@ function saveFoodLog(){localStorage.setItem(FOOD_STORAGE,JSON.stringify(foodLog)
 function currentFoods(){return Array.isArray(foodLog[selected])?foodLog[selected]:[]}
 function n(id){return parseFloat(document.getElementById(id).value)||0}
 function portionData(){const q=n('foodQty'),factor=q/100;const p100=n('foodP'),c100=n('foodC'),f100=n('foodF');let kcal100=n('foodKcal');if(!kcal100&&(p100||c100||f100))kcal100=p100*4+c100*4+f100*9;return{qty:q,kcal:kcal100*factor,p:p100*factor,c:c100*factor,f:f100*factor,kcal100,p100,c100,f100}}
-function previewFood(){const x=portionData(),el=document.getElementById('foodPreview');if(!x.qty){el.innerHTML='<strong>Importante:</strong> escribe la cantidad consumida y los valores reales por 100 g. Los números grises son solo ejemplos.';return}if(!(x.kcal100||x.p100||x.c100||x.f100)){el.innerHTML='<strong>Faltan los datos nutricionales.</strong> Los números grises son ejemplos, no valores ingresados. Escribe kcal y/o macros por 100 g.';return}el.innerHTML=`Esta porción aporta aproximadamente <strong>${Math.round(x.kcal)} kcal</strong> · <strong>${x.p.toFixed(1)} g P</strong> · <strong>${x.c.toFixed(1)} g CH</strong> · <strong>${x.f.toFixed(1)} g G</strong>.`}
+
+function updateSelectedFoodCompact(){
+  const box=document.getElementById('selectedFoodCompact');
+  if(!box) return;
+
+  const name=(document.getElementById('foodName')?.value||'').trim();
+  const qty=parseFloat(document.getElementById('foodQty')?.value||0)||0;
+  const kcal100=parseFloat(document.getElementById('foodKcal')?.value||0)||0;
+  const p100=parseFloat(document.getElementById('foodP')?.value||0)||0;
+  const c100=parseFloat(document.getElementById('foodC')?.value||0)||0;
+  const f100=parseFloat(document.getElementById('foodF')?.value||0)||0;
+
+  const isSelected=!!(selectedFatSecretProduct || selectedLocalProduct);
+  if(!isSelected || !name){
+    box.classList.remove('show');
+    return;
+  }
+
+  box.classList.add('show');
+  document.getElementById('compactName').textContent=name;
+
+  let source='Producto seleccionado';
+  if(selectedLocalProduct){
+    source=selectedLocalProduct.shared?'Base MoveSmart compartida':
+      (selectedLocalProduct.custom?'Mi Base MoveSmart':'Base MoveSmart');
+  }else if(selectedFatSecretProduct){
+    source='FatSecret';
+  }
+  document.getElementById('compactSource').textContent=
+    qty>0 ? `${source} · ${qty} g` : source;
+
+  const factor=qty>0?qty/100:0;
+  document.getElementById('compactKcal').textContent=factor?Math.round(kcal100*factor):'—';
+  document.getElementById('compactP').textContent=factor?(p100*factor).toFixed(1)+' g':'—';
+  document.getElementById('compactC').textContent=factor?(c100*factor).toFixed(1)+' g':'—';
+  document.getElementById('compactF').textContent=factor?(f100*factor).toFixed(1)+' g':'—';
+}
+
+function previewFood(){updateSelectedFoodCompact();const x=portionData(),el=document.getElementById('foodPreview');if(!x.qty){el.innerHTML='<strong>Importante:</strong> escribe la cantidad consumida y los valores reales por 100 g. Los números grises son solo ejemplos.';return}if(!(x.kcal100||x.p100||x.c100||x.f100)){el.innerHTML='<strong>Faltan los datos nutricionales.</strong> Los números grises son ejemplos, no valores ingresados. Escribe kcal y/o macros por 100 g.';return}el.innerHTML=`Esta porción aporta aproximadamente <strong>${Math.round(x.kcal)} kcal</strong> · <strong>${x.p.toFixed(1)} g P</strong> · <strong>${x.c.toFixed(1)} g CH</strong> · <strong>${x.f.toFixed(1)} g G</strong>.`}
 function addFood(){
   const name=document.getElementById('foodName').value.trim(),x=portionData();
   if(!name){alert('Escribe el nombre del alimento.');return}
@@ -1072,6 +1180,7 @@ async function useCustomFood(){
   toggleCustomFood(false);
   previewFood();
   updatePortionPreview();
+  updateSelectedFoodCompact();
   document.getElementById('foodQty').focus();
 }
 
