@@ -29,12 +29,12 @@ h1{margin:0;font-size:clamp(3rem,6vw,5rem);line-height:.98;letter-spacing:-.05em
 .week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}.day{padding:12px}.dayname{font-size:.72rem;font-weight:900;color:var(--accent2);margin-bottom:9px;text-transform:uppercase;letter-spacing:.06em}.day button{width:100%;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025);color:#d7cddd;border-radius:11px;padding:9px 8px;text-align:left;font-size:.72rem;font-weight:700;margin:0 0 7px;cursor:pointer;transition:.18s ease}.day button:hover{transform:translateY(-1px);border-color:rgba(243,107,42,.25);background:rgba(243,107,42,.07)}.day button:last-child{margin:0}.day button.active{background:linear-gradient(180deg,var(--accent2),var(--accent));color:#fff;border-color:transparent;box-shadow:0 10px 22px rgba(243,107,42,.18)}.day button.active:before{content:'✓ ';font-weight:900}
 .btn{width:100%;margin-top:18px;min-height:50px;border:1px solid rgba(255,255,255,.08);background:linear-gradient(180deg,var(--accent2),var(--accent));color:#fff;border-radius:14px;padding:0 20px;font-size:.95rem;font-weight:800;cursor:pointer;box-shadow:0 10px 26px rgba(243,107,42,.22);transition:.22s ease}.btn:hover{transform:translateY(-2px);box-shadow:0 16px 34px rgba(243,107,42,.28)}
 #results{display:none}.summary{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}.summaryMain,.visual,.detail{padding:20px}.big{font-size:3rem;line-height:1;font-weight:900;letter-spacing:-.05em;margin-top:8px;color:#fff}.macrogrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}.macro{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:13px}.macro .val,.stat .val{font-size:1.08rem;font-weight:900;margin-top:4px;color:#fff}.visual{display:flex;align-items:center;justify-content:center}.ring{width:195px;height:195px;border-radius:50%;position:relative;box-shadow:0 18px 40px rgba(0,0,0,.22)}.hole{position:absolute;inset:24px;background:#160f1d;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center}.hole b{font-size:1.8rem;font-weight:900}.hole span{font-size:.62rem;color:var(--faint);text-transform:uppercase;letter-spacing:.07em}
-.tabs{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin:18px 0}.tabs button{border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);color:#d6cbdc;padding:10px 5px;border-radius:999px;font-size:.7rem;font-weight:900;cursor:pointer;position:relative}.tabs button.active{background:rgba(243,107,42,.17);color:var(--accent2);border-color:rgba(243,107,42,.35)}.tabs button.today:not(.active){border-color:rgba(243,107,42,.45)}.tabs button .today-dot{position:absolute;top:5px;right:7px;width:6px;height:6px;border-radius:50%;background:var(--accent2);box-shadow:0 0 0 2px rgba(243,107,42,.18)}
+.tabs{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin:18px 0}.tabs button{border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);color:#d6cbdc;padding:10px 5px;border-radius:999px;font-size:.7rem;font-weight:900;cursor:pointer}.tabs button.active{background:rgba(243,107,42,.17);color:var(--accent2);border-color:rgba(243,107,42,.35)}
 .detailTop{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.detail h3{font-size:1.8rem;letter-spacing:-.04em;margin:0}.session{color:var(--accent2);font-size:.9rem;font-weight:800;margin-top:4px}.pill{border:1px solid rgba(243,107,42,.22);background:rgba(243,107,42,.10);color:var(--accent2);border-radius:999px;padding:7px 10px;font-size:.72rem;font-weight:800;height:max-content}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}.stat{padding:13px}.reason{border-top:1px solid rgba(255,255,255,.07);margin-top:16px;padding-top:16px;color:var(--dim);font-size:.88rem;line-height:1.6}.reparto{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.meal{padding:14px}.meal b{display:block;font-size:.8rem}.meal span{display:block;color:var(--dim);font-size:.8rem;line-height:1.5;margin-top:6px}
 table{width:100%;border-collapse:collapse;font-size:.82rem}th,td{padding:11px;border-bottom:1px solid rgba(255,255,255,.07);text-align:left}th{font-size:.68rem;color:var(--faint);text-transform:uppercase;letter-spacing:.06em}.mono{font-variant-numeric:tabular-nums;font-weight:800}.note{font-size:.8rem;line-height:1.55;color:var(--faint);margin:14px 0 0}.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.ghost{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.045);color:#fff;border-radius:14px;padding:12px;font-weight:800;cursor:pointer;transition:.18s}.ghost:hover{transform:translateY(-1px);border-color:rgba(243,107,42,.25)}
 details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:14px 16px;margin-top:10px}summary{cursor:pointer;font-weight:800;font-size:.84rem}details p{color:var(--dim);font-size:.82rem;line-height:1.6;margin:10px 0 0}footer{text-align:center;color:#a99db1;font-size:.76rem;margin-top:30px;padding-bottom:8px}
 
-.food-layout{display:grid;grid-template-columns:1fr .95fr;gap:16px}.food-form,.progress-panel{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:18px}.food-grid{display:grid;grid-template-columns:2fr 1fr;gap:10px}.food-macros{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}.field label{display:block;color:#d9cfe0;font-size:.72rem;font-weight:800;margin:0 0 6px 2px}.field input{width:100%;color:var(--text);background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:11px 12px;outline:none}.field input:focus{border-color:rgba(243,107,42,.65);box-shadow:0 0 0 4px rgba(243,107,42,.09)}.food-preview{margin-top:12px;padding:12px 14px;border-radius:14px;background:rgba(243,107,42,.08);border:1px solid rgba(243,107,42,.18);color:var(--dim);font-size:.82rem;line-height:1.5}.food-preview strong{color:#fff}.add-food{width:100%;margin-top:12px;min-height:46px;border:0;border-radius:12px;background:linear-gradient(180deg,var(--accent2),var(--accent));color:#fff;font-weight:900;cursor:pointer}.progress-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-end}.progress-head h3{margin:0;font-size:1.25rem}.progress-kcal{font-size:1.35rem;font-weight:900;color:#fff}.progress-list{display:grid;gap:12px;margin-top:16px}.progress-row{display:grid;gap:6px}.progress-row-top{display:flex;justify-content:space-between;gap:12px;font-size:.8rem}.progress-row-top span:first-child{font-weight:800}.progress-row-top span:last-child{color:var(--dim);font-variant-numeric:tabular-nums}.bar{height:9px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden}.bar>span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;transition:width .25s ease,background .25s ease}.bar.protein>span{background:linear-gradient(90deg,#f2a35f,#ffbd7d)}.bar.fat>span{background:linear-gradient(90deg,#a975bc,#d1a4df)}.bar>span.over{background:linear-gradient(90deg,#e0a72e,#f4c860)!important}.remaining{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07);color:var(--dim);font-size:.82rem;line-height:1.6}.remaining strong{color:#fff}.food-list{display:grid;gap:9px;margin-top:16px}.food-item{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:12px 13px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);border-radius:13px}.food-item b{display:block;font-size:.86rem}.food-item small{display:block;color:var(--dim);margin-top:4px;line-height:1.45}.food-item-actions{display:flex;gap:6px}.edit-food,.delete-food{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);border-radius:10px;width:36px;height:36px;font-size:.95rem;cursor:pointer}.delete-food{color:#ff9b9b}.edit-food{color:#ffb36b}.empty-food{margin-top:14px;padding:18px;border:1px dashed rgba(255,255,255,.12);border-radius:14px;text-align:center;color:var(--faint);font-size:.8rem}.day-food-label{display:inline-flex;margin-bottom:14px;padding:7px 10px;border-radius:999px;background:rgba(243,107,42,.10);border:1px solid rgba(243,107,42,.22);color:var(--accent2);font-size:.72rem;font-weight:900}
+.food-layout{display:grid;grid-template-columns:1fr .95fr;gap:16px}.food-form,.progress-panel{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:18px}.food-grid{display:grid;grid-template-columns:2fr 1fr;gap:10px}.food-macros{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}.field label{display:block;color:#d9cfe0;font-size:.72rem;font-weight:800;margin:0 0 6px 2px}.field input{width:100%;color:var(--text);background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:11px 12px;outline:none}.field input:focus{border-color:rgba(243,107,42,.65);box-shadow:0 0 0 4px rgba(243,107,42,.09)}.food-preview{margin-top:12px;padding:12px 14px;border-radius:14px;background:rgba(243,107,42,.08);border:1px solid rgba(243,107,42,.18);color:var(--dim);font-size:.82rem;line-height:1.5}.food-preview strong{color:#fff}.add-food{width:100%;margin-top:12px;min-height:46px;border:0;border-radius:12px;background:linear-gradient(180deg,var(--accent2),var(--accent));color:#fff;font-weight:900;cursor:pointer}.progress-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-end}.progress-head h3{margin:0;font-size:1.25rem}.progress-kcal{font-size:1.35rem;font-weight:900;color:#fff}.progress-list{display:grid;gap:12px;margin-top:16px}.progress-row{display:grid;gap:6px}.progress-row-top{display:flex;justify-content:space-between;gap:12px;font-size:.8rem}.progress-row-top span:first-child{font-weight:800}.progress-row-top span:last-child{color:var(--dim);font-variant-numeric:tabular-nums}.bar{height:9px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden}.bar>span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;transition:width .25s ease}.bar.protein>span{background:linear-gradient(90deg,#f2a35f,#ffbd7d)}.bar.fat>span{background:linear-gradient(90deg,#a975bc,#d1a4df)}.remaining{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.07);color:var(--dim);font-size:.82rem;line-height:1.6}.remaining strong{color:#fff}.food-list{display:grid;gap:9px;margin-top:16px}.food-item{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:12px 13px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);border-radius:13px}.food-item b{display:block;font-size:.86rem}.food-item small{display:block;color:var(--dim);margin-top:4px;line-height:1.45}.delete-food{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);color:#ff9b9b;border-radius:10px;width:36px;height:36px;font-size:1rem;cursor:pointer}.empty-food{margin-top:14px;padding:18px;border:1px dashed rgba(255,255,255,.12);border-radius:14px;text-align:center;color:var(--faint);font-size:.8rem}.day-food-label{display:inline-flex;margin-bottom:14px;padding:7px 10px;border-radius:999px;background:rgba(243,107,42,.10);border:1px solid rgba(243,107,42,.22);color:var(--accent2);font-size:.72rem;font-weight:900}
 @media(max-width:900px){.week,.tabs{grid-template-columns:repeat(4,1fr)}.summary,.food-layout{grid-template-columns:1fr}.principles{grid-template-columns:1fr}.profile{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){:root{--container:min(100% - 28px,100%)}.nav{min-height:68px}.brand{font-size:1.35rem}.wrap{padding-bottom:46px}.hero{padding:50px 0 34px}.card{padding:18px}.week,.tabs{grid-template-columns:repeat(2,1fr)}.profile{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.macrogrid,.reparto,.food-grid,.food-macros{grid-template-columns:1fr}.actions{grid-template-columns:1fr}th:nth-child(2),td:nth-child(2){display:none}}
 
@@ -47,7 +47,7 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 .off-result{width:100%;display:grid;grid-template-columns:48px 1fr auto;gap:11px;align-items:center;text-align:left;padding:10px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);border-radius:13px;color:var(--text);cursor:pointer}
 .off-result:hover{border-color:rgba(243,107,42,.35);background:rgba(243,107,42,.07)}
 .off-result img{width:48px;height:48px;object-fit:contain;border-radius:9px;background:#fff}
-.off-result .noimg{width:48px;height:48px;display:grid;place-items:center;border-radius:9px;background:rgba(255,255,255,.05);color:var(--faint);font-size:1.15rem}
+.off-result .noimg{width:48px;height:48px;display:grid;place-items:center;border-radius:9px;background:rgba(255,255,255,.05);color:var(--faint);font-size:.65rem}
 .off-result b{display:block;font-size:.8rem;line-height:1.3}
 .off-result small{display:block;color:var(--dim);font-size:.68rem;line-height:1.35;margin-top:3px}
 .off-result .choose{color:var(--accent2);font-size:.68rem;font-weight:900}
@@ -230,34 +230,176 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 }
 </style>
 
+
 <style>
-/* --- Mejoras de experiencia agregadas --- */
-.week-toggle-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 14px}
-.week-toggle-btn{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.045);color:#fff;border-radius:12px;padding:10px 14px;font-size:.8rem;font-weight:800;cursor:pointer;transition:.18s}
-.week-toggle-btn:hover{border-color:rgba(243,107,42,.30);background:rgba(243,107,42,.07)}
-.today-summary{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.today-summary .badge-today{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;background:rgba(243,107,42,.12);border:1px solid rgba(243,107,42,.28);color:var(--accent2);font-size:.76rem;font-weight:900}
-.today-summary .badge-today .dot{width:7px;height:7px;border-radius:50%;background:var(--accent2)}
-#week{display:none}
-#week.open{display:grid}
+.custom-food-toggle{
+  display:inline-flex;
+  width:max-content;
+  margin-top:12px;
+  min-height:44px;
+  padding:0 18px;
+  border:0;
+  border-radius:12px;
+  background:linear-gradient(180deg,var(--accent2),var(--accent));
+  color:#fff;
+  font-weight:900;
+  font-size:.88rem;
+  cursor:pointer;
+  white-space:nowrap;
+  box-shadow:0 8px 20px rgba(243,107,42,.18);
+  transition:.18s ease;
+  align-items:center;
+  justify-content:center;
+}
+.custom-food-toggle.show{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.custom-food-toggle:hover{
+  transform:translateY(-1px);
+  box-shadow:0 12px 26px rgba(243,107,42,.24);
+}
+.custom-food-panel{
+  display:none;
+  margin-top:14px;
+  padding:18px;
+  border-radius:16px;
+  border:1px solid rgba(243,107,42,.22);
+  background:linear-gradient(180deg,rgba(243,107,42,.08),rgba(255,255,255,.025));
+}
+.custom-food-panel.show{display:block}
+.custom-food-panel h4{margin:0 0 6px;font-size:1rem}
+.custom-food-panel .custom-help{margin:0 0 14px;color:var(--dim);font-size:.78rem;line-height:1.5}
+.custom-food-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:10px}
+.custom-food-macros{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
+.custom-check{display:flex;gap:9px;align-items:flex-start;margin-top:12px;color:var(--dim);font-size:.76rem;line-height:1.45}
+.custom-check input{margin-top:2px;accent-color:var(--accent)}
+.custom-actions{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:13px}
+.custom-save{min-height:44px;border:0;border-radius:12px;background:linear-gradient(180deg,var(--accent2),var(--accent));color:white;font-weight:900;cursor:pointer}
+.custom-cancel{min-height:44px;padding:0 18px;border-radius:12px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);color:#fff;font-weight:800;cursor:pointer}
+.custom-preview{margin-top:12px;color:var(--dim);font-size:.76rem;line-height:1.5}
+.custom-preview strong{color:#fff}
+@media(max-width:700px){
+  .custom-food-grid,.custom-food-macros,.custom-actions{grid-template-columns:1fr}
+  .custom-food-toggle{width:100%}
+}
+</style>
 
-.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:linear-gradient(180deg,#241a2c,#1a1220);border:1px solid rgba(243,107,42,.35);color:#fff;padding:13px 20px;border-radius:14px;font-size:.85rem;font-weight:800;box-shadow:0 18px 40px rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease;z-index:200;display:flex;align-items:center;gap:9px}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.toast .tick{width:20px;height:20px;border-radius:50%;background:linear-gradient(180deg,var(--accent2),var(--accent));display:flex;align-items:center;justify-content:center;font-size:.7rem;flex:none}
 
-.weekly-compliance{margin-top:18px}
-.compliance-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:12px}
-.compliance-day{border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);border-radius:13px;padding:10px 8px;text-align:center}
-.compliance-day .cd-name{font-size:.62rem;color:var(--faint);text-transform:uppercase;font-weight:800;letter-spacing:.05em}
-.compliance-day .cd-pct{font-size:1.05rem;font-weight:900;margin-top:5px;color:#fff}
-.compliance-day.good{border-color:rgba(120,200,140,.35);background:rgba(120,200,140,.08)}
-.compliance-day.good .cd-pct{color:#8fe0a6}
-.compliance-day.mid{border-color:rgba(243,107,42,.30);background:rgba(243,107,42,.06)}
-.compliance-day.low{border-color:rgba(255,255,255,.07)}
-.compliance-day.today-col{box-shadow:0 0 0 2px rgba(243,107,42,.35) inset}
-.compliance-note{margin-top:10px;color:var(--faint);font-size:.74rem;line-height:1.5}
+<style>
+#customFoodToggle{
+  display:inline-flex !important;
+  align-items:center;
+  justify-content:center;
+  width:max-content;
+  min-height:52px;
+  margin-top:14px;
+  padding:0 24px;
+  border:none !important;
+  border-radius:14px;
+  background:linear-gradient(180deg,var(--accent2),var(--accent)) !important;
+  color:#fff !important;
+  font-size:.95rem;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 10px 24px rgba(243,107,42,.22);
+  transition:transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+#customFoodToggle:hover{
+  transform:translateY(-1px);
+  box-shadow:0 14px 30px rgba(243,107,42,.28);
+  filter:brightness(1.03);
+}
+#customFoodToggle:active{
+  transform:translateY(0);
+}
+@media(max-width:600px){
+  #customFoodToggle{width:100%;}
+}
+</style>
 
-.source-icon{font-size:1rem}
+
+<style>
+/* Registro simplificado */
+#foodBarcode{display:none!important}
+.food-grid .field:has(#foodBarcode){display:none!important}
+
+#technicalFields{display:none!important}
+
+.selected-food-compact{
+  display:none;
+  margin-top:14px;
+  padding:16px;
+  border-radius:16px;
+  border:1px solid rgba(243,107,42,.22);
+  background:linear-gradient(180deg,rgba(243,107,42,.10),rgba(243,107,42,.045));
+}
+.selected-food-compact.show{display:block}
+.selected-food-compact .compact-name{
+  color:#fff;
+  font-size:1rem;
+  font-weight:900;
+}
+.selected-food-compact .compact-source{
+  margin-top:5px;
+  color:var(--accent2);
+  font-size:.72rem;
+  font-weight:800;
+}
+.selected-food-compact .compact-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:12px;
+}
+.selected-food-compact .compact-grid div{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:12px;
+  padding:10px;
+}
+.selected-food-compact .compact-grid b{
+  display:block;
+  color:#fff;
+  font-size:1rem;
+}
+.selected-food-compact .compact-grid span{
+  color:var(--faint);
+  font-size:.68rem;
+}
+@media(max-width:600px){
+  .selected-food-compact .compact-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+
+
+<style>
+.ms-main-tabs{
+  position:sticky;top:74px;z-index:40;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  margin:-16px 0 22px;padding:8px;
+  border:1px solid rgba(255,255,255,.08);border-radius:16px;
+  background:rgba(15,10,20,.88);backdrop-filter:blur(12px);
+  box-shadow:0 12px 30px rgba(0,0,0,.18)
+}
+.ms-main-tab{
+  min-height:46px;border:0;border-radius:12px;background:transparent;
+  color:var(--dim);font-weight:900;font-size:.84rem;cursor:pointer;transition:.18s ease
+}
+.ms-main-tab:hover{background:rgba(255,255,255,.045);color:#fff}
+.ms-main-tab.active{
+  background:linear-gradient(180deg,var(--accent2),var(--accent));
+  color:#fff;box-shadow:0 8px 20px rgba(243,107,42,.20)
+}
+.ms-tab-hidden{display:none!important}
+.hero{padding-bottom:28px!important}
+.ms-tab-section .n{display:none}
+.ms-tab-section h2{margin-bottom:16px}
+@media(max-width:600px){
+  .ms-main-tabs{top:68px;margin-top:-8px}
+  .ms-main-tab{min-height:44px;font-size:.78rem}
+}
 </style>
 
 </head>
@@ -266,11 +408,18 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 <header class="topbar"><div class="nav"><a class="brand" href="#">Move<span>Smart</span></a><span class="nav-badge">Nutrición · Postcirugía</span></div></header>
 <div class="wrap">
 <header class="hero">
-<div class="eyebrow" id="eyebrowWeek">MoveSmart · Semana actual</div>
+<div class="eyebrow">MoveSmart · Semana 10–16 agosto</div>
 <h1>Nutrición para <em>recuperar sin perder forma</em>.</h1>
 <p class="sub">Esta versión está construida para tu semana postcirugía: menos impacto y volumen que una semana normal de trail, proteína estable para proteger masa muscular y carbohidratos que cambian según la carga de cada día.</p>
 <div class="chips"><span class="chip">Postcirugía</span><span class="chip">Mantener peso</span><span class="chip">Proteger masa muscular</span><span class="chip">Carga reducida temporal</span></div>
 </header>
+
+
+<nav class="ms-main-tabs" id="msMainTabs" aria-label="Secciones de nutrición">
+  <button type="button" class="ms-main-tab active" data-tab="hoy" onclick="showMainTab('hoy')">Hoy</button>
+  <button type="button" class="ms-main-tab" data-tab="semana" onclick="showMainTab('semana')">Semana</button>
+  <button type="button" class="ms-main-tab" data-tab="plan" onclick="showMainTab('plan')">Plan</button>
+</nav>
 
 <section class="card"><h2><span class="n">01</span> Tu contexto esta semana</h2>
 <div class="profile"><div class="box"><div class="k">Edad</div><div class="v">36 años</div></div><div class="box"><div class="k">Peso de referencia</div><div class="v">60 kg</div></div><div class="box"><div class="k">Altura</div><div class="v">158 cm</div></div></div>
@@ -286,11 +435,7 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 </section>
 
 <section class="card"><h2><span class="n">03</span> Ajusta tu semana real</h2>
-<p class="note" style="margin:0 0 14px;border:0;padding:0">Esta es la semana ya cargada con el plan que definimos. Por defecto se muestra resumida; si un día cambió, ábrela y actualízalo.</p>
-<div class="week-toggle-row">
-  <div class="today-summary" id="todaySummary"></div>
-  <button type="button" class="week-toggle-btn" id="weekToggleBtn" onclick="toggleWeekEditor()">✏️ Editar mi semana completa</button>
-</div>
+<p class="note" style="margin:0 0 14px;border:0;padding:0">La semana ya viene cargada con el plan que definimos. Si un día cambia, toca directamente el tipo de sesión y vuelve a calcular.</p>
 <div class="week" id="week"></div><button class="btn" onclick="calculate()">Actualizar mis macros de la semana</button>
 </section>
 
@@ -301,14 +446,7 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 <div class="detail"><div class="detailTop"><div><h3 id="dDay">—</h3><div class="session" id="dSession">—</div></div><span class="pill">Postcirugía · semana 1</span></div>
 <div class="stats"><div class="stat"><div class="small">Calorías</div><div class="val" id="dKcal">—</div></div><div class="stat"><div class="small">Proteína</div><div class="val" id="dP">—</div></div><div class="stat"><div class="small">Carbohidratos</div><div class="val" id="dC">—</div></div><div class="stat"><div class="small">Grasas</div><div class="val" id="dF">—</div></div></div>
 <div class="reason" id="dReason"></div><div class="reparto"><div class="meal"><b>Postentreno / media mañana</b><span>≈25 g de proteína. Si corresponde, añade una fuente de carbohidratos según el día.</span></div><div class="meal"><b>Almuerzo</b><span>≈40–45 g de proteína + una parte importante de los carbohidratos del día.</span></div><div class="meal"><b>Cena</b><span>≈40–45 g de proteína + el resto de carbohidratos y grasas.</span></div></div>
-</div>
-
-<div class="weekly-compliance">
-  <h3 style="margin:0 0 4px;font-size:1.05rem">Cumplimiento de la semana</h3>
-  <p class="compliance-note">Qué tan cerca estuvo cada día de su meta de proteína — el macro que más importa mantener estable esta semana.</p>
-  <div class="compliance-grid" id="complianceGrid"></div>
-</div>
-</section>
+</div></section>
 
 <section class="card" id="foodSection"><h2><span class="n">05</span> Registra lo que comiste</h2>
 <p class="note" style="margin:0 0 14px">Elige desayuno, almuerzo, cena o snack; luego busca el alimento, indica cuánto consumiste y MoveSmart calculará la porción y la sumará al total del día.</p>
@@ -325,7 +463,7 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
       </div>
     </div>
     <div class="search-row">
-      <div class="field"><label>Buscar alimento o producto</label><input id="foodName" placeholder="Ej: yogur Colun, leche, arroz, pollo..." onkeydown="if(event.key==='Enter'){event.preventDefault();searchFood();}"></div>
+      <div class="field"><label>Buscar alimento o producto</label><input id="foodName" placeholder="Ej: yogur Colun, leche, arroz, pollo..." oninput="updateCustomFoodToggle()" onkeydown="if(event.key==='Enter'){event.preventDefault();searchFood();}"></div>
       <button class="search-btn" id="searchFoodBtn" type="button" onclick="searchFood()">Buscar</button>
     </div>
     <div class="search-status" id="searchStatus">Escribe al menos 2 caracteres y presiona Buscar.</div>
@@ -383,11 +521,21 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
       <div class="field"><label>Cantidad consumida (g)</label><input id="foodQty" type="number" min="0" step="1" placeholder="200" oninput="previewFood()"></div>
       <div class="field"><label>ID / referencia</label><input id="foodBarcode" placeholder="Se completa al elegir" readonly></div>
     </div>
-    <div class="food-macros">
+    <div class="food-macros" id="technicalFields">
       <div class="field"><label>kcal / 100 g</label><input id="foodKcal" type="number" min="0" step="0.1" placeholder="130" oninput="previewFood()"></div>
       <div class="field"><label>Proteína / 100 g</label><input id="foodP" type="number" min="0" step="0.1" placeholder="2.7" oninput="previewFood()"></div>
       <div class="field"><label>CH / 100 g</label><input id="foodC" type="number" min="0" step="0.1" placeholder="28" oninput="previewFood()"></div>
       <div class="field"><label>Grasas / 100 g</label><input id="foodF" type="number" min="0" step="0.1" placeholder="0.3" oninput="previewFood()"></div>
+    </div>
+    <div class="selected-food-compact" id="selectedFoodCompact">
+      <div class="compact-name" id="compactName">Producto seleccionado</div>
+      <div class="compact-source" id="compactSource"></div>
+      <div class="compact-grid">
+        <div><b id="compactKcal">—</b><span>kcal</span></div>
+        <div><b id="compactP">—</b><span>proteína</span></div>
+        <div><b id="compactC">—</b><span>carbohidratos</span></div>
+        <div><b id="compactF">—</b><span>grasas</span></div>
+      </div>
     </div>
     <div class="food-preview" id="foodPreview"><strong>Busca y selecciona un producto</strong> para cargar sus macros automáticamente, o escribe manualmente los valores nutricionales por 100 g.</div>
     <div class="portion-preview" id="portionPreview">
@@ -425,37 +573,7 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 </section></div>
 <footer>MOVESMART — MÁS CONTEXTO. MENOS RECETAS.</footer>
 </div>
-
-<div class="toast" id="toast"><span class="tick">✓</span><span id="toastText">Agregado</span></div>
-
 <script>
-/* --- Identificador de clienta: permite reusar esta misma plantilla para varias personas
-   sin que compartan registro de comidas ni semana. Se toma de ?cliente= en la URL
-   (ej: archivo.html?cliente=camila) y se recuerda en este navegador. Si no hay ninguno
-   guardado, se pregunta una vez. --- */
-function resolveClientId(){
-  try{
-    const params=new URLSearchParams(window.location.search);
-    const fromUrl=(params.get('cliente')||'').trim();
-    if(fromUrl){
-      const id=fromUrl.toLowerCase().replace(/[^a-z0-9_-]+/g,'-').replace(/^-+|-+$/g,'')||'clienta';
-      localStorage.setItem('ms_active_client_id',id);
-      return id;
-    }
-    const stored=localStorage.getItem('ms_active_client_id');
-    if(stored) return stored;
-    const typed=(window.prompt('¿Nombre de la clienta para este registro? (para diferenciar sus datos, ej: camila)')||'').trim();
-    const id=typed?typed.toLowerCase().replace(/[^a-z0-9_-]+/g,'-').replace(/^-+|-+$/g,''):'';
-    const finalId=id||'clienta';
-    localStorage.setItem('ms_active_client_id',finalId);
-    return finalId;
-  }catch(e){
-    return 'clienta';
-  }
-}
-const CLIENT_ID=resolveClientId();
-window.MS_CLIENT_ID=CLIENT_ID;
-
 const days=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
 const types={
  rest:{label:'Descanso',p:110,c:160,f:60,reason:'Día de menor gasto. Mantenemos la proteína y la grasa; el ajuste energético se hace principalmente bajando carbohidratos.'},
@@ -470,103 +588,12 @@ const types={
 const options=['rest','rehab','bike40','strength','bikeCore','strengthRehab','bike50','longBike'];
 const original=['bike40','strength','bikeCore','strengthRehab','bike50','longBike','rest'];
 let week=[...original], results=[], selected=0;
-
-/* --- Semana real: se calcula automáticamente el Lunes de la semana actual, para que
-   el plan siempre muestre la semana en curso sin tener que editar fechas a mano. --- */
-function mondayOfCurrentWeek(){
-  const now=new Date();
-  const d=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-  const dow=d.getDay(); // 0=domingo ... 6=sábado
-  const diffToMonday=(dow===0)?-6:(1-dow);
-  d.setDate(d.getDate()+diffToMonday);
-  return d;
-}
-const WEEK_START=mondayOfCurrentWeek();
-function todayIndex(){
-  const now=new Date();
-  const start=new Date(WEEK_START.getFullYear(),WEEK_START.getMonth(),WEEK_START.getDate());
-  const cur=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-  const diff=Math.round((cur-start)/86400000);
-  return (diff>=0 && diff<=6) ? diff : -1;
-}
-function dateLabelForIndex(i){
-  const d=new Date(WEEK_START.getFullYear(),WEEK_START.getMonth(),WEEK_START.getDate()+i);
-  return d.toLocaleDateString('es-CL',{day:'numeric',month:'short'});
-}
-function weekRangeLabel(){
-  const start=dateLabelForIndex(0), end=dateLabelForIndex(6);
-  return `${start} – ${end}`;
-}
-function weekStartISO(){
-  const d=WEEK_START;
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-}
-function renderWeekHeaderLabels(){
-  const eyebrow=document.getElementById('eyebrowWeek');
-  if(eyebrow) eyebrow.textContent=`MoveSmart · Semana ${weekRangeLabel()}`;
-}
-window.msWeekStartISO=weekStartISO;
-
-function toggleWeekEditor(force){
-  const el=document.getElementById('week');
-  const btn=document.getElementById('weekToggleBtn');
-  const open=typeof force==='boolean'?force:!el.classList.contains('open');
-  el.classList.toggle('open',open);
-  btn.textContent=open?'✕ Cerrar edición de semana':'✏️ Editar mi semana completa';
-}
-
-function renderTodaySummary(){
-  const el=document.getElementById('todaySummary');
-  const ti=todayIndex();
-  if(ti<0){
-    el.innerHTML=`<span class="badge-today"><span class="dot"></span> Semana del ${weekRangeLabel()}</span>`;
-    return;
-  }
-  el.innerHTML=`<span class="badge-today"><span class="dot"></span> Hoy es ${days[ti]} · ${dateLabelForIndex(ti)}</span>`;
-}
-
 function build(){const root=document.getElementById('week');root.innerHTML='';days.forEach((d,i)=>{const el=document.createElement('div');el.className='day';el.innerHTML=`<div class="dayname">${d}</div>`;options.forEach(k=>{const b=document.createElement('button');b.type='button';b.textContent=types[k].label;b.className=week[i]===k?'active':'';b.onclick=()=>{week[i]=k;build();};el.appendChild(b)});root.appendChild(el)});}
 function kcal(x){return x.p*4+x.c*4+x.f*9}
-function calculate(){results=week.map((k,i)=>({...types[k],key:k,day:days[i],kcal:kcal(types[k])}));const ak=Math.round(results.reduce((s,x)=>s+x.kcal,0)/7);const ap=Math.round(results.reduce((s,x)=>s+x.p,0)/7);const ac=Math.round(results.reduce((s,x)=>s+x.c,0)/7);const af=Math.round(results.reduce((s,x)=>s+x.f,0)/7);document.getElementById('avg').textContent=ak;document.getElementById('avgP').textContent=ap+' g';document.getElementById('avgC').textContent=ac+' g';document.getElementById('avgF').textContent=af+' g';
-  const ti=todayIndex();
-  selected=(ti>=0)?ti:0;
-  renderTodaySummary();
-  renderTabs();renderTable();showDay(selected);renderCompliance();document.getElementById('results').style.display='block';document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});localStorage.setItem(`ms_${CLIENT_ID}_postop_week`,JSON.stringify(week));}
-function renderTabs(){const t=document.getElementById('tabs');t.innerHTML='';const ti=todayIndex();days.forEach((d,i)=>{const b=document.createElement('button');b.textContent=d.slice(0,3).toUpperCase();let cls=i===selected?'active':'';if(i===ti)cls+=' today';b.className=cls.trim();if(i===ti)b.innerHTML+='<span class="today-dot" title="Hoy"></span>';b.onclick=()=>{selected=i;renderTabs();showDay(i)};t.appendChild(b)})}
+function calculate(){results=week.map((k,i)=>({...types[k],key:k,day:days[i],kcal:kcal(types[k])}));const ak=Math.round(results.reduce((s,x)=>s+x.kcal,0)/7);const ap=Math.round(results.reduce((s,x)=>s+x.p,0)/7);const ac=Math.round(results.reduce((s,x)=>s+x.c,0)/7);const af=Math.round(results.reduce((s,x)=>s+x.f,0)/7);document.getElementById('avg').textContent=ak;document.getElementById('avgP').textContent=ap+' g';document.getElementById('avgC').textContent=ac+' g';document.getElementById('avgF').textContent=af+' g';renderTabs();renderTable();showDay(selected);document.getElementById('results').style.display='block';document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});localStorage.setItem('ms_camila_postop_week',JSON.stringify(week));}
+function renderTabs(){const t=document.getElementById('tabs');t.innerHTML='';days.forEach((d,i)=>{const b=document.createElement('button');b.textContent=d.slice(0,3).toUpperCase();b.className=i===selected?'active':'';b.onclick=()=>{selected=i;renderTabs();showDay(i)};t.appendChild(b)})}
 function showDay(i){if(!results.length)return;const r=results[i];document.getElementById('dDay').textContent=r.day;document.getElementById('dSession').textContent=r.label;document.getElementById('dKcal').textContent=r.kcal+' kcal';document.getElementById('dP').textContent=r.p+' g';document.getElementById('dC').textContent=r.c+' g';document.getElementById('dF').textContent=r.f+' g';document.getElementById('dReason').textContent=r.reason;document.getElementById('ringKcal').textContent=r.kcal;const pk=r.p*4,ck=r.c*4,fk=r.f*9,total=pk+ck+fk,p1=pk/total*100,p2=(pk+ck)/total*100;document.getElementById('ring').style.background=`conic-gradient(var(--protein) 0 ${p1}%,var(--carbs) ${p1}% ${p2}%,var(--fat) ${p2}% 100%)`;renderFood();}
 function renderTable(){const b=document.getElementById('body');b.innerHTML='';results.forEach(r=>{const tr=document.createElement('tr');tr.innerHTML=`<td><strong>${r.day}</strong></td><td>${r.label}</td><td class="mono">${r.kcal}</td><td class="mono">${r.p} g</td><td class="mono">${r.c} g</td><td class="mono">${r.f} g</td>`;b.appendChild(tr)})}
-
-function renderCompliance(){
-  const grid=document.getElementById('complianceGrid');
-  if(!grid || !results.length) return;
-  const ti=todayIndex();
-  grid.innerHTML=results.map((r,i)=>{
-    const logged=Array.isArray(foodLog[i])?foodLog[i]:[];
-    const totals=logged.reduce((a,x)=>({p:a.p+x.p}),{p:0});
-    const target=r.p||1;
-    let pct= logged.length ? Math.round(Math.min(150,(totals.p/target)*100)) : null;
-    let cls='low', txt='—';
-    if(pct!==null){
-      txt=pct+'%';
-      if(pct>=90 && pct<=130) cls='good';
-      else if(pct>=60) cls='mid';
-      else cls='low';
-    }
-    return `<div class="compliance-day ${cls}${i===ti?' today-col':''}">
-      <div class="cd-name">${days[i].slice(0,3)}</div>
-      <div class="cd-pct">${txt}</div>
-    </div>`;
-  }).join('');
-}
-
-function showToast(msg){
-  const t=document.getElementById('toast');
-  const txt=document.getElementById('toastText');
-  txt.textContent=msg;
-  t.classList.add('show');
-  clearTimeout(window._toastTimer);
-  window._toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
-}
 
 
 const FATSECRET_API = "https://movesmart-nutrition-api.movesmartchile.workers.dev";
@@ -592,13 +619,14 @@ function selectLocalProduct(i){
   selected.className='selected-product show';
   selected.innerHTML=
     `<b>Seleccionado:</b> ${escapeHtml(p.name)}<br>`+
-    `${Number(p.kcal).toFixed(0)} kcal · ${Number(p.p).toFixed(1)} P · ${Number(p.c).toFixed(1)} CH · ${Number(p.f).toFixed(1)} G por 100 g · <span class="source-icon">🏠</span> Ya la teníamos`;
+    `${Number(p.kcal).toFixed(0)} kcal · ${Number(p.p).toFixed(1)} P · ${Number(p.c).toFixed(1)} CH · ${Number(p.f).toFixed(1)} G por 100 g · ${p.shared?'Base MoveSmart compartida':(p.custom?'Mi Base MoveSmart':'Base MoveSmart')}`;
 
   document.getElementById('offResults').innerHTML='';
-  document.getElementById('searchStatus').textContent=`Seleccionado: ${p.name}`;
+  document.getElementById('searchStatus').textContent=`Seleccionado desde ${p.shared?'Base MoveSmart compartida':'Base MoveSmart'}: ${p.name}`;
 
   previewFood();
   if(typeof updatePortionPreview==='function') updatePortionPreview();
+  updateSelectedFoodCompact();
   document.getElementById('foodQty').focus();
 }
 
@@ -627,10 +655,11 @@ async function searchFood(){
 
   selectedFatSecretProduct=null;
   selectedLocalProduct=null;
+  const compact=document.getElementById('selectedFoodCompact'); if(compact) compact.classList.remove('show');
 
   btn.disabled=true;
   btn.textContent='Buscando…';
-  status.textContent='Buscando en tus alimentos guardados y en línea…';
+  status.textContent='Buscando en la Base MoveSmart compartida y en FatSecret…';
   root.innerHTML='';
 
   try{
@@ -673,10 +702,10 @@ async function searchFood(){
 
     const msHtml=moveSmartResults.map((p,i)=>`
       <button type="button" class="off-result" onclick="selectLocalProduct(${i})">
-        <div class="noimg">🏠</div>
+        <div class="noimg">${p.shared?'CL':'MS'}</div>
         <span>
           <b>${escapeHtml(p.name)}</b>
-          <small>${Number(p.kcal).toFixed(0)} kcal · ${Number(p.p).toFixed(1)} P · ${Number(p.c).toFixed(1)} CH · ${Number(p.f).toFixed(1)} G / 100 g · Ya la teníamos</small>
+          <small>${Number(p.kcal).toFixed(0)} kcal · ${Number(p.p).toFixed(1)} P · ${Number(p.c).toFixed(1)} CH · ${Number(p.f).toFixed(1)} G / 100 g · ${p.shared?'Base MoveSmart compartida':(p.custom?'Mi Base MoveSmart':'Base MoveSmart')}</small>
         </span>
         <span class="choose">Elegir</span>
       </button>
@@ -689,7 +718,7 @@ async function searchFood(){
 
       return `
         <button type="button" class="off-result" onclick="selectFatSecretProduct(${i})">
-          <div class="noimg">🔍</div>
+          <div class="noimg">FS</div>
           <span>
             <b>${title}</b>
             <small>${type}${type?' · ':''}${desc}</small>
@@ -706,9 +735,9 @@ async function searchFood(){
       status.textContent='No encontré resultados. Usa “No encuentro mi producto” para agregarlo desde su etiqueta.';
     }else{
       const parts=[];
-      if(moveSmartResults.length) parts.push(`${moveSmartResults.length} ya guardados 🏠`);
-      if(fatFoods.length) parts.push(`${fatFoods.length} en línea 🔍`);
-      status.textContent=`Encontré ${parts.join(' y ')}.`;
+      if(moveSmartResults.length) parts.push(`${moveSmartResults.length} de MoveSmart`);
+      if(fatFoods.length) parts.push(`${fatFoods.length} de FatSecret`);
+      status.textContent=`Encontré ${parts.join(' y ')}. Los productos de la Base MoveSmart aparecen primero.`;
     }
 
   }catch(err){
@@ -796,16 +825,17 @@ async function selectFatSecretProduct(i){
       `<b>Seleccionado:</b> ${escapeHtml(fullName)}<br>`+
       `${Math.round(base.kcal)} kcal · ${Number(base.protein).toFixed(1)} P · `+
       `${Number(base.carbs).toFixed(1)} CH · ${Number(base.fat).toFixed(1)} G por 100 g`+
-      `${converted ? ' · convertido desde una porción en línea' : ' · <span class="source-icon">🔍</span> Buscado en línea'}`;
+      `${converted ? ' · convertido desde una porción FatSecret' : ' · FatSecret'}`;
 
     status.textContent=
       converted
-        ? 'Producto cargado. Se convirtió una porción a valores por 100 g.'
-        : 'Producto cargado. Ahora indica la cantidad que consumiste.';
+        ? 'Producto cargado. MoveSmart convirtió una porción de FatSecret a valores por 100 g.'
+        : 'Producto cargado desde FatSecret. Ahora indica la cantidad que consumiste.';
 
     previewFood();
     if(typeof updatePortionPreview==='function') updatePortionPreview();
-    document.getElementById('foodQty').focus();
+    updateSelectedFoodCompact();
+  document.getElementById('foodQty').focus();
 
   }catch(err){
     console.error(err);
@@ -828,45 +858,61 @@ function setMeal(meal){
     btn.classList.toggle('active',btn.dataset.meal===meal);
   });
   const addBtn=document.getElementById('addFoodBtn');
-  if(addBtn) addBtn.textContent = editingFoodId
-    ? `✓ Guardar cambios en ${MEALS[meal].label.toLowerCase()}`
-    : `+ Agregar a mi ${MEALS[meal].label.toLowerCase()}`;
+  if(addBtn) addBtn.textContent=`+ Agregar a mi ${MEALS[meal].label.toLowerCase()}`;
 }
 
 document.querySelectorAll('.meal-choice').forEach(btn=>{
   btn.addEventListener('click',()=>setMeal(btn.dataset.meal));
 });
 setMeal('desayuno');
+updateCustomFoodToggle();
 
-const FOOD_STORAGE=`ms_${CLIENT_ID}_food_log_v1`;
+const FOOD_STORAGE='ms_camila_food_log_v1';
 let foodLog={};
 try{foodLog=JSON.parse(localStorage.getItem(FOOD_STORAGE)||'{}')||{}}catch(e){foodLog={}}
-function saveFoodLog(){
-  localStorage.setItem(FOOD_STORAGE,JSON.stringify(foodLog));
-  syncFoodLogToCloud();
-}
+function saveFoodLog(){localStorage.setItem(FOOD_STORAGE,JSON.stringify(foodLog))}
 function currentFoods(){return Array.isArray(foodLog[selected])?foodLog[selected]:[]}
 function n(id){return parseFloat(document.getElementById(id).value)||0}
 function portionData(){const q=n('foodQty'),factor=q/100;const p100=n('foodP'),c100=n('foodC'),f100=n('foodF');let kcal100=n('foodKcal');if(!kcal100&&(p100||c100||f100))kcal100=p100*4+c100*4+f100*9;return{qty:q,kcal:kcal100*factor,p:p100*factor,c:c100*factor,f:f100*factor,kcal100,p100,c100,f100}}
-function previewFood(){const x=portionData(),el=document.getElementById('foodPreview');if(!x.qty){el.innerHTML='<strong>Importante:</strong> escribe la cantidad consumida y los valores reales por 100 g. Los números grises son solo ejemplos.';return}if(!(x.kcal100||x.p100||x.c100||x.f100)){el.innerHTML='<strong>Faltan los datos nutricionales.</strong> Los números grises son ejemplos, no valores ingresados. Escribe kcal y/o macros por 100 g.';return}el.innerHTML=`Esta porción aporta aproximadamente <strong>${Math.round(x.kcal)} kcal</strong> · <strong>${x.p.toFixed(1)} g P</strong> · <strong>${x.c.toFixed(1)} g CH</strong> · <strong>${x.f.toFixed(1)} g G</strong>.`}
 
-let editingFoodId=null;
+function updateSelectedFoodCompact(){
+  const box=document.getElementById('selectedFoodCompact');
+  if(!box) return;
 
-function resetFoodForm(){
-  ['foodName','foodQty','foodKcal','foodP','foodC','foodF','foodBarcode'].forEach(id=>document.getElementById(id).value='');
-  selectedFatSecretProduct=null;
-  selectedLocalProduct=null;
-  editingFoodId=null;
-  document.getElementById('selectedProduct').className='selected-product';
-  document.getElementById('selectedProduct').innerHTML='';
-  document.getElementById('offResults').innerHTML='';
-  toggleCustomFood(false);
-  document.getElementById('searchStatus').textContent='Escribe al menos 2 caracteres y presiona Buscar.';
-  setMeal(selectedMeal);
-  previewFood();
-  if(typeof updatePortionPreview==='function') updatePortionPreview();
+  const name=(document.getElementById('foodName')?.value||'').trim();
+  const qty=parseFloat(document.getElementById('foodQty')?.value||0)||0;
+  const kcal100=parseFloat(document.getElementById('foodKcal')?.value||0)||0;
+  const p100=parseFloat(document.getElementById('foodP')?.value||0)||0;
+  const c100=parseFloat(document.getElementById('foodC')?.value||0)||0;
+  const f100=parseFloat(document.getElementById('foodF')?.value||0)||0;
+
+  const isSelected=!!(selectedFatSecretProduct || selectedLocalProduct);
+  if(!isSelected || !name){
+    box.classList.remove('show');
+    return;
+  }
+
+  box.classList.add('show');
+  document.getElementById('compactName').textContent=name;
+
+  let source='Producto seleccionado';
+  if(selectedLocalProduct){
+    source=selectedLocalProduct.shared?'Base MoveSmart compartida':
+      (selectedLocalProduct.custom?'Mi Base MoveSmart':'Base MoveSmart');
+  }else if(selectedFatSecretProduct){
+    source='FatSecret';
+  }
+  document.getElementById('compactSource').textContent=
+    qty>0 ? `${source} · ${qty} g` : source;
+
+  const factor=qty>0?qty/100:0;
+  document.getElementById('compactKcal').textContent=factor?Math.round(kcal100*factor):'—';
+  document.getElementById('compactP').textContent=factor?(p100*factor).toFixed(1)+' g':'—';
+  document.getElementById('compactC').textContent=factor?(c100*factor).toFixed(1)+' g':'—';
+  document.getElementById('compactF').textContent=factor?(f100*factor).toFixed(1)+' g':'—';
 }
 
+function previewFood(){updateSelectedFoodCompact();const x=portionData(),el=document.getElementById('foodPreview');if(!x.qty){el.innerHTML='<strong>Importante:</strong> escribe la cantidad consumida y los valores reales por 100 g. Los números grises son solo ejemplos.';return}if(!(x.kcal100||x.p100||x.c100||x.f100)){el.innerHTML='<strong>Faltan los datos nutricionales.</strong> Los números grises son ejemplos, no valores ingresados. Escribe kcal y/o macros por 100 g.';return}el.innerHTML=`Esta porción aporta aproximadamente <strong>${Math.round(x.kcal)} kcal</strong> · <strong>${x.p.toFixed(1)} g P</strong> · <strong>${x.c.toFixed(1)} g CH</strong> · <strong>${x.f.toFixed(1)} g G</strong>.`}
 function addFood(){
   const name=document.getElementById('foodName').value.trim(),x=portionData();
   if(!name){alert('Escribe el nombre del alimento.');return}
@@ -874,8 +920,8 @@ function addFood(){
   if(!(x.kcal100||x.p100||x.c100||x.f100)){alert('Faltan los datos nutricionales por 100 g. Los números grises son solo ejemplos.');return}
   if(!foodLog[selected])foodLog[selected]=[];
 
-  const entry={
-    id:editingFoodId || (Date.now()+Math.random()),
+  foodLog[selected].push({
+    id:Date.now()+Math.random(),
     name,
     meal:selectedMeal,
     qty:x.qty,
@@ -884,54 +930,24 @@ function addFood(){
     c:x.c,
     f:x.f,
     barcode:document.getElementById('foodBarcode').value||'',
-    source:selectedLocalProduct?'Ya guardado':(selectedFatSecretProduct?'Buscado en línea':'Manual')
-  };
-
-  if(editingFoodId){
-    const idx=foodLog[selected].findIndex(x=>x.id===editingFoodId);
-    if(idx>=0) foodLog[selected][idx]=entry;
-    else foodLog[selected].push(entry);
-    showToast(`✓ Actualizado en tu ${MEALS[selectedMeal].label.toLowerCase()}`);
-  }else{
-    foodLog[selected].push(entry);
-    showToast(`✓ Agregado a tu ${MEALS[selectedMeal].label.toLowerCase()}`);
-  }
+    source:selectedLocalProduct?(selectedLocalProduct.shared?'Base MoveSmart compartida':(selectedLocalProduct.custom?'Mi Base MoveSmart':'Base MoveSmart')):(selectedFatSecretProduct?'FatSecret':'Manual')
+  });
 
   saveFoodLog();
-  resetFoodForm();
-  renderFood();
-  renderCompliance();
-}
-
-function editFood(id){
-  const item=currentFoods().find(x=>x.id===id);
-  if(!item) return;
-  editingFoodId=id;
-  setMeal(item.meal||'snack');
-  document.getElementById('foodName').value=item.name;
-  document.getElementById('foodQty').value=item.qty;
-  document.getElementById('foodBarcode').value=item.barcode||'';
-  // Reconstruir valores por 100g desde la porción guardada.
-  const factor=item.qty?100/item.qty:0;
-  document.getElementById('foodKcal').value=(item.kcal*factor).toFixed(1);
-  document.getElementById('foodP').value=(item.p*factor).toFixed(2);
-  document.getElementById('foodC').value=(item.c*factor).toFixed(2);
-  document.getElementById('foodF').value=(item.f*factor).toFixed(2);
-  document.getElementById('selectedProduct').className='selected-product show';
-  document.getElementById('selectedProduct').innerHTML=`<b>Editando:</b> ${escapeHtml(item.name)}`;
+  ['foodName','foodQty','foodKcal','foodP','foodC','foodF','foodBarcode'].forEach(id=>document.getElementById(id).value='');
+  selectedFatSecretProduct=null;
+  selectedLocalProduct=null;
+  document.getElementById('selectedProduct').className='selected-product';
+  document.getElementById('selectedProduct').innerHTML='';
+  document.getElementById('offResults').innerHTML='';
+  toggleCustomFood(false);
+  document.getElementById('searchStatus').textContent='Escribe al menos 2 caracteres y presiona Buscar.';
+  updateCustomFoodToggle();
   previewFood();
-  updatePortionPreview();
-  document.getElementById('foodSection').scrollIntoView({behavior:'smooth',block:'start'});
-  document.getElementById('foodQty').focus();
-}
-
-function deleteFood(id){
-  foodLog[selected]=currentFoods().filter(x=>x.id!==id);
-  if(editingFoodId===id) resetFoodForm();
-  saveFoodLog();
+  if(typeof updatePortionPreview==='function') updatePortionPreview();
   renderFood();
-  renderCompliance();
 }
+function deleteFood(id){foodLog[selected]=currentFoods().filter(x=>x.id!==id);saveFoodLog();renderFood()}
 function foodTotals(){return currentFoods().reduce((a,x)=>({kcal:a.kcal+x.kcal,p:a.p+x.p,c:a.c+x.c,f:a.f+x.f}),{kcal:0,p:0,c:0,f:0})}
 function pct(v,max){return Math.max(0,Math.min(100,max? v/max*100:0))}
 function mealTotals(items){
@@ -956,30 +972,20 @@ function renderFood(){
   document.getElementById('progPText').textContent=`${t.p.toFixed(1)} / ${target.p} g`;
   document.getElementById('progCText').textContent=`${t.c.toFixed(1)} / ${target.c} g`;
   document.getElementById('progFText').textContent=`${t.f.toFixed(1)} / ${target.f} g`;
+  document.getElementById('progPBar').style.width=pct(t.p,target.p)+'%';
+  document.getElementById('progCBar').style.width=pct(t.c,target.c)+'%';
+  document.getElementById('progFBar').style.width=pct(t.f,target.f)+'%';
 
-  const pBar=document.getElementById('progPBar'), cBar=document.getElementById('progCBar'), fBar=document.getElementById('progFBar');
-  pBar.style.width=pct(t.p,target.p)+'%'; pBar.classList.toggle('over',t.p>target.p);
-  cBar.style.width=pct(t.c,target.c)+'%'; cBar.classList.toggle('over',t.c>target.c);
-  fBar.style.width=pct(t.f,target.f)+'%'; fBar.classList.toggle('over',t.f>target.f);
+  const rk=Math.max(0,target.kcal-t.kcal),
+        rp=Math.max(0,target.p-t.p),
+        rc=Math.max(0,target.c-t.c),
+        rf=Math.max(0,target.f-t.f);
 
-  const rk=target.kcal-t.kcal, rp=target.p-t.p, rc=target.c-t.c, rf=target.f-t.f;
-  const overAny = rk<0 || rp<0 || rc<0 || rf<0;
-
-  if(!overAny){
-    document.getElementById('remainingText').innerHTML=
-      `Te quedan aproximadamente <strong>${Math.round(Math.max(0,rk))} kcal</strong> · `+
-      `<strong>${Math.max(0,rp).toFixed(1)} g P</strong> · `+
-      `<strong>${Math.max(0,rc).toFixed(1)} g CH</strong> · `+
-      `<strong>${Math.max(0,rf).toFixed(1)} g G</strong>.`;
-  }else{
-    const overParts=[];
-    if(rk<0) overParts.push(`${Math.round(-rk)} kcal`);
-    if(rp<0) overParts.push(`${(-rp).toFixed(1)} g P`);
-    if(rc<0) overParts.push(`${(-rc).toFixed(1)} g CH`);
-    if(rf<0) overParts.push(`${(-rf).toFixed(1)} g G`);
-    document.getElementById('remainingText').innerHTML=
-      `Superaste tu meta en <strong>${overParts.join(' · ')}</strong>. No pasa nada — no es un error, solo ajusta si quieres el resto del día.`;
-  }
+  document.getElementById('remainingText').innerHTML=
+    `Te quedan aproximadamente <strong>${Math.round(rk)} kcal</strong> · `+
+    `<strong>${rp.toFixed(1)} g P</strong> · `+
+    `<strong>${rc.toFixed(1)} g CH</strong> · `+
+    `<strong>${rf.toFixed(1)} g G</strong>.`;
 
   const list=document.getElementById('foodList');
 
@@ -989,7 +995,6 @@ function renderFood(){
   }
 
   const mealOrder=['desayuno','almuerzo','cena','snack'];
-  const sourceIcon={'Ya guardado':'🏠','Buscado en línea':'🔍','Manual':'✍️'};
 
   list.innerHTML=mealOrder.map(mealKey=>{
     const info=MEALS[mealKey];
@@ -1002,13 +1007,10 @@ function renderFood(){
         <div class="food-item">
           <div>
             <b>${escapeHtml(x.name)} · ${Math.round(x.qty)} g</b>
-            <small>${Math.round(x.kcal)} kcal · ${x.p.toFixed(1)} P · ${x.c.toFixed(1)} CH · ${x.f.toFixed(1)} G ${sourceIcon[x.source]||''}</small>
+            <small>${Math.round(x.kcal)} kcal · ${x.p.toFixed(1)} P · ${x.c.toFixed(1)} CH · ${x.f.toFixed(1)} G${x.source?' · '+escapeHtml(x.source):''}</small>
             <span class="meal-badge">${info.icon} ${info.label}</span>
           </div>
-          <div class="food-item-actions">
-            <button class="edit-food" onclick="editFood(${x.id})" aria-label="Editar">✎</button>
-            <button class="delete-food" onclick="deleteFood(${x.id})" aria-label="Eliminar">×</button>
-          </div>
+          <button class="delete-food" onclick="deleteFood(${x.id})" aria-label="Eliminar">×</button>
         </div>`).join('')
       : `<div class="meal-group-empty">Aún no has registrado alimentos aquí.</div>`;
 
@@ -1024,10 +1026,9 @@ function renderFood(){
 }
 function escapeHtml(v){return String(v).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;')}
 
-function resetWeek(){week=[...original];toggleWeekEditor(false);build();calculate();localStorage.removeItem(`ms_${CLIENT_ID}_postop_week`)}
-function copyWeek(){if(!results.length)return;const lines=results.map(r=>`${r.day}: ${r.label} — ${r.kcal} kcal | ${r.p} P | ${r.c} CH | ${r.f} G`);const text=`MOVESMART — Semana ${weekRangeLabel()} · postcirugía\n\n${lines.join('\n')}\n\nObjetivo: mantener peso y masa muscular durante reducción temporal de carga.`;navigator.clipboard.writeText(text).then(()=>showToast('✓ Semana copiada al portapapeles'))}
-try{const saved=JSON.parse(localStorage.getItem(`ms_${CLIENT_ID}_postop_week`)||'null');if(Array.isArray(saved)&&saved.length===7)week=saved}catch(e){}
-renderWeekHeaderLabels();
+function resetWeek(){week=[...original];selected=0;build();calculate();localStorage.removeItem('ms_camila_postop_week')}
+function copyWeek(){if(!results.length)return;const lines=results.map(r=>`${r.day}: ${r.label} — ${r.kcal} kcal | ${r.p} P | ${r.c} CH | ${r.f} G`);const text=`MOVESMART — Semana 10–16 agosto · postcirugía\n\n${lines.join('\n')}\n\nObjetivo: mantener peso y masa muscular durante reducción temporal de carga.`;navigator.clipboard.writeText(text).then(()=>alert('Semana copiada ✓'))}
+try{const saved=JSON.parse(localStorage.getItem('ms_camila_postop_week')||'null');if(Array.isArray(saved)&&saved.length===7)week=saved}catch(e){}
 build();calculate();
 
 
@@ -1044,6 +1045,16 @@ function getCustomFoods(){
 
 function saveCustomFoods(list){
   localStorage.setItem(CUSTOM_FOODS_STORAGE,JSON.stringify(list));
+}
+
+
+function updateCustomFoodToggle(){
+  const panel=document.getElementById('customFoodPanel');
+  // El botón "No encuentro mi producto" permanece visible siempre.
+  // El formulario manual solo se abre al hacer clic en ese botón.
+  if(panel && !document.getElementById('foodName').value.trim()){
+    panel.classList.remove('show');
+  }
 }
 
 function toggleCustomFood(force){
@@ -1192,17 +1203,18 @@ async function useCustomFood(){
     `<b>Seleccionado:</b> ${escapeHtml(fullName)}<br>`+
     `${Math.round(per100.kcal)} kcal · ${per100.p.toFixed(1)} P · `+
     `${per100.c.toFixed(1)} CH · ${per100.f.toFixed(1)} G por 100 g · `+
-    `${sharedSaved?'<span class="source-icon">🏠</span> Guardado':'Producto manual'}`;
+    `${sharedSaved?'Base MoveSmart compartida':'Producto manual'}`;
 
   document.getElementById('searchStatus').textContent=
     sharedSaved
-      ? 'Producto cargado y guardado. Ya podrá aparecerle a otras personas.'
+      ? 'Producto cargado y guardado en la Base MoveSmart compartida. Ya podrá aparecerle a otras personas.'
       : 'Producto cargado para esta ocasión.';
 
   document.getElementById('offResults').innerHTML='';
   toggleCustomFood(false);
   previewFood();
   updatePortionPreview();
+  updateSelectedFoodCompact();
   document.getElementById('foodQty').focus();
 }
 
@@ -1369,7 +1381,7 @@ updatePortionPreview();
 
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js';
-  import { getFirestore, collection, getDocs, addDoc, doc, setDoc } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
+  import { getFirestore, collection, getDocs, addDoc } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
 
   const firebaseConfig = {
     apiKey: "AIzaSyDhbiXajp-1oRJAK9YSjmD75DQ1VHPJJPQ",
@@ -1500,78 +1512,46 @@ updatePortionPreview();
     return ref.id;
   };
 
-  // --- Persistencia en la nube del registro de comidas (para continuidad entre dispositivos) ---
-  // Usa el mismo identificador de clienta resuelto en el script principal (window.MS_CLIENT_ID),
-  // así cada clienta que use esta plantilla tiene su propio documento y no se mezclan datos.
-  function getClientId(){
-    return window.MS_CLIENT_ID || "clienta";
-  }
-
-  window.msSaveFoodLog = async function(logObject){
-    try{
-      await setDoc(doc(db, "food_logs", getClientId()), {
-        week_start: typeof window.msWeekStartISO==='function' ? window.msWeekStartISO() : "",
-        data: JSON.stringify(logObject),
-        updated_at: new Date().toISOString()
-      });
-      return true;
-    }catch(err){
-      console.warn("No se pudo sincronizar el registro con la nube:", err);
-      return false;
-    }
-  };
-
-  window.msLoadFoodLog = async function(){
-    try{
-      const snap = await getDocs(collection(db, "food_logs"));
-      const own = snap.docs.find(d=>d.id===getClientId());
-      if(!own) return null;
-      const raw = own.data()?.data;
-      return raw ? JSON.parse(raw) : null;
-    }catch(err){
-      console.warn("No se pudo cargar el registro desde la nube:", err);
-      return null;
-    }
-  };
-
-  // Precarga silenciosa de alimentos compartidos.
+  // Precarga silenciosa.
   loadSharedFoods().catch(err=>console.warn("Firestore no pudo precargarse:", err));
-
-  // Intentar traer el registro de comidas guardado en la nube (si es más nuevo que el local, se usa).
-  window.msLoadFoodLog().then(cloudLog=>{
-    if(cloudLog && typeof window.mergeCloudFoodLog==='function'){
-      window.mergeCloudFoodLog(cloudLog);
-    }
-  });
 </script>
 
+
 <script>
-// Sincroniza el registro local de comidas hacia la nube (debounced) para que persista entre dispositivos.
-let _syncTimer=null;
-function syncFoodLogToCloud(){
-  clearTimeout(_syncTimer);
-  _syncTimer=setTimeout(()=>{
-    if(typeof window.msSaveFoodLog==='function'){
-      window.msSaveFoodLog(foodLog);
+function setupMainTabs(){
+  const cards=[...document.querySelectorAll('section.card')];
+  cards.forEach(card=>{
+    const h2=card.querySelector('h2');
+    if(!h2) return;
+    const text=(h2.textContent||'').toLowerCase();
+    card.classList.add('ms-tab-section');
+    if(text.includes('tu contexto esta semana') || text.includes('las reglas de esta semana')){
+      card.dataset.mainTab='plan';
+    }else if(text.includes('ajusta tu semana real') || text.includes('semana completa')){
+      card.dataset.mainTab='semana';
+    }else if(text.includes('tu semana nutricional') || text.includes('registra lo que comiste')){
+      card.dataset.mainTab='hoy';
     }
-  },1200);
+  });
+  showMainTab('hoy', false);
 }
 
-// Si al cargar la página existe un registro en la nube y el local está vacío (u otro dispositivo tiene más datos), lo adoptamos.
-window.mergeCloudFoodLog=function(cloudLog){
-  try{
-    const localHasData=Object.keys(foodLog).some(k=>Array.isArray(foodLog[k])&&foodLog[k].length);
-    const cloudHasData=cloudLog && Object.keys(cloudLog).some(k=>Array.isArray(cloudLog[k])&&cloudLog[k].length);
-    if(cloudHasData && !localHasData){
-      foodLog=cloudLog;
-      localStorage.setItem(FOOD_STORAGE,JSON.stringify(foodLog));
-      renderFood();
-      renderCompliance();
-    }
-  }catch(e){
-    console.warn("No se pudo fusionar el registro en la nube:",e);
+function showMainTab(tab, scroll=true){
+  document.querySelectorAll('.ms-main-tab').forEach(btn=>{
+    btn.classList.toggle('active',btn.dataset.tab===tab);
+  });
+  document.querySelectorAll('.ms-tab-section').forEach(section=>{
+    section.classList.toggle('ms-tab-hidden',section.dataset.mainTab!==tab);
+  });
+  const resultsEl=document.getElementById('results');
+  if(resultsEl && typeof results!=='undefined' && results.length){
+    resultsEl.style.display='block';
   }
-};
+  if(scroll){
+    document.getElementById('msMainTabs')?.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+}
+document.addEventListener('DOMContentLoaded',setupMainTabs);
 </script>
 
 </body></html>
