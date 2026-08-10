@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,10 +7,10 @@
 <title>MoveSmart — Semana nutricional postcirugía</title>
 <style>
 :root{
-  --bg:#0c0812;--card:rgba(24,16,32,.56);--card-2:rgba(255,255,255,.045);
-  --line:rgba(255,255,255,.08);--text:#f3edf7;--dim:#cbc0d3;--faint:#9f92a8;
-  --accent:#f36b2a;--accent2:#ff8b4f;--protein:#ffb36b;--carbs:#f36b2a;--fat:#c99bd7;
-  --shadow:0 18px 50px rgba(0,0,0,.35);--radius:22px;--container:min(1200px,calc(100% - 48px));
+--bg:#0c0812;--card:rgba(24,16,32,.56);--card-2:rgba(255,255,255,.045);
+--line:rgba(255,255,255,.08);--text:#f3edf7;--dim:#cbc0d3;--faint:#9f92a8;
+--accent:#f36b2a;--accent2:#ff8b4f;--protein:#ffb36b;--carbs:#f36b2a;--fat:#c99bd7;
+--shadow:0 18px 50px rgba(0,0,0,.35);--radius:22px;--container:min(1200px,calc(100% - 48px));
 }
 *{box-sizing:border-box} html{scroll-behavior:smooth}
 body{margin:0;color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at top,rgba(128,70,86,.14),transparent 34%),linear-gradient(180deg,#0b0710 0%,#0d0812 55%,#09070f 100%);min-height:100vh}
@@ -54,637 +55,225 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 </style>
 <style>
 .food-result{
-  width:100%;
-  text-align:left;
-  display:grid;
-  gap:4px;
-  margin-top:8px;
-  padding:14px 16px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(255,255,255,.045);
-  color:#fff;
+width:100%;
+text-align:left;
+display:grid;
+gap:4px;
+margin-top:8px;
+padding:14px 16px;
+border-radius:14px;
+border:1px solid rgba(255,255,255,.10);
+background:rgba(255,255,255,.045);
+color:#fff;
 }
 .food-result:hover{
-  border-color:rgba(243,107,42,.35);
-  background:rgba(243,107,42,.08);
+border-color:rgba(243,107,42,.35);
+background:rgba(243,107,42,.08);
 }
 .food-result span,.food-result small{
-  color:#cfc5d6;
+color:#cfc5d6;
 }
 .food-result small{
-  font-size:.72rem;
+font-size:.72rem;
 }
 </style>
 <style>
 .portion-preview{
-  margin-top:18px;
-  padding:18px;
-  border-radius:18px;
-  border:1px solid rgba(243,107,42,.28);
-  background:
-    linear-gradient(180deg,rgba(243,107,42,.10),rgba(243,107,42,.045)),
-    rgba(255,255,255,.025);
+margin-top:18px;
+padding:18px;
+border-radius:18px;
+border:1px solid rgba(243,107,42,.28);
+background:
+linear-gradient(180deg,rgba(243,107,42,.10),rgba(243,107,42,.045)),
+rgba(255,255,255,.025);
 }
 .portion-preview-kicker{
-  color:#ff8b4f;
-  font-size:.72rem;
-  font-weight:900;
-  letter-spacing:.12em;
-  margin-bottom:6px;
+color:#ff8b4f;
+font-size:.72rem;
+font-weight:900;
+letter-spacing:.12em;
+margin-bottom:6px;
 }
 .portion-preview-title{
-  color:#fff;
-  font-weight:800;
-  font-size:1rem;
-  margin-bottom:14px;
+color:#fff;
+font-weight:800;
+font-size:1rem;
+margin-bottom:14px;
 }
 .portion-preview-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
 }
 .portion-preview-grid div{
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.07);
-  border-radius:14px;
-  padding:12px;
-  display:flex;
-  flex-direction:column;
-  gap:3px;
+background:rgba(255,255,255,.04);
+border:1px solid rgba(255,255,255,.07);
+border-radius:14px;
+padding:12px;
+display:flex;
+flex-direction:column;
+gap:3px;
 }
 .portion-preview-grid strong{
-  color:#fff;
-  font-size:1.15rem;
+color:#fff;
+font-size:1.15rem;
 }
 .portion-preview-grid span{
-  color:#bfb2c8;
-  font-size:.72rem;
+color:#bfb2c8;
+font-size:.72rem;
 }
 @media(max-width:600px){
-  .portion-preview-grid{grid-template-columns:repeat(2,1fr);}
+.portion-preview-grid{grid-template-columns:repeat(2,1fr);}
 }
 </style>
 <style>
 .meal-selector-wrap{
-  margin:0 0 16px;
+margin:0 0 16px;
 }
 .meal-selector-label{
-  display:block;
-  color:#d9cfe0;
-  font-size:.72rem;
-  font-weight:800;
-  margin:0 0 8px 2px;
+display:block;
+color:#d9cfe0;
+font-size:.72rem;
+font-weight:800;
+margin:0 0 8px 2px;
 }
 .meal-selector{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:8px;
 }
 .meal-choice{
-  min-height:46px;
-  border:1px solid rgba(255,255,255,.09);
-  background:rgba(255,255,255,.035);
-  color:#d8cddd;
-  border-radius:13px;
-  font-size:.78rem;
-  font-weight:850;
-  cursor:pointer;
-  transition:.18s ease;
+min-height:46px;
+border:1px solid rgba(255,255,255,.09);
+background:rgba(255,255,255,.035);
+color:#d8cddd;
+border-radius:13px;
+font-size:.78rem;
+font-weight:850;
+cursor:pointer;
+transition:.18s ease;
 }
 .meal-choice:hover{
-  transform:translateY(-1px);
-  border-color:rgba(243,107,42,.30);
-  background:rgba(243,107,42,.07);
+transform:translateY(-1px);
+border-color:rgba(243,107,42,.30);
+background:rgba(243,107,42,.07);
 }
 .meal-choice.active{
-  color:#fff;
-  border-color:transparent;
-  background:linear-gradient(180deg,var(--accent2),var(--accent));
-  box-shadow:0 10px 22px rgba(243,107,42,.18);
+color:#fff;
+border-color:transparent;
+background:linear-gradient(180deg,var(--accent2),var(--accent));
+box-shadow:0 10px 22px rgba(243,107,42,.18);
 }
 .meal-group{
-  margin-top:14px;
-  border:1px solid rgba(255,255,255,.07);
-  background:rgba(255,255,255,.025);
-  border-radius:16px;
-  overflow:hidden;
+margin-top:14px;
+border:1px solid rgba(255,255,255,.07);
+background:rgba(255,255,255,.025);
+border-radius:16px;
+overflow:hidden;
 }
 .meal-group-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  padding:12px 14px;
-  border-bottom:1px solid rgba(255,255,255,.06);
-  background:rgba(255,255,255,.025);
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px;
+padding:12px 14px;
+border-bottom:1px solid rgba(255,255,255,.06);
+background:rgba(255,255,255,.025);
 }
 .meal-group-title{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  font-size:.83rem;
-  font-weight:900;
-  color:#fff;
+display:flex;
+align-items:center;
+gap:8px;
+font-size:.83rem;
+font-weight:900;
+color:#fff;
 }
 .meal-group-total{
-  color:var(--dim);
-  font-size:.72rem;
-  font-weight:800;
-  font-variant-numeric:tabular-nums;
+color:var(--dim);
+font-size:.72rem;
+font-weight:800;
+font-variant-numeric:tabular-nums;
 }
 .meal-group-body{
-  display:grid;
-  gap:8px;
-  padding:10px;
+display:grid;
+gap:8px;
+padding:10px;
 }
 .meal-group-empty{
-  color:var(--faint);
-  font-size:.76rem;
-  padding:8px 4px;
+color:var(--faint);
+font-size:.76rem;
+padding:8px 4px;
 }
 .meal-badge{
-  display:inline-flex;
-  align-items:center;
-  padding:4px 7px;
-  border-radius:999px;
-  background:rgba(243,107,42,.10);
-  border:1px solid rgba(243,107,42,.18);
-  color:var(--accent2);
-  font-size:.64rem;
-  font-weight:900;
-  margin-top:5px;
+display:inline-flex;
+align-items:center;
+padding:4px 7px;
+border-radius:999px;
+background:rgba(243,107,42,.10);
+border:1px solid rgba(243,107,42,.18);
+color:var(--accent2);
+font-size:.64rem;
+font-weight:900;
+margin-top:5px;
 }
 @media(max-width:700px){
-  .meal-selector{grid-template-columns:repeat(2,1fr);}
-  .meal-group-head{align-items:flex-start;flex-direction:column;}
+.meal-selector{grid-template-columns:repeat(2,1fr);}
+.meal-group-head{align-items:flex-start;flex-direction:column;}
 }
 </style>
 
 <style>
-/* Botón "No encuentro mi producto" */
+.menu-copy-box{
+  margin-top:14px;
+  padding:14px;
+  border:1px solid rgba(243,107,42,.20);
+  background:rgba(243,107,42,.055);
+  border-radius:14px;
+}
+.menu-copy-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}
+.menu-copy-title{font-size:.82rem;font-weight:900;color:#fff}
+.menu-copy-source{font-size:.68rem;font-weight:850;color:var(--accent2)}
+.menu-copy-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end}
+.menu-copy-field label{display:block;color:var(--faint);font-size:.66rem;font-weight:800;margin:0 0 5px 2px}
+.menu-copy-field select{
+  width:100%;min-height:42px;padding:0 10px;border-radius:11px;
+  border:1px solid rgba(255,255,255,.10);background:#17101e;color:#fff;font-weight:750;outline:none;
+}
+.menu-copy-btn{
+  min-height:42px;padding:0 14px;border:0;border-radius:11px;
+  background:linear-gradient(180deg,var(--accent2),var(--accent));color:#fff;font-weight:900;cursor:pointer;
+}
+.menu-copy-btn:disabled{opacity:.5;cursor:not-allowed}
+.menu-copy-status{min-height:18px;margin-top:8px;color:var(--dim);font-size:.72rem;line-height:1.4}
+@media(max-width:700px){.menu-copy-grid{grid-template-columns:1fr}.menu-copy-btn{width:100%}}
+</style>
+
+
+<style>
+/* Mantener oculto el formulario de producto manual hasta que se solicite */
 .custom-food-toggle{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  margin-top:12px;
   min-height:44px;
   padding:0 18px;
   border:0;
   border-radius:12px;
   background:linear-gradient(180deg,var(--accent2),var(--accent));
   color:#fff;
-  font-size:.82rem;
   font-weight:900;
   cursor:pointer;
-  box-shadow:0 10px 22px rgba(243,107,42,.18);
+  box-shadow:0 10px 24px rgba(243,107,42,.20);
   transition:.18s ease;
 }
 .custom-food-toggle:hover{
   transform:translateY(-1px);
-  box-shadow:0 14px 28px rgba(243,107,42,.25);
+  box-shadow:0 14px 28px rgba(243,107,42,.26);
 }
-
-/* El formulario manual solo aparece cuando se abre */
-.custom-food-panel{
-  display:none;
-  margin-top:14px;
-  padding:16px;
-  border:1px solid rgba(243,107,42,.20);
-  background:rgba(255,255,255,.03);
-  border-radius:16px;
-}
-.custom-food-panel.show{display:block}
-.custom-food-panel h4{margin:0 0 8px;font-size:1rem}
-.custom-help{margin:0 0 14px;color:var(--dim);font-size:.78rem;line-height:1.5}
-.custom-food-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.custom-food-macros{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
-.custom-preview{margin-top:12px;padding:11px 12px;border-radius:12px;background:rgba(243,107,42,.08);border:1px solid rgba(243,107,42,.18);color:var(--dim);font-size:.76rem;line-height:1.45}
-.custom-check{display:flex;gap:9px;align-items:flex-start;margin-top:12px;color:var(--dim);font-size:.74rem;line-height:1.45}
-.custom-check strong{color:#fff}
-.custom-actions{display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:12px}
-.custom-save,.custom-cancel{
-  min-height:42px;border-radius:11px;font-weight:900;cursor:pointer;
-}
-.custom-save{border:0;background:linear-gradient(180deg,var(--accent2),var(--accent));color:#fff}
-.custom-cancel{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.04);color:#fff;padding:0 15px}
-
-/* Acciones de alimentos registrados */
-.food-item{grid-template-columns:1fr auto}
-.food-item-actions{display:flex;gap:7px;align-items:center}
-.edit-food,.delete-food{
-  border-radius:10px;
-  height:36px;
-  cursor:pointer;
-  font-weight:900;
-}
-.edit-food{
-  border:1px solid rgba(243,107,42,.30);
-  background:rgba(243,107,42,.11);
-  color:var(--accent2);
-  padding:0 12px;
-  font-size:.72rem;
-}
-.edit-food:hover{background:rgba(243,107,42,.18)}
-.delete-food{flex:0 0 36px}
-
-@media(max-width:600px){
-  .custom-food-grid,.custom-food-macros{grid-template-columns:1fr}
-  .custom-actions{grid-template-columns:1fr}
-  .custom-food-toggle{width:100%}
-  .food-item{grid-template-columns:1fr}
-  .food-item-actions{justify-content:flex-end}
-}
+.custom-food-panel{display:none;}
+.custom-food-panel.show{display:block;}
 </style>
-
-
-
-
-
-
-
-
-
-
-
-<style>
-/* =========================================================
-   MOVESMART — EXPERIENCIA MÓVIL
-   Solo modifica la vista en celulares. Escritorio se mantiene.
-   ========================================================= */
-@media (max-width: 600px){
-
-  :root{
-    --container: calc(100% - 24px);
-    --radius: 18px;
-  }
-
-  body{
-    overflow-x:hidden;
-  }
-
-  /* Barra superior más limpia */
-  .nav{
-    min-height:58px;
-    gap:10px;
-  }
-  .brand{
-    font-size:1.2rem;
-  }
-  .nav-badge{
-    padding:6px 9px;
-    font-size:.62rem;
-  }
-
-  /* Hero mucho más corto */
-  .hero{
-    padding:28px 0 22px;
-  }
-  .eyebrow{
-    font-size:.66rem;
-    margin-bottom:9px;
-  }
-  h1{
-    font-size:2rem;
-    line-height:1.03;
-  }
-  .sub{
-    margin-top:12px;
-    font-size:.88rem;
-    line-height:1.5;
-  }
-  .chips{
-    margin-top:14px;
-    gap:6px;
-  }
-  .chip{
-    padding:6px 8px;
-    font-size:.63rem;
-  }
-
-  /* Tarjetas generales */
-  .card{
-    padding:15px;
-    margin-bottom:12px;
-    border-radius:18px;
-  }
-  .card h2{
-    margin-bottom:14px;
-    font-size:1.18rem;
-  }
-
-  /* Contexto y reglas: más compactos */
-  .profile{
-    grid-template-columns:repeat(3,1fr);
-    gap:7px;
-  }
-  .box{
-    padding:10px 8px;
-    text-align:center;
-  }
-  .box .k{
-    font-size:.56rem;
-  }
-  .box .v{
-    font-size:.88rem;
-  }
-  .goal{
-    padding:12px;
-    font-size:.76rem;
-  }
-  .principles{
-    gap:8px;
-  }
-  .principle{
-    padding:12px;
-  }
-  .principle .value{
-    font-size:1rem;
-  }
-  .principle p{
-    display:none;
-  }
-
-  /* Resumen semanal: solo lo esencial */
-  .summary{
-    grid-template-columns:1fr;
-    gap:8px;
-  }
-  .summaryMain{
-    padding:14px;
-  }
-  .visual{
-    display:none;
-  }
-  .big{
-    font-size:2.15rem;
-  }
-  .macrogrid{
-    grid-template-columns:repeat(3,1fr);
-    gap:7px;
-    margin-top:12px;
-  }
-  .macro{
-    padding:10px 6px;
-    text-align:center;
-  }
-  .macro .small{
-    font-size:.55rem;
-    letter-spacing:0;
-  }
-  .macro .val{
-    font-size:.9rem;
-  }
-
-  /* Días: scroll horizontal en lugar de 2 columnas */
-  .tabs{
-    display:flex;
-    overflow-x:auto;
-    gap:7px;
-    margin:12px -3px;
-    padding:2px 3px 6px;
-    scrollbar-width:none;
-  }
-  .tabs::-webkit-scrollbar{
-    display:none;
-  }
-  .tabs button{
-    flex:0 0 auto;
-    min-width:58px;
-    padding:9px 12px;
-  }
-
-  /* Detalle del día más compacto */
-  .detail{
-    padding:14px;
-  }
-  .detail h3{
-    font-size:1.35rem;
-  }
-  .session{
-    font-size:.76rem;
-  }
-  .pill{
-    font-size:.6rem;
-    padding:6px 8px;
-  }
-  .stats{
-    grid-template-columns:repeat(2,1fr);
-    gap:7px;
-    margin-top:12px;
-  }
-  .stat{
-    padding:10px;
-  }
-  .reason{
-    font-size:.76rem;
-  }
-  .reparto{
-    display:none;
-  }
-
-  /* Registro: el progreso aparece primero */
-  .food-layout{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-  }
-  .progress-panel{
-    order:1;
-    padding:14px;
-  }
-  .food-form{
-    order:2;
-    padding:14px;
-  }
-
-  .progress-head{
-    align-items:center;
-  }
-  .progress-head h3{
-    font-size:1rem;
-  }
-  .progress-kcal{
-    font-size:.95rem;
-  }
-  .progress-list{
-    margin-top:12px;
-    gap:9px;
-  }
-  .progress-row-top{
-    font-size:.72rem;
-  }
-  .remaining{
-    margin-top:11px;
-    padding-top:11px;
-    font-size:.73rem;
-  }
-
-  /* Selector de comida grande y táctil */
-  .meal-selector{
-    grid-template-columns:repeat(2,1fr);
-    gap:7px;
-  }
-  .meal-choice{
-    min-height:48px;
-    font-size:.76rem;
-  }
-
-  /* Búsqueda cómoda */
-  .search-row{
-    grid-template-columns:1fr;
-    gap:7px;
-  }
-  .field input{
-    min-height:46px;
-    font-size:16px; /* evita zoom automático en iPhone */
-  }
-  .search-btn,
-  .custom-food-toggle,
-  .add-food{
-    min-height:48px;
-    width:100%;
-    font-size:.84rem;
-  }
-
-  .search-status{
-    font-size:.67rem;
-  }
-
-  /* Resultados de búsqueda */
-  .off-results{
-    max-height:260px;
-  }
-  .off-result{
-    grid-template-columns:42px 1fr;
-    padding:9px;
-  }
-
-  /* Macros del producto: 2 x 2 en vez de columna larga */
-  .food-grid{
-    grid-template-columns:1fr;
-  }
-  .food-macros{
-    grid-template-columns:repeat(2,1fr);
-    gap:7px;
-  }
-  .portion-preview{
-    padding:13px;
-    margin-top:12px;
-  }
-  .portion-preview-grid{
-    grid-template-columns:repeat(2,1fr);
-    gap:7px;
-  }
-
-  /* Producto manual también 2x2 */
-  .custom-food-grid{
-    grid-template-columns:1fr;
-  }
-  .custom-food-macros{
-    grid-template-columns:repeat(2,1fr);
-    gap:7px;
-  }
-
-  /* Alimentos registrados compactos */
-  .food-list{
-    gap:7px;
-  }
-  .meal-group{
-    margin-top:10px;
-  }
-  .meal-group-head{
-    padding:10px 11px;
-  }
-  .meal-group-body{
-    padding:7px;
-  }
-  .food-item{
-    grid-template-columns:1fr auto;
-    gap:8px;
-    padding:10px;
-  }
-  .food-item b{
-    font-size:.78rem;
-  }
-  .food-item small{
-    font-size:.65rem;
-  }
-  .food-item-actions{
-    gap:5px;
-    justify-content:flex-end;
-  }
-  .edit-food{
-    height:34px;
-    padding:0 9px;
-    font-size:.65rem;
-  }
-  .delete-food{
-    width:34px;
-    height:34px;
-  }
-
-
-  footer{
-    margin-top:18px;
-    font-size:.64rem;
-  }
-}
-</style>
-
-
-<style>
-.firebase-sync-bar{
-  width:var(--container);
-  margin:10px auto 0;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  padding:10px 12px;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:14px;
-  background:rgba(255,255,255,.035);
-  color:var(--dim);
-  font-size:.76rem;
-}
-.firebase-sync-left{display:flex;align-items:center;gap:8px;min-width:0}
-.firebase-dot{width:8px;height:8px;border-radius:50%;background:#9f92a8;flex:0 0 8px}
-.firebase-dot.ok{background:#5bc86b}
-.firebase-dot.warn{background:#f3a62a}
-.firebase-dot.err{background:#ff6b6b}
-.firebase-sync-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.firebase-auth-btn{
-  border:1px solid rgba(243,107,42,.26);
-  background:rgba(243,107,42,.10);
-  color:var(--accent2);
-  border-radius:10px;
-  padding:8px 10px;
-  font-size:.7rem;
-  font-weight:900;
-  cursor:pointer;
-  white-space:nowrap;
-}
-@media(max-width:600px){
-  .firebase-sync-bar{margin-top:8px;padding:9px 10px;font-size:.68rem}
-  .firebase-auth-btn{padding:7px 9px;font-size:.64rem}
-}
-</style>
-
 </head>
 <body>
 <div class="site-glow"></div>
-<header class="topbar"><div class="nav"><a class="brand" href="#">Move<span>Smart</span></a><span class="nav-badge">Nutrición · Postcirugía</span></div></header>
-
-<div class="firebase-sync-bar" id="firebaseSyncBar">
-  <div class="firebase-sync-left">
-    <span class="firebase-dot" id="firebaseDot"></span>
-    <span class="firebase-sync-text" id="firebaseSyncText">Conectando con Firebase…</span>
-  </div>
-  <button type="button" class="firebase-auth-btn" id="firebaseAuthBtn">Entrar con Google</button>
-</div>
-
+<header class="topbar"><div class="nav"><a class="brand" href="https://movesmart-chile.github.io/plataforma-nutricional/#">Move<span>Smart</span></a><span class="nav-badge">Nutrición · Postcirugía</span></div></header>
 <div class="wrap">
 <header class="hero">
 <div class="eyebrow">MoveSmart · Semana 10–16 agosto</div>
@@ -703,6 +292,7 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 <div class="principle"><div class="top"><span class="label">Carbohidratos</span><span class="value" style="color:var(--carbs)">160–210 g</span></div><p>Suben en fuerza, bici y fondo; bajan en descanso. Son la principal variable de ajuste esta semana.</p></div>
 </div>
 </section>
+<div id="week" style="display:none"></div>
 <div id="results">
 <section class="card"><h2><span class="n">04</span> Tu semana nutricional</h2>
 <div class="summary"><div class="summaryMain"><div class="small">Promedio diario de esta semana</div><div class="big" id="avg">—</div><div class="small" style="margin-top:5px">kcal / día</div><div class="macrogrid"><div class="macro"><div class="small">Proteína</div><div class="val" id="avgP">—</div></div><div class="macro"><div class="small">Carbohidratos</div><div class="val" id="avgC">—</div></div><div class="macro"><div class="small">Grasas</div><div class="val" id="avgF">—</div></div></div></div><div class="visual"><div class="ring" id="ring"><div class="hole"><b id="ringKcal">—</b><span>día seleccionado</span></div></div></div></div>
@@ -715,1136 +305,943 @@ details{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07)
 <p class="note" style="margin:0 0 14px">Elige desayuno, almuerzo, cena o snack; luego busca el alimento, indica cuánto consumiste y MoveSmart calculará la porción y la sumará al total del día.</p>
 <span class="day-food-label" id="foodDayLabel">—</span>
 <div class="food-layout">
-  <div class="food-form">
-    <div class="meal-selector-wrap">
-      <span class="meal-selector-label">¿En qué comida lo consumiste?</span>
-      <div class="meal-selector" id="mealSelector">
-        <button type="button" class="meal-choice active" data-meal="desayuno">☕ Desayuno</button>
-        <button type="button" class="meal-choice" data-meal="almuerzo">🍽️ Almuerzo</button>
-        <button type="button" class="meal-choice" data-meal="cena">🌙 Cena</button>
-        <button type="button" class="meal-choice" data-meal="snack">🍎 Snack</button>
-      </div>
-    </div>
-    <div class="search-row">
-      <div class="field"><label>Buscar alimento o producto</label><input id="foodName" placeholder="Ej: yogur Colun, leche, arroz, pollo..." onkeydown="if(event.key==='Enter'){event.preventDefault();searchFood();}"></div>
-      <button class="search-btn" id="searchFoodBtn" type="button" onclick="searchFood()">Buscar</button>
-    </div>
-    <div class="search-status" id="searchStatus">Escribe al menos 2 caracteres y presiona Buscar.</div>
-    <div class="off-results" id="offResults"></div>
-    <button type="button" class="custom-food-toggle" id="customFoodToggle" onclick="toggleCustomFood()">＋ No encuentro mi producto</button>
-    <div class="custom-food-panel" id="customFoodPanel">
-      <h4>Agregar producto desde su etiqueta</h4>
-      <p class="custom-help">Ingresa los valores tal como aparecen en el envase. MoveSmart los convertirá automáticamente a 100 g y, si quieres, guardará el producto en la base compartida para futuras búsquedas.</p>
-      <div class="custom-food-grid">
-        <div class="field">
-          <label>Nombre del producto</label>
-          <input id="customFoodName" placeholder="Ej: Yogur Protein Colun">
-        </div>
-        <div class="field">
-          <label>Marca (opcional)</label>
-          <input id="customFoodBrand" placeholder="Ej: Colun">
-        </div>
-      </div>
-      <div class="custom-food-grid" style="margin-top:10px">
-        <div class="field">
-          <label>Gramos de la porción de la etiqueta</label>
-          <input id="customFoodGrams" type="number" min="0.1" step="0.1" placeholder="150" oninput="previewCustomFood()">
-        </div>
-        <div class="field">
-          <label>Descripción de porción (opcional)</label>
-          <input id="customFoodServing" placeholder="Ej: 1 pote">
-        </div>
-      </div>
-      <div class="custom-food-macros">
-        <div class="field"><label>kcal / porción</label><input id="customFoodKcal" type="number" min="0" step="0.1" placeholder="100" oninput="previewCustomFood()"></div>
-        <div class="field"><label>Proteína / porción</label><input id="customFoodP" type="number" min="0" step="0.1" placeholder="12" oninput="previewCustomFood()"></div>
-        <div class="field"><label>CH / porción</label><input id="customFoodC" type="number" min="0" step="0.1" placeholder="8" oninput="previewCustomFood()"></div>
-        <div class="field"><label>Grasas / porción</label><input id="customFoodF" type="number" min="0" step="0.1" placeholder="2" oninput="previewCustomFood()"></div>
-      </div>
-      <div class="custom-preview" id="customFoodPreview">Completa los gramos de la porción y los valores de la etiqueta para calcular la equivalencia por 100 g.</div>
-      <label class="custom-check">
-        <input id="customFoodSave" type="checkbox" checked>
-        <span><strong>Guardar en la Base MoveSmart compartida.</strong> El producto quedará disponible para otras personas que usen MoveSmart.</span>
-      </label>
-      <div class="custom-actions">
-        <button type="button" class="custom-save" onclick="useCustomFood()">Usar este producto</button>
-        <button type="button" class="custom-cancel" onclick="toggleCustomFood(false)">Cancelar</button>
-      </div>
-    </div>
-    <div class="selected-product" id="selectedProduct"></div>
-    <div class="food-grid" style="margin-top:12px">
-      <div class="field"><label>Cantidad consumida (g)</label><input id="foodQty" type="number" min="0" step="1" placeholder="200" oninput="previewFood()"></div>
-      <div class="field"><label>ID / referencia</label><input id="foodBarcode" placeholder="Se completa al elegir" readonly></div>
-    </div>
-    <div class="food-macros">
-      <div class="field"><label>kcal / 100 g</label><input id="foodKcal" type="number" min="0" step="0.1" placeholder="130" oninput="previewFood()"></div>
-      <div class="field"><label>Proteína / 100 g</label><input id="foodP" type="number" min="0" step="0.1" placeholder="2.7" oninput="previewFood()"></div>
-      <div class="field"><label>CH / 100 g</label><input id="foodC" type="number" min="0" step="0.1" placeholder="28" oninput="previewFood()"></div>
-      <div class="field"><label>Grasas / 100 g</label><input id="foodF" type="number" min="0" step="0.1" placeholder="0.3" oninput="previewFood()"></div>
-    </div>
-    <div class="food-preview" id="foodPreview"><strong>Busca y selecciona un producto</strong> para cargar sus macros automáticamente, o escribe manualmente los valores nutricionales por 100 g.</div>
-    <div class="portion-preview" id="portionPreview">
-      <div class="portion-preview-kicker">TU PORCIÓN</div>
-      <div class="portion-preview-title" id="portionPreviewTitle">Indica la cantidad que vas a consumir</div>
-      <div class="portion-preview-grid">
-        <div><strong id="portionKcal">—</strong><span>kcal</span></div>
-        <div><strong id="portionP">—</strong><span>proteína</span></div>
-        <div><strong id="portionC">—</strong><span>CH</span></div>
-        <div><strong id="portionF">—</strong><span>grasas</span></div>
-      </div>
-    </div>
+<div class="food-form">
+<div class="meal-selector-wrap">
+<span class="meal-selector-label">¿En qué comida lo consumiste?</span>
+<div class="meal-selector" id="mealSelector">
+<button type="button" class="meal-choice active" data-meal="desayuno">☕ Desayuno</button>
+<button type="button" class="meal-choice" data-meal="almuerzo">🍽️ Almuerzo</button>
+<button type="button" class="meal-choice" data-meal="cena">🌙 Cena</button>
+<button type="button" class="meal-choice" data-meal="snack">🍎 Snack</button>
+</div>
+</div>
+<div class="search-row">
+<div class="field"><label>Buscar alimento o producto</label><input id="foodName" placeholder="Ej: yogur Colun, leche, arroz, pollo..." onkeydown="if(event.key==='Enter'){event.preventDefault();searchFood();}"></div>
+<button class="search-btn" id="searchFoodBtn" type="button" onclick="searchFood()">Buscar</button>
+</div>
+<div class="search-status" id="searchStatus">Escribe al menos 2 caracteres y presiona Buscar.</div>
+<div class="off-results" id="offResults"></div>
+<button type="button" class="custom-food-toggle" id="customFoodToggle" onclick="toggleCustomFood()">＋ No encuentro mi producto</button>
+<div class="custom-food-panel" id="customFoodPanel">
+<h4>Agregar producto desde su etiqueta</h4>
+<p class="custom-help">Ingresa los valores tal como aparecen en el envase. MoveSmart los convertirá automáticamente a 100 g y, si quieres, guardará el producto en la base compartida para futuras búsquedas.</p>
+<div class="custom-food-grid">
+<div class="field">
+<label>Nombre del producto</label>
+<input id="customFoodName" placeholder="Ej: Yogur Protein Colun">
+</div>
+<div class="field">
+<label>Marca (opcional)</label>
+<input id="customFoodBrand" placeholder="Ej: Colun">
+</div>
+</div>
+<div class="custom-food-grid" style="margin-top:10px">
+<div class="field">
+<label>Gramos de la porción de la etiqueta</label>
+<input id="customFoodGrams" type="number" min="0.1" step="0.1" placeholder="150" oninput="previewCustomFood()">
+</div>
+<div class="field">
+<label>Descripción de porción (opcional)</label>
+<input id="customFoodServing" placeholder="Ej: 1 pote">
+</div>
+</div>
+<div class="custom-food-macros">
+<div class="field"><label>kcal / porción</label><input id="customFoodKcal" type="number" min="0" step="0.1" placeholder="100" oninput="previewCustomFood()"></div>
+<div class="field"><label>Proteína / porción</label><input id="customFoodP" type="number" min="0" step="0.1" placeholder="12" oninput="previewCustomFood()"></div>
+<div class="field"><label>CH / porción</label><input id="customFoodC" type="number" min="0" step="0.1" placeholder="8" oninput="previewCustomFood()"></div>
+<div class="field"><label>Grasas / porción</label><input id="customFoodF" type="number" min="0" step="0.1" placeholder="2" oninput="previewCustomFood()"></div>
+</div>
+<div class="custom-preview" id="customFoodPreview">Completa los gramos de la porción y los valores de la etiqueta para calcular la equivalencia por 100 g.</div>
+<label class="custom-check">
+<input id="customFoodSave" type="checkbox" checked>
+<span><strong>Guardar en la Base MoveSmart compartida.</strong> El producto quedará disponible para otras personas que usen MoveSmart.</span>
+</label>
+<div class="custom-actions">
+<button type="button" class="custom-save" onclick="useCustomFood()">Usar este producto</button>
+<button type="button" class="custom-cancel" onclick="toggleCustomFood(false)">Cancelar</button>
+</div>
+</div>
+<div class="selected-product" id="selectedProduct"></div>
+<div class="food-grid" style="margin-top:12px">
+<div class="field"><label>Cantidad consumida (g)</label><input id="foodQty" type="number" min="0" step="1" placeholder="200" oninput="previewFood()"></div>
+<div class="field"><label>ID / referencia</label><input id="foodBarcode" placeholder="Se completa al elegir" readonly></div>
+</div>
+<div class="food-macros">
+<div class="field"><label>kcal / 100 g</label><input id="foodKcal" type="number" min="0" step="0.1" placeholder="130" oninput="previewFood()"></div>
+<div class="field"><label>Proteína / 100 g</label><input id="foodP" type="number" min="0" step="0.1" placeholder="2.7" oninput="previewFood()"></div>
+<div class="field"><label>CH / 100 g</label><input id="foodC" type="number" min="0" step="0.1" placeholder="28" oninput="previewFood()"></div>
+<div class="field"><label>Grasas / 100 g</label><input id="foodF" type="number" min="0" step="0.1" placeholder="0.3" oninput="previewFood()"></div>
+</div>
+<div class="food-preview" id="foodPreview"><strong>Busca y selecciona un producto</strong> para cargar sus macros automáticamente, o escribe manualmente los valores nutricionales por 100 g.</div>
+<div class="portion-preview" id="portionPreview">
+<div class="portion-preview-kicker">TU PORCIÓN</div>
+<div class="portion-preview-title" id="portionPreviewTitle">Indica la cantidad que vas a consumir</div>
+<div class="portion-preview-grid">
+<div><strong id="portionKcal">—</strong><span>kcal</span></div>
+<div><strong id="portionP">—</strong><span>proteína</span></div>
+<div><strong id="portionC">—</strong><span>CH</span></div>
+<div><strong id="portionF">—</strong><span>grasas</span></div>
+</div>
+</div>
 <div class="source-note">Fuente automática: FatSecret a través de MoveSmart Nutrition API. Revisa la porción seleccionada y el envase cuando necesites máxima precisión. Datos nutricionales proporcionados por FatSecret.</div>
-    <button class="add-food" id="addFoodBtn" onclick="addFood()">+ Agregar a mi desayuno</button>
-    <div class="food-list" id="foodList"></div>
+<button class="add-food" id="addFoodBtn" onclick="addFood()">+ Agregar a mi desayuno</button>
+<div class="food-list" id="foodList"></div>
+
+<div class="menu-copy-box" id="menuCopyBox">
+  <div class="menu-copy-head">
+    <div class="menu-copy-title">📋 Repetir este menú</div>
+    <div class="menu-copy-source" id="menuCopySource">Desde: —</div>
   </div>
-  <div class="progress-panel">
-    <div class="progress-head"><div><div class="small">Tu progreso de hoy</div><h3 id="progressDay">—</h3></div><div class="progress-kcal" id="progressKcal">0 / 0 kcal</div></div>
-    <div class="progress-list">
-      <div class="progress-row"><div class="progress-row-top"><span>Proteína</span><span id="progPText">0 / 0 g</span></div><div class="bar protein"><span id="progPBar"></span></div></div>
-      <div class="progress-row"><div class="progress-row-top"><span>Carbohidratos</span><span id="progCText">0 / 0 g</span></div><div class="bar"><span id="progCBar"></span></div></div>
-      <div class="progress-row"><div class="progress-row-top"><span>Grasas</span><span id="progFText">0 / 0 g</span></div><div class="bar fat"><span id="progFBar"></span></div></div>
+  <div class="menu-copy-grid">
+    <div class="menu-copy-field">
+      <label>Copiar a</label>
+      <select id="menuCopyTarget"></select>
     </div>
-    <div class="remaining" id="remainingText">—</div>
+    <div class="menu-copy-field">
+      <label>Si el otro día ya tiene alimentos</label>
+      <select id="menuCopyMode">
+        <option value="append">Agregar al menú existente</option>
+        <option value="replace">Reemplazar ese menú</option>
+      </select>
+    </div>
+    <button type="button" class="menu-copy-btn" id="menuCopyBtn" onclick="copyDayMenu()">Copiar menú</button>
   </div>
+  <div class="menu-copy-status" id="menuCopyStatus">El menú se guarda automáticamente mientras registras tus alimentos.</div>
+</div>
+
+</div>
+<div class="progress-panel">
+<div class="progress-head"><div><div class="small">Tu progreso de hoy</div><h3 id="progressDay">—</h3></div><div class="progress-kcal" id="progressKcal">0 / 0 kcal</div></div>
+<div class="progress-list">
+<div class="progress-row"><div class="progress-row-top"><span>Proteína</span><span id="progPText">0 / 0 g</span></div><div class="bar protein"><span id="progPBar"></span></div></div>
+<div class="progress-row"><div class="progress-row-top"><span>Carbohidratos</span><span id="progCText">0 / 0 g</span></div><div class="bar"><span id="progCBar"></span></div></div>
+<div class="progress-row"><div class="progress-row-top"><span>Grasas</span><span id="progFText">0 / 0 g</span></div><div class="bar fat"><span id="progFBar"></span></div></div>
+</div>
+<div class="remaining" id="remainingText">—</div>
+</div>
 </div>
 </section>
-</div>
+<section class="card"><h2><span class="n">06</span> Semana completa</h2><div style="overflow:auto"><table><thead><tr><th>Día</th><th>Sesión</th><th>kcal</th><th>P</th><th>CH</th><th>G</th></tr></thead><tbody id="body"></tbody></table></div>
+<p class="note">Las kcal se derivan de los macros (4 kcal/g para proteína y carbohidratos; 9 kcal/g para grasa), por lo que pueden verse unos pocos kcal distintas a una cifra “redondeada” de planificación.</p>
+<div class="actions"><button class="ghost" onclick="copyWeek()">Copiar semana</button><button class="ghost" onclick="resetWeek()">Restaurar plan original</button></div>
+<details><summary>Suplementos de esta semana</summary><p><strong>Creatina:</strong> 3–5 g diarios. <strong>Colágeno:</strong> 10–15 g + vitamina C antes de rehabilitación, si ya lo estás utilizando. <strong>Omega-3:</strong> con comida; recién operada, evita aumentar dosis sin confirmar con tu equipo tratante. <strong>Astaxantina:</strong> con comida. <strong>Magnesio:</strong> mantén tu horario habitual.</p></details>
+<details><summary>Importante durante la recuperación</summary><p>Esta herramienta acompaña la planificación que ya definiste, pero no reemplaza las indicaciones postoperatorias. Si una sesión tira de la incisión, aumenta dolor, sangrado o inflamación, la prioridad es modificar el entrenamiento, no “cumplir” las calorías o compensar con otra sesión.</p></details>
+</section></div>
 <footer>MOVESMART — MÁS CONTEXTO. MENOS RECETAS.</footer>
 </div>
 <script>
 const days=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
 const types={
- rest:{label:'Descanso',p:110,c:160,f:60,reason:'Día de menor gasto. Mantenemos la proteína y la grasa; el ajuste energético se hace principalmente bajando carbohidratos.'},
- rehab:{label:'Rehabilitación / muy suave',p:110,c:180,f:60,reason:'La demanda energética sigue siendo baja, pero dejamos más carbohidratos que en descanso para acompañar movimiento y recuperación.'},
- bike40:{label:"Bici suave 40′ + rehab",p:110,c:180,f:60,reason:'Primeros días postcirugía: suficiente energía para volver a mover sin tratar de reemplazar el volumen de running que falta.'},
- strength:{label:'Fuerza inferior',p:110,c:200,f:60,reason:'Subimos carbohidratos para la sesión de fuerza mientras la proteína permanece alta para apoyar el mantenimiento de masa muscular.'},
- bikeCore:{label:"Bici 55′ + core",p:110,c:200,f:60,reason:'La sesión aeróbica y el core elevan la demanda respecto a un día suave; por eso pasamos a 200 g de carbohidratos.'},
- strengthRehab:{label:'Fuerza + rehabilitación',p:110,c:180,f:60,reason:'Es una segunda sesión de fuerza más corta y preventiva. No necesita el mismo aporte de un día de mayor volumen.'},
- bike50:{label:"Bici 50′ Z2",p:110,c:200,f:60,reason:'Aporte moderado-alto de carbohidratos para sostener el trabajo aeróbico sin convertirlo en una compensación por no correr.'},
- longBike:{label:"Bici 60′ · fondo",p:110,c:210,f:60,reason:'Es el estímulo aeróbico más largo de la semana y, por eso, el día con más carbohidratos. Sigue siendo una semana de recuperación, no una larga de trail.'}
+rest:{label:'Descanso',p:110,c:160,f:60,reason:'Día de menor gasto. Mantenemos la proteína y la grasa; el ajuste energético se hace principalmente bajando carbohidratos.'},
+rehab:{label:'Rehabilitación / muy suave',p:110,c:180,f:60,reason:'La demanda energética sigue siendo baja, pero dejamos más carbohidratos que en descanso para acompañar movimiento y recuperación.'},
+bike40:{label:"Bici suave 40′ + rehab",p:110,c:180,f:60,reason:'Primeros días postcirugía: suficiente energía para volver a mover sin tratar de reemplazar el volumen de running que falta.'},
+strength:{label:'Fuerza inferior',p:110,c:200,f:60,reason:'Subimos carbohidratos para la sesión de fuerza mientras la proteína permanece alta para apoyar el mantenimiento de masa muscular.'},
+bikeCore:{label:"Bici 55′ + core",p:110,c:200,f:60,reason:'La sesión aeróbica y el core elevan la demanda respecto a un día suave; por eso pasamos a 200 g de carbohidratos.'},
+strengthRehab:{label:'Fuerza + rehabilitación',p:110,c:180,f:60,reason:'Es una segunda sesión de fuerza más corta y preventiva. No necesita el mismo aporte de un día de mayor volumen.'},
+bike50:{label:"Bici 50′ Z2",p:110,c:200,f:60,reason:'Aporte moderado-alto de carbohidratos para sostener el trabajo aeróbico sin convertirlo en una compensación por no correr.'},
+longBike:{label:"Bici 60′ · fondo",p:110,c:210,f:60,reason:'Es el estímulo aeróbico más largo de la semana y, por eso, el día con más carbohidratos. Sigue siendo una semana de recuperación, no una larga de trail.'}
 };
 const options=['rest','rehab','bike40','strength','bikeCore','strengthRehab','bike50','longBike'];
 const original=['bike40','strength','bikeCore','strengthRehab','bike50','longBike','rest'];
 let week=[...original], results=[], selected=0;
-function build(){const root=document.getElementById('week');if(!root)return;root.innerHTML='';days.forEach((d,i)=>{const el=document.createElement('div');el.className='day';el.innerHTML=`<div class="dayname">${d}</div>`;options.forEach(k=>{const b=document.createElement('button');b.type='button';b.textContent=types[k].label;b.className=week[i]===k?'active':'';b.onclick=()=>{week[i]=k;build();};el.appendChild(b)});root.appendChild(el)});}
+function build(){const root=document.getElementById('week');root.innerHTML='';days.forEach((d,i)=>{const el=document.createElement('div');el.className='day';el.innerHTML=`<div class="dayname">${d}</div>`;options.forEach(k=>{const b=document.createElement('button');b.type='button';b.textContent=types[k].label;b.className=week[i]===k?'active':'';b.onclick=()=>{week[i]=k;build();};el.appendChild(b)});root.appendChild(el)});}
 function kcal(x){return x.p*4+x.c*4+x.f*9}
-function calculate(){results=week.map((k,i)=>({...types[k],key:k,day:days[i],kcal:kcal(types[k])}));const ak=Math.round(results.reduce((s,x)=>s+x.kcal,0)/7);const ap=Math.round(results.reduce((s,x)=>s+x.p,0)/7);const ac=Math.round(results.reduce((s,x)=>s+x.c,0)/7);const af=Math.round(results.reduce((s,x)=>s+x.f,0)/7);document.getElementById('avg').textContent=ak;document.getElementById('avgP').textContent=ap+' g';document.getElementById('avgC').textContent=ac+' g';document.getElementById('avgF').textContent=af+' g';renderTabs();showDay(selected);document.getElementById('results').style.display='block';document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});localStorage.setItem('ms_camila_postop_week',JSON.stringify(week));}
+function calculate(){results=week.map((k,i)=>({...types[k],key:k,day:days[i],kcal:kcal(types[k])}));const ak=Math.round(results.reduce((s,x)=>s+x.kcal,0)/7);const ap=Math.round(results.reduce((s,x)=>s+x.p,0)/7);const ac=Math.round(results.reduce((s,x)=>s+x.c,0)/7);const af=Math.round(results.reduce((s,x)=>s+x.f,0)/7);document.getElementById('avg').textContent=ak;document.getElementById('avgP').textContent=ap+' g';document.getElementById('avgC').textContent=ac+' g';document.getElementById('avgF').textContent=af+' g';renderTabs();renderTable();showDay(selected);document.getElementById('results').style.display='block';document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});localStorage.setItem('ms_camila_postop_week',JSON.stringify(week));}
 function renderTabs(){const t=document.getElementById('tabs');t.innerHTML='';days.forEach((d,i)=>{const b=document.createElement('button');b.textContent=d.slice(0,3).toUpperCase();b.className=i===selected?'active':'';b.onclick=()=>{selected=i;renderTabs();showDay(i)};t.appendChild(b)})}
 function showDay(i){if(!results.length)return;const r=results[i];document.getElementById('dDay').textContent=r.day;document.getElementById('dSession').textContent=r.label;document.getElementById('dKcal').textContent=r.kcal+' kcal';document.getElementById('dP').textContent=r.p+' g';document.getElementById('dC').textContent=r.c+' g';document.getElementById('dF').textContent=r.f+' g';document.getElementById('dReason').textContent=r.reason;document.getElementById('ringKcal').textContent=r.kcal;const pk=r.p*4,ck=r.c*4,fk=r.f*9,total=pk+ck+fk,p1=pk/total*100,p2=(pk+ck)/total*100;document.getElementById('ring').style.background=`conic-gradient(var(--protein) 0 ${p1}%,var(--carbs) ${p1}% ${p2}%,var(--fat) ${p2}% 100%)`;renderFood();}
-const _msOriginalShowDay = showDay;
-showDay = function(i){
-  _msOriginalShowDay(i);
-  if(window.movesmartFirebaseSync){
-    window.movesmartFirebaseSync.subscribeSelectedDay();
-  }
-};
-
-function renderTable(){const b=document.getElementById('body');if(!b)return;}
+function renderTable(){const b=document.getElementById('body');b.innerHTML='';results.forEach(r=>{const tr=document.createElement('tr');tr.innerHTML=`<td><strong>${r.day}</strong></td><td>${r.label}</td><td class="mono">${r.kcal}</td><td class="mono">${r.p} g</td><td class="mono">${r.c} g</td><td class="mono">${r.f} g</td>`;b.appendChild(tr)})}
 const FATSECRET_API = "https://movesmart-nutrition-api.movesmartchile.workers.dev";
 let selectedFatSecretProduct = null;
 let selectedLocalProduct = null;
 function selectLocalProduct(i){
-  const p=(window._localSearchProducts||[])[i];
-  if(!p) return;
-  selectedLocalProduct=p;
-  selectedFatSecretProduct=null;
-  document.getElementById('foodName').value=p.name;
-  document.getElementById('foodBarcode').value='';
-  document.getElementById('foodKcal').value=p.kcal;
-  document.getElementById('foodP').value=p.p;
-  document.getElementById('foodC').value=p.c;
-  document.getElementById('foodF').value=p.f;
-  const selected=document.getElementById('selectedProduct');
-  selected.className='selected-product show';
-  selected.innerHTML=
-    `<b>Seleccionado:</b> ${escapeHtml(p.name)}<br>`+
-    `${Number(p.kcal).toFixed(0)} kcal · ${Number(p.p).toFixed(1)} P · ${Number(p.c).toFixed(1)} CH · ${Number(p.f).toFixed(1)} G por 100 g · ${p.shared?'Base MoveSmart compartida':(p.custom?'Mi Base MoveSmart':'Base MoveSmart')}`;
-  document.getElementById('offResults').innerHTML='';
-  document.getElementById('searchStatus').textContent=`Seleccionado desde ${p.shared?'Base MoveSmart compartida':'Base MoveSmart'}: ${p.name}`;
-  previewFood();
-  if(typeof updatePortionPreview==='function') updatePortionPreview();
-  document.getElementById('foodQty').focus();
+const p=(window._localSearchProducts||[])[i];
+if(!p) return;
+selectedLocalProduct=p;
+selectedFatSecretProduct=null;
+document.getElementById('foodName').value=p.name;
+document.getElementById('foodBarcode').value='';
+document.getElementById('foodKcal').value=p.kcal;
+document.getElementById('foodP').value=p.p;
+document.getElementById('foodC').value=p.c;
+document.getElementById('foodF').value=p.f;
+const selected=document.getElementById('selectedProduct');
+selected.className='selected-product show';
+selected.innerHTML=
+`<b>Seleccionado:</b> ${escapeHtml(p.name)}<br>`+
+`${Number(p.kcal).toFixed(0)} kcal · ${Number(p.p).toFixed(1)} P · ${Number(p.c).toFixed(1)} CH · ${Number(p.f).toFixed(1)} G por 100 g · ${p.shared?'Base MoveSmart compartida':(p.custom?'Mi Base MoveSmart':'Base MoveSmart')}`;
+document.getElementById('offResults').innerHTML='';
+document.getElementById('searchStatus').textContent=`Seleccionado desde ${p.shared?'Base MoveSmart compartida':'Base MoveSmart'}: ${p.name}`;
+previewFood();
+if(typeof updatePortionPreview==='function') updatePortionPreview();
+document.getElementById('foodQty').focus();
 }
 function normalizeFatSecretFoods(data){
-  let foods=data?.foods?.food||[];
-  if(!Array.isArray(foods)) foods=foods?[foods]:[];
-  return foods;
+let foods=data?.foods?.food||[];
+if(!Array.isArray(foods)) foods=foods?[foods]:[];
+return foods;
 }
 function fatSecretTitle(food){
-  const brand=food.brand_name ? `${food.brand_name} · ` : '';
-  return `${brand}${food.food_name||'Alimento'}`;
+const brand=food.brand_name ? `${food.brand_name} · ` : '';
+return `${brand}${food.food_name||'Alimento'}`;
 }
 async function searchFood(){
-  const q=document.getElementById('foodName').value.trim();
-  const status=document.getElementById('searchStatus');
-  const root=document.getElementById('offResults');
-  const btn=document.getElementById('searchFoodBtn');
-  if(q.length<2){
-    status.textContent='Escribe al menos 2 caracteres para buscar.';
-    root.innerHTML='';
-    return;
-  }
-  selectedFatSecretProduct=null;
-  selectedLocalProduct=null;
-  btn.disabled=true;
-  btn.textContent='Buscando…';
-  status.textContent='Buscando en la Base MoveSmart compartida y en FatSecret…';
-  root.innerHTML='';
-  try{
-    const local=typeof buscarLocalFood==='function' ? buscarLocalFood(q) : [];
-    let shared=[];
-    try{
-      if(typeof window.msSearchSharedFoods==='function'){
-        shared=await window.msSearchSharedFoods(q);
-      }
-    }catch(err){
-      console.warn('No se pudo consultar Firestore:',err);
-    }
-    // Evitar duplicados entre base compartida y base local.
-    const seen=new Set();
-    const moveSmartResults=[...shared,...local].filter(p=>{
-      const key=normalizeText(p.name);
-      if(!key || seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-    window._localSearchProducts=moveSmartResults;
-    let fatFoods=[];
-    try{
-      const res=await fetch(
-        `${FATSECRET_API}/?q=${encodeURIComponent(q)}`,
-        {headers:{'Accept':'application/json'}}
-      );
-      if(!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data=await res.json();
-      fatFoods=normalizeFatSecretFoods(data);
-    }catch(err){
-      console.warn('No se pudo consultar FatSecret:',err);
-    }
-    window._fatSecretSearchProducts=fatFoods;
-    const msHtml=moveSmartResults.map((p,i)=>`
-      <button type="button" class="off-result" onclick="selectLocalProduct(${i})">
-        <div class="noimg">${p.shared?'CL':'MS'}</div>
-        <span>
-          <b>${escapeHtml(p.name)}</b>
-          <small>${Number(p.kcal).toFixed(0)} kcal · ${Number(p.p).toFixed(1)} P · ${Number(p.c).toFixed(1)} CH · ${Number(p.f).toFixed(1)} G / 100 g · ${p.shared?'Base MoveSmart compartida':(p.custom?'Mi Base MoveSmart':'Base MoveSmart')}</small>
-        </span>
-        <span class="choose">Elegir</span>
-      </button>
-    `).join('');
-    const fatHtml=fatFoods.map((food,i)=>{
-      const title=escapeHtml(fatSecretTitle(food));
-      const type=escapeHtml(food.food_type||'');
-      const desc=escapeHtml(food.food_description||'');
-      return `
-        <button type="button" class="off-result" onclick="selectFatSecretProduct(${i})">
-          <div class="noimg">FS</div>
-          <span>
-            <b>${title}</b>
-            <small>${type}${type?' · ':''}${desc}</small>
-          </span>
-          <span class="choose">Elegir</span>
-        </button>
-      `;
-    }).join('');
-    root.innerHTML=msHtml+fatHtml;
-    const total=moveSmartResults.length+fatFoods.length;
-    if(!total){
-      status.textContent='No encontré resultados. Usa “No encuentro mi producto” para agregarlo desde su etiqueta.';
-    }else{
-      const parts=[];
-      if(moveSmartResults.length) parts.push(`${moveSmartResults.length} de MoveSmart`);
-      if(fatFoods.length) parts.push(`${fatFoods.length} de FatSecret`);
-      status.textContent=`Encontré ${parts.join(' y ')}. Los productos de la Base MoveSmart aparecen primero.`;
-    }
-  }catch(err){
-    console.error(err);
-    status.textContent='No pude completar la búsqueda. Puedes agregar el producto manualmente.';
-  }finally{
-    btn.disabled=false;
-    btn.textContent='Buscar';
-  }
+const q=document.getElementById('foodName').value.trim();
+const status=document.getElementById('searchStatus');
+const root=document.getElementById('offResults');
+const btn=document.getElementById('searchFoodBtn');
+if(q.length<2){
+status.textContent='Escribe al menos 2 caracteres para buscar.';
+root.innerHTML='';
+return;
+}
+selectedFatSecretProduct=null;
+selectedLocalProduct=null;
+btn.disabled=true;
+btn.textContent='Buscando…';
+status.textContent='Buscando en la Base MoveSmart compartida y en FatSecret…';
+root.innerHTML='';
+try{
+const local=typeof buscarLocalFood==='function' ? buscarLocalFood(q) : [];
+let shared=[];
+try{
+if(typeof window.msSearchSharedFoods==='function'){
+shared=await window.msSearchSharedFoods(q);
+}
+}catch(err){
+console.warn('No se pudo consultar Firestore:',err);
+}
+// Evitar duplicados entre base compartida y base local.
+const seen=new Set();
+const moveSmartResults=[...shared,...local].filter(p=>{
+const key=normalizeText(p.name);
+if(!key || seen.has(key)) return false;
+seen.add(key);
+return true;
+});
+window._localSearchProducts=moveSmartResults;
+let fatFoods=[];
+try{
+const res=await fetch(
+`${FATSECRET_API}/?q=${encodeURIComponent(q)}`,
+{headers:{'Accept':'application/json'}}
+);
+if(!res.ok) throw new Error(`HTTP ${res.status}`);
+const data=await res.json();
+fatFoods=normalizeFatSecretFoods(data);
+}catch(err){
+console.warn('No se pudo consultar FatSecret:',err);
+}
+window._fatSecretSearchProducts=fatFoods;
+const msHtml=moveSmartResults.map((p,i)=>`
+<button type="button" class="off-result" onclick="selectLocalProduct(${i})">
+<div class="noimg">${p.shared?'CL':'MS'}</div>
+<span>
+<b>${escapeHtml(p.name)}</b>
+<small>${Number(p.kcal).toFixed(0)} kcal · ${Number(p.p).toFixed(1)} P · ${Number(p.c).toFixed(1)} CH · ${Number(p.f).toFixed(1)} G / 100 g · ${p.shared?'Base MoveSmart compartida':(p.custom?'Mi Base MoveSmart':'Base MoveSmart')}</small>
+</span>
+<span class="choose">Elegir</span>
+</button>
+`).join('');
+const fatHtml=fatFoods.map((food,i)=>{
+const title=escapeHtml(fatSecretTitle(food));
+const type=escapeHtml(food.food_type||'');
+const desc=escapeHtml(food.food_description||'');
+return `
+<button type="button" class="off-result" onclick="selectFatSecretProduct(${i})">
+<div class="noimg">FS</div>
+<span>
+<b>${title}</b>
+<small>${type}${type?' · ':''}${desc}</small>
+</span>
+<span class="choose">Elegir</span>
+</button>
+`;
+}).join('');
+root.innerHTML=msHtml+fatHtml;
+const total=moveSmartResults.length+fatFoods.length;
+if(!total){
+status.textContent='No encontré resultados. Usa “No encuentro mi producto” para agregarlo desde su etiqueta.';
+}else{
+const parts=[];
+if(moveSmartResults.length) parts.push(`${moveSmartResults.length} de MoveSmart`);
+if(fatFoods.length) parts.push(`${fatFoods.length} de FatSecret`);
+status.textContent=`Encontré ${parts.join(' y ')}. Los productos de la Base MoveSmart aparecen primero.`;
+}
+}catch(err){
+console.error(err);
+status.textContent='No pude completar la búsqueda. Puedes agregar el producto manualmente.';
+}finally{
+btn.disabled=false;
+btn.textContent='Buscar';
+}
 }
 async function selectFatSecretProduct(i){
-  const food=(window._fatSecretSearchProducts||[])[i];
-  if(!food) return;
-  const status=document.getElementById('searchStatus');
-  const root=document.getElementById('offResults');
-  const selected=document.getElementById('selectedProduct');
-  status.textContent='Cargando porciones y valores nutricionales…';
-  root.innerHTML='';
-  try{
-    const res=await fetch(
-      `${FATSECRET_API}/?food_id=${encodeURIComponent(food.food_id)}`,
-      {headers:{'Accept':'application/json'}}
-    );
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    const detail=await res.json();
-    if(!detail?.ok){
-      throw new Error(detail?.error || 'No se pudo cargar el alimento.');
-    }
-    let base=detail.per_100g || null;
-    let converted=false;
-    if(!base){
-      const serving=(detail.servings||[]).find(s=>Number(s.grams)>0);
-      if(serving){
-        const factor=100/Number(serving.grams);
-        base={
-          label:'100 g (calculado)',
-          grams:100,
-          unit:'g',
-          kcal:Number(serving.kcal||0)*factor,
-          protein:Number(serving.protein||0)*factor,
-          carbs:Number(serving.carbs||0)*factor,
-          fat:Number(serving.fat||0)*factor
-        };
-        converted=true;
-      }
-    }
-    if(!base){
-      throw new Error('FatSecret no entregó una porción convertible a gramos.');
-    }
-    selectedFatSecretProduct={
-      food_id:detail.food_id,
-      name:detail.name || food.food_name || 'Alimento',
-      brand:food.brand_name || '',
-      type:detail.type || food.food_type || '',
-      base,
-      servings:detail.servings || [],
-      converted
-    };
-    selectedLocalProduct=null;
-    const fullName=
-      `${selectedFatSecretProduct.brand ? selectedFatSecretProduct.brand+' · ' : ''}${selectedFatSecretProduct.name}`;
-    document.getElementById('foodName').value=fullName;
-    document.getElementById('foodBarcode').value=detail.food_id||'';
-    document.getElementById('foodKcal').value=Number(base.kcal||0).toFixed(1);
-    document.getElementById('foodP').value=Number(base.protein||0).toFixed(2);
-    document.getElementById('foodC').value=Number(base.carbs||0).toFixed(2);
-    document.getElementById('foodF').value=Number(base.fat||0).toFixed(2);
-    selected.className='selected-product show';
-    selected.innerHTML=
-      `<b>Seleccionado:</b> ${escapeHtml(fullName)}<br>`+
-      `${Math.round(base.kcal)} kcal · ${Number(base.protein).toFixed(1)} P · `+
-      `${Number(base.carbs).toFixed(1)} CH · ${Number(base.fat).toFixed(1)} G por 100 g`+
-      `${converted ? ' · convertido desde una porción FatSecret' : ' · FatSecret'}`;
-    status.textContent=
-      converted
-        ? 'Producto cargado. MoveSmart convirtió una porción de FatSecret a valores por 100 g.'
-        : 'Producto cargado desde FatSecret. Ahora indica la cantidad que consumiste.';
-    previewFood();
-    if(typeof updatePortionPreview==='function') updatePortionPreview();
-    document.getElementById('foodQty').focus();
-  }catch(err){
-    console.error(err);
-    status.textContent=`No pude cargar el detalle del alimento: ${err.message}`;
-  }
+const food=(window._fatSecretSearchProducts||[])[i];
+if(!food) return;
+const status=document.getElementById('searchStatus');
+const root=document.getElementById('offResults');
+const selected=document.getElementById('selectedProduct');
+status.textContent='Cargando porciones y valores nutricionales…';
+root.innerHTML='';
+try{
+const res=await fetch(
+`${FATSECRET_API}/?food_id=${encodeURIComponent(food.food_id)}`,
+{headers:{'Accept':'application/json'}}
+);
+if(!res.ok) throw new Error(`HTTP ${res.status}`);
+const detail=await res.json();
+if(!detail?.ok){
+throw new Error(detail?.error || 'No se pudo cargar el alimento.');
+}
+let base=detail.per_100g || null;
+let converted=false;
+if(!base){
+const serving=(detail.servings||[]).find(s=>Number(s.grams)>0);
+if(serving){
+const factor=100/Number(serving.grams);
+base={
+label:'100 g (calculado)',
+grams:100,
+unit:'g',
+kcal:Number(serving.kcal||0)*factor,
+protein:Number(serving.protein||0)*factor,
+carbs:Number(serving.carbs||0)*factor,
+fat:Number(serving.fat||0)*factor
+};
+converted=true;
+}
+}
+if(!base){
+throw new Error('FatSecret no entregó una porción convertible a gramos.');
+}
+selectedFatSecretProduct={
+food_id:detail.food_id,
+name:detail.name || food.food_name || 'Alimento',
+brand:food.brand_name || '',
+type:detail.type || food.food_type || '',
+base,
+servings:detail.servings || [],
+converted
+};
+selectedLocalProduct=null;
+const fullName=
+`${selectedFatSecretProduct.brand ? selectedFatSecretProduct.brand+' · ' : ''}${selectedFatSecretProduct.name}`;
+document.getElementById('foodName').value=fullName;
+document.getElementById('foodBarcode').value=detail.food_id||'';
+document.getElementById('foodKcal').value=Number(base.kcal||0).toFixed(1);
+document.getElementById('foodP').value=Number(base.protein||0).toFixed(2);
+document.getElementById('foodC').value=Number(base.carbs||0).toFixed(2);
+document.getElementById('foodF').value=Number(base.fat||0).toFixed(2);
+selected.className='selected-product show';
+selected.innerHTML=
+`<b>Seleccionado:</b> ${escapeHtml(fullName)}<br>`+
+`${Math.round(base.kcal)} kcal · ${Number(base.protein).toFixed(1)} P · `+
+`${Number(base.carbs).toFixed(1)} CH · ${Number(base.fat).toFixed(1)} G por 100 g`+
+`${converted ? ' · convertido desde una porción FatSecret' : ' · FatSecret'}`;
+status.textContent=
+converted
+? 'Producto cargado. MoveSmart convirtió una porción de FatSecret a valores por 100 g.'
+: 'Producto cargado desde FatSecret. Ahora indica la cantidad que consumiste.';
+previewFood();
+if(typeof updatePortionPreview==='function') updatePortionPreview();
+document.getElementById('foodQty').focus();
+}catch(err){
+console.error(err);
+status.textContent=`No pude cargar el detalle del alimento: ${err.message}`;
+}
 }
 const MEALS={
-  desayuno:{label:'Desayuno',icon:'☕'},
-  almuerzo:{label:'Almuerzo',icon:'🍽️'},
-  cena:{label:'Cena',icon:'🌙'},
-  snack:{label:'Snack',icon:'🍎'}
+desayuno:{label:'Desayuno',icon:'☕'},
+almuerzo:{label:'Almuerzo',icon:'🍽️'},
+cena:{label:'Cena',icon:'🌙'},
+snack:{label:'Snack',icon:'🍎'}
 };
 let selectedMeal='desayuno';
 function setMeal(meal){
-  if(!MEALS[meal]) return;
-  selectedMeal=meal;
-  document.querySelectorAll('.meal-choice').forEach(btn=>{
-    btn.classList.toggle('active',btn.dataset.meal===meal);
-  });
-  const addBtn=document.getElementById('addFoodBtn');
-  if(addBtn) addBtn.textContent=`+ Agregar a mi ${MEALS[meal].label.toLowerCase()}`;
+if(!MEALS[meal]) return;
+selectedMeal=meal;
+document.querySelectorAll('.meal-choice').forEach(btn=>{
+btn.classList.toggle('active',btn.dataset.meal===meal);
+});
+const addBtn=document.getElementById('addFoodBtn');
+if(addBtn) addBtn.textContent=`+ Agregar a mi ${MEALS[meal].label.toLowerCase()}`;
 }
 document.querySelectorAll('.meal-choice').forEach(btn=>{
-  btn.addEventListener('click',()=>setMeal(btn.dataset.meal));
+btn.addEventListener('click',()=>setMeal(btn.dataset.meal));
 });
 setMeal('desayuno');
 const FOOD_STORAGE='ms_camila_food_log_v1';
 let foodLog={};
 try{foodLog=JSON.parse(localStorage.getItem(FOOD_STORAGE)||'{}')||{}}catch(e){foodLog={}}
 function saveFoodLog(){localStorage.setItem(FOOD_STORAGE,JSON.stringify(foodLog))}
-const _msOriginalSaveFoodLog = saveFoodLog;
-saveFoodLog = function(){
-  _msOriginalSaveFoodLog();
-  if(window.movesmartFirebaseSync){
-    window.movesmartFirebaseSync.scheduleSync();
-  }
-};
-
 function currentFoods(){return Array.isArray(foodLog[selected])?foodLog[selected]:[]}
-window.msNutritionBridge = {
-  getSelected: () => selected,
-  getDays: () => days,
-  getResults: () => results,
-  getFoods: () => currentFoods(),
-  replaceFoods: (items) => {
-    foodLog[selected] = Array.isArray(items) ? items : [];
-    _msOriginalSaveFoodLog();
-    renderFood();
+
+function updateMenuCopyUI(){
+  const source=document.getElementById('menuCopySource');
+  const target=document.getElementById('menuCopyTarget');
+  const btn=document.getElementById('menuCopyBtn');
+  const status=document.getElementById('menuCopyStatus');
+  if(!source||!target||!btn) return;
+
+  source.textContent=`Desde: ${days[selected]}`;
+  const previous=target.value;
+  target.innerHTML=days.map((day,i)=>i===selected?'':`<option value="${i}">${day}</option>`).join('');
+  if(previous && Number(previous)!==selected && [...target.options].some(o=>o.value===previous)){
+    target.value=previous;
   }
-};
+  btn.disabled=currentFoods().length===0;
+  if(status && currentFoods().length===0){
+    status.textContent=`Agrega alimentos a ${days[selected]} para poder copiar este menú.`;
+  }else if(status){
+    status.textContent=`${days[selected]} se guarda automáticamente. Puedes copiar sus ${currentFoods().length} alimento${currentFoods().length===1?'':'s'} a otro día.`;
+  }
+}
+
+function cloneMenuItems(items){
+  const stamp=Date.now();
+  return items.map((item,i)=>({
+    ...item,
+    id:stamp+i+Math.random()
+  }));
+}
+
+function copyDayMenu(){
+  const sourceIndex=selected;
+  const sourceItems=Array.isArray(foodLog[sourceIndex])?foodLog[sourceIndex]:[];
+  const targetEl=document.getElementById('menuCopyTarget');
+  const modeEl=document.getElementById('menuCopyMode');
+  const status=document.getElementById('menuCopyStatus');
+  const targetIndex=Number(targetEl?.value);
+
+  if(!sourceItems.length){
+    if(status) status.textContent=`${days[sourceIndex]} todavía no tiene alimentos para copiar.`;
+    return;
+  }
+  if(!Number.isInteger(targetIndex) || targetIndex<0 || targetIndex>=days.length || targetIndex===sourceIndex){
+    if(status) status.textContent='Selecciona un día de destino distinto.';
+    return;
+  }
+
+  const copied=cloneMenuItems(sourceItems);
+  const existing=Array.isArray(foodLog[targetIndex])?foodLog[targetIndex]:[];
+  const mode=modeEl?.value==='replace'?'replace':'append';
+
+  foodLog[targetIndex]=mode==='replace' ? copied : [...existing,...copied];
+  saveFoodLog();
+
+  if(status){
+    status.textContent=`✓ Menú de ${days[sourceIndex]} copiado a ${days[targetIndex]} (${copied.length} alimento${copied.length===1?'':'s'}).`;
+  }
+}
 
 function n(id){return parseFloat(document.getElementById(id).value)||0}
 function portionData(){const q=n('foodQty'),factor=q/100;const p100=n('foodP'),c100=n('foodC'),f100=n('foodF');let kcal100=n('foodKcal');if(!kcal100&&(p100||c100||f100))kcal100=p100*4+c100*4+f100*9;return{qty:q,kcal:kcal100*factor,p:p100*factor,c:c100*factor,f:f100*factor,kcal100,p100,c100,f100}}
 function previewFood(){const x=portionData(),el=document.getElementById('foodPreview');if(!x.qty){el.innerHTML='<strong>Importante:</strong> escribe la cantidad consumida y los valores reales por 100 g. Los números grises son solo ejemplos.';return}if(!(x.kcal100||x.p100||x.c100||x.f100)){el.innerHTML='<strong>Faltan los datos nutricionales.</strong> Los números grises son ejemplos, no valores ingresados. Escribe kcal y/o macros por 100 g.';return}el.innerHTML=`Esta porción aporta aproximadamente <strong>${Math.round(x.kcal)} kcal</strong> · <strong>${x.p.toFixed(1)} g P</strong> · <strong>${x.c.toFixed(1)} g CH</strong> · <strong>${x.f.toFixed(1)} g G</strong>.`}
 function addFood(){
-  const name=document.getElementById('foodName').value.trim(),x=portionData();
-  if(!name){alert('Escribe el nombre del alimento.');return}
-  if(!x.qty){alert('Indica la cantidad consumida en gramos.');return}
-  if(!(x.kcal100||x.p100||x.c100||x.f100)){alert('Faltan los datos nutricionales por 100 g. Los números grises son solo ejemplos.');return}
-  if(!foodLog[selected])foodLog[selected]=[];
-  const addedFood={
-    id:Date.now()+Math.random(),
-    name,
-    meal:selectedMeal,
-    qty:x.qty,
-    kcal:x.kcal,
-    p:x.p,
-    c:x.c,
-    f:x.f,
-    barcode:document.getElementById('foodBarcode').value||'',
-    source:selectedLocalProduct?(selectedLocalProduct.shared?'Base MoveSmart compartida':(selectedLocalProduct.custom?'Mi Base MoveSmart':'Base MoveSmart')):(selectedFatSecretProduct?'FatSecret':'Manual')
-  };
-  foodLog[selected].push(addedFood);
-  saveFoodLog();
-  ['foodName','foodQty','foodKcal','foodP','foodC','foodF','foodBarcode'].forEach(id=>document.getElementById(id).value='');
-  selectedFatSecretProduct=null;
-  selectedLocalProduct=null;
-  document.getElementById('selectedProduct').className='selected-product';
-  document.getElementById('selectedProduct').innerHTML='';
-  document.getElementById('offResults').innerHTML='';
-  toggleCustomFood(false);
-  document.getElementById('searchStatus').textContent='Escribe al menos 2 caracteres y presiona Buscar.';
-  previewFood();
-  if(typeof updatePortionPreview==='function') updatePortionPreview();
-  renderFood();
+const name=document.getElementById('foodName').value.trim(),x=portionData();
+if(!name){alert('Escribe el nombre del alimento.');return}
+if(!x.qty){alert('Indica la cantidad consumida en gramos.');return}
+if(!(x.kcal100||x.p100||x.c100||x.f100)){alert('Faltan los datos nutricionales por 100 g. Los números grises son solo ejemplos.');return}
+if(!foodLog[selected])foodLog[selected]=[];
+foodLog[selected].push({
+id:Date.now()+Math.random(),
+name,
+meal:selectedMeal,
+qty:x.qty,
+kcal:x.kcal,
+p:x.p,
+c:x.c,
+f:x.f,
+barcode:document.getElementById('foodBarcode').value||'',
+source:selectedLocalProduct?(selectedLocalProduct.shared?'Base MoveSmart compartida':(selectedLocalProduct.custom?'Mi Base MoveSmart':'Base MoveSmart')):(selectedFatSecretProduct?'FatSecret':'Manual')
+});
+saveFoodLog();
+['foodName','foodQty','foodKcal','foodP','foodC','foodF','foodBarcode'].forEach(id=>document.getElementById(id).value='');
+selectedFatSecretProduct=null;
+selectedLocalProduct=null;
+document.getElementById('selectedProduct').className='selected-product';
+document.getElementById('selectedProduct').innerHTML='';
+document.getElementById('offResults').innerHTML='';
+toggleCustomFood(false);
+document.getElementById('searchStatus').textContent='Escribe al menos 2 caracteres y presiona Buscar.';
+previewFood();
+if(typeof updatePortionPreview==='function') updatePortionPreview();
+renderFood();
 }
-
-function editFood(id){
-  const items=currentFoods();
-  const item=items.find(x=>x.id===id);
-  if(!item) return;
-
-  const currentQty=Number(item.qty)||0;
-  const factor=currentQty/100 || 1;
-  const kcal100=currentQty ? (Number(item.kcal)||0)/factor : 0;
-  const p100=currentQty ? (Number(item.p)||0)/factor : 0;
-  const c100=currentQty ? (Number(item.c)||0)/factor : 0;
-  const f100=currentQty ? (Number(item.f)||0)/factor : 0;
-
-  const name=prompt('Nombre del alimento:',item.name);
-  if(name===null) return;
-
-  const qtyRaw=prompt('Cantidad consumida (g):',String(Math.round(currentQty*10)/10));
-  if(qtyRaw===null) return;
-  const qty=parseFloat(qtyRaw);
-  if(!(qty>0)){alert('La cantidad debe ser mayor que 0 g.');return}
-
-  const kcalRaw=prompt('kcal por 100 g:',String(Math.round(kcal100*10)/10));
-  if(kcalRaw===null) return;
-  const pRaw=prompt('Proteína por 100 g:',String(Math.round(p100*10)/10));
-  if(pRaw===null) return;
-  const cRaw=prompt('Carbohidratos por 100 g:',String(Math.round(c100*10)/10));
-  if(cRaw===null) return;
-  const fRaw=prompt('Grasas por 100 g:',String(Math.round(f100*10)/10));
-  if(fRaw===null) return;
-
-  const newKcal100=parseFloat(kcalRaw)||0;
-  const newP100=parseFloat(pRaw)||0;
-  const newC100=parseFloat(cRaw)||0;
-  const newF100=parseFloat(fRaw)||0;
-  const newFactor=qty/100;
-
-  item.name=name.trim() || item.name;
-  item.qty=qty;
-  item.kcal=newKcal100*newFactor;
-  item.p=newP100*newFactor;
-  item.c=newC100*newFactor;
-  item.f=newF100*newFactor;
-
-  saveFoodLog();
-  renderFood();
-}
-
 function deleteFood(id){foodLog[selected]=currentFoods().filter(x=>x.id!==id);saveFoodLog();renderFood()}
 function foodTotals(){return currentFoods().reduce((a,x)=>({kcal:a.kcal+x.kcal,p:a.p+x.p,c:a.c+x.c,f:a.f+x.f}),{kcal:0,p:0,c:0,f:0})}
 function pct(v,max){return Math.max(0,Math.min(100,max? v/max*100:0))}
 function mealTotals(items){
-  return items.reduce((a,x)=>({
-    kcal:a.kcal+x.kcal,
-    p:a.p+x.p,
-    c:a.c+x.c,
-    f:a.f+x.f
-  }),{kcal:0,p:0,c:0,f:0});
+return items.reduce((a,x)=>({
+kcal:a.kcal+x.kcal,
+p:a.p+x.p,
+c:a.c+x.c,
+f:a.f+x.f
+}),{kcal:0,p:0,c:0,f:0});
 }
 function renderFood(){
-  if(!results.length)return;
-  const target=results[selected],
-        items=currentFoods(),
-        t=foodTotals();
-  document.getElementById('foodDayLabel').textContent=`Registrando: ${days[selected]}`;
-  document.getElementById('progressDay').textContent=days[selected];
-  document.getElementById('progressKcal').textContent=`${Math.round(t.kcal)} / ${target.kcal} kcal`;
-  document.getElementById('progPText').textContent=`${t.p.toFixed(1)} / ${target.p} g`;
-  document.getElementById('progCText').textContent=`${t.c.toFixed(1)} / ${target.c} g`;
-  document.getElementById('progFText').textContent=`${t.f.toFixed(1)} / ${target.f} g`;
-  document.getElementById('progPBar').style.width=pct(t.p,target.p)+'%';
-  document.getElementById('progCBar').style.width=pct(t.c,target.c)+'%';
-  document.getElementById('progFBar').style.width=pct(t.f,target.f)+'%';
-  const rk=Math.max(0,target.kcal-t.kcal),
-        rp=Math.max(0,target.p-t.p),
-        rc=Math.max(0,target.c-t.c),
-        rf=Math.max(0,target.f-t.f);
-  document.getElementById('remainingText').innerHTML=
-    `Te quedan aproximadamente <strong>${Math.round(rk)} kcal</strong> · `+
-    `<strong>${rp.toFixed(1)} g P</strong> · `+
-    `<strong>${rc.toFixed(1)} g CH</strong> · `+
-    `<strong>${rf.toFixed(1)} g G</strong>.`;
-  const list=document.getElementById('foodList');
-  if(!items.length){
-    list.innerHTML='<div class="empty-food">Todavía no has registrado alimentos en este día.</div>';
-    return;
-  }
-  const mealOrder=['desayuno','almuerzo','cena','snack'];
-  list.innerHTML=mealOrder.map(mealKey=>{
-    const info=MEALS[mealKey];
-    // Compatibilidad con registros anteriores: si no tienen meal, se muestran como snack.
-    const mealItems=items.filter(x=>(x.meal||'snack')===mealKey);
-    const mt=mealTotals(mealItems);
-    const body=mealItems.length
-      ? mealItems.map(x=>`
-        <div class="food-item">
-          <div>
-            <b>${escapeHtml(x.name)} · ${Math.round(x.qty)} g</b>
-            <small>${Math.round(x.kcal)} kcal · ${x.p.toFixed(1)} P · ${x.c.toFixed(1)} CH · ${x.f.toFixed(1)} G${x.source?' · '+escapeHtml(x.source):''}</small>
-            <span class="meal-badge">${info.icon} ${info.label}</span>
-          </div>
-          <div class="food-item-actions">
-            <button class="edit-food" onclick="editFood(${x.id})" aria-label="Editar alimento">Editar</button>
-            <button class="delete-food" onclick="deleteFood(${x.id})" aria-label="Eliminar">×</button>
-          </div>
-        </div>`).join('')
-      : `<div class="meal-group-empty">Aún no has registrado alimentos aquí.</div>`;
-    return `
-      <section class="meal-group">
-        <div class="meal-group-head">
-          <div class="meal-group-title">${info.icon} ${info.label}</div>
-          <div class="meal-group-total">${Math.round(mt.kcal)} kcal · ${mt.p.toFixed(1)} P · ${mt.c.toFixed(1)} CH · ${mt.f.toFixed(1)} G</div>
-        </div>
-        <div class="meal-group-body">${body}</div>
-      </section>`;
-  }).join('');
+if(!results.length)return;
+updateMenuCopyUI();
+const target=results[selected],
+items=currentFoods(),
+t=foodTotals();
+document.getElementById('foodDayLabel').textContent=`Registrando: ${days[selected]}`;
+document.getElementById('progressDay').textContent=days[selected];
+document.getElementById('progressKcal').textContent=`${Math.round(t.kcal)} / ${target.kcal} kcal`;
+document.getElementById('progPText').textContent=`${t.p.toFixed(1)} / ${target.p} g`;
+document.getElementById('progCText').textContent=`${t.c.toFixed(1)} / ${target.c} g`;
+document.getElementById('progFText').textContent=`${t.f.toFixed(1)} / ${target.f} g`;
+document.getElementById('progPBar').style.width=pct(t.p,target.p)+'%';
+document.getElementById('progCBar').style.width=pct(t.c,target.c)+'%';
+document.getElementById('progFBar').style.width=pct(t.f,target.f)+'%';
+const rk=Math.max(0,target.kcal-t.kcal),
+rp=Math.max(0,target.p-t.p),
+rc=Math.max(0,target.c-t.c),
+rf=Math.max(0,target.f-t.f);
+document.getElementById('remainingText').innerHTML=
+`Te quedan aproximadamente <strong>${Math.round(rk)} kcal</strong> · `+
+`<strong>${rp.toFixed(1)} g P</strong> · `+
+`<strong>${rc.toFixed(1)} g CH</strong> · `+
+`<strong>${rf.toFixed(1)} g G</strong>.`;
+const list=document.getElementById('foodList');
+if(!items.length){
+list.innerHTML='<div class="empty-food">Todavía no has registrado alimentos en este día.</div>';
+return;
+}
+const mealOrder=['desayuno','almuerzo','cena','snack'];
+list.innerHTML=mealOrder.map(mealKey=>{
+const info=MEALS[mealKey];
+// Compatibilidad con registros anteriores: si no tienen meal, se muestran como snack.
+const mealItems=items.filter(x=>(x.meal||'snack')===mealKey);
+const mt=mealTotals(mealItems);
+const body=mealItems.length
+? mealItems.map(x=>`
+<div class="food-item">
+<div>
+<b>${escapeHtml(x.name)} · ${Math.round(x.qty)} g</b>
+<small>${Math.round(x.kcal)} kcal · ${x.p.toFixed(1)} P · ${x.c.toFixed(1)} CH · ${x.f.toFixed(1)} G${x.source?' · '+escapeHtml(x.source):''}</small>
+<span class="meal-badge">${info.icon} ${info.label}</span>
+</div>
+<button class="delete-food" onclick="deleteFood(${x.id})" aria-label="Eliminar">×</button>
+</div>`).join('')
+: `<div class="meal-group-empty">Aún no has registrado alimentos aquí.</div>`;
+return `
+<section class="meal-group">
+<div class="meal-group-head">
+<div class="meal-group-title">${info.icon} ${info.label}</div>
+<div class="meal-group-total">${Math.round(mt.kcal)} kcal · ${mt.p.toFixed(1)} P · ${mt.c.toFixed(1)} CH · ${mt.f.toFixed(1)} G</div>
+</div>
+<div class="meal-group-body">${body}</div>
+</section>`;
+}).join('');
 }
 function escapeHtml(v){return String(v).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;')}
 function resetWeek(){week=[...original];selected=0;build();calculate();localStorage.removeItem('ms_camila_postop_week')}
 function copyWeek(){if(!results.length)return;const lines=results.map(r=>`${r.day}: ${r.label} — ${r.kcal} kcal | ${r.p} P | ${r.c} CH | ${r.f} G`);const text=`MOVESMART — Semana 10–16 agosto · postcirugía\n\n${lines.join('\n')}\n\nObjetivo: mantener peso y masa muscular durante reducción temporal de carga.`;navigator.clipboard.writeText(text).then(()=>alert('Semana copiada ✓'))}
 try{const saved=JSON.parse(localStorage.getItem('ms_camila_postop_week')||'null');if(Array.isArray(saved)&&saved.length===7)week=saved}catch(e){}
 build();calculate();
-
-function formatRemaining(value, unit, valueId, unitId, cardId){
-  const valueEl=document.getElementById(valueId);
-  const unitEl=document.getElementById(unitId);
-  const card=document.getElementById(cardId);
-  if(!valueEl || !unitEl || !card) return;
-
-  card.classList.remove('done');
-
-  if(value > 0.05){
-    valueEl.textContent=unit==='kcal' ? Math.round(value) : value.toFixed(1);
-    unitEl.textContent=unit;
-  }else{
-    valueEl.textContent='✓';
-    unitEl.textContent='Objetivo cumplido';
-    card.classList.add('done');
-  }
-}
-
-
 const CUSTOM_FOODS_STORAGE = 'ms_movesmart_custom_foods_v1';
 function getCustomFoods(){
-  try{
-    const data=JSON.parse(localStorage.getItem(CUSTOM_FOODS_STORAGE)||'[]');
-    return Array.isArray(data)?data:[];
-  }catch(e){
-    return [];
-  }
+try{
+const data=JSON.parse(localStorage.getItem(CUSTOM_FOODS_STORAGE)||'[]');
+return Array.isArray(data)?data:[];
+}catch(e){
+return [];
+}
 }
 function saveCustomFoods(list){
-  localStorage.setItem(CUSTOM_FOODS_STORAGE,JSON.stringify(list));
+localStorage.setItem(CUSTOM_FOODS_STORAGE,JSON.stringify(list));
 }
 function toggleCustomFood(force){
-  const panel=document.getElementById('customFoodPanel');
-  if(!panel) return;
-  const open=typeof force==='boolean' ? force : !panel.classList.contains('show');
-  panel.classList.toggle('show',open);
-  if(open){
-    const mainName=document.getElementById('foodName')?.value.trim()||'';
-    const customName=document.getElementById('customFoodName');
-    if(customName && !customName.value) customName.value=mainName;
-    setTimeout(()=>customName?.focus(),30);
-    previewCustomFood();
-  }
+const panel=document.getElementById('customFoodPanel');
+if(!panel) return;
+const open=typeof force==='boolean' ? force : !panel.classList.contains('show');
+panel.classList.toggle('show',open);
+if(open){
+const mainName=document.getElementById('foodName')?.value.trim()||'';
+const customName=document.getElementById('customFoodName');
+if(customName && !customName.value) customName.value=mainName;
+setTimeout(()=>customName?.focus(),30);
+previewCustomFood();
+}
 }
 function customNum(id){
-  const n=Number(document.getElementById(id)?.value||0);
-  return Number.isFinite(n)?n:0;
+const n=Number(document.getElementById(id)?.value||0);
+return Number.isFinite(n)?n:0;
 }
 function getCustomPer100(){
-  const grams=customNum('customFoodGrams');
-  if(!grams) return null;
-  const factor=100/grams;
-  return {
-    grams,
-    kcal:customNum('customFoodKcal')*factor,
-    p:customNum('customFoodP')*factor,
-    c:customNum('customFoodC')*factor,
-    f:customNum('customFoodF')*factor
-  };
+const grams=customNum('customFoodGrams');
+if(!grams) return null;
+const factor=100/grams;
+return {
+grams,
+kcal:customNum('customFoodKcal')*factor,
+p:customNum('customFoodP')*factor,
+c:customNum('customFoodC')*factor,
+f:customNum('customFoodF')*factor
+};
 }
 function previewCustomFood(){
-  const el=document.getElementById('customFoodPreview');
-  if(!el) return;
-  const x=getCustomPer100();
-  if(!x){
-    el.innerHTML='Completa los <strong>gramos de la porción</strong> y los valores de la etiqueta para calcular la equivalencia por 100 g.';
-    return;
-  }
-  el.innerHTML=
-    `Equivalencia estimada por <strong>100 g</strong>: `+
-    `<strong>${Math.round(x.kcal)} kcal</strong> · `+
-    `<strong>${x.p.toFixed(1)} g P</strong> · `+
-    `<strong>${x.c.toFixed(1)} g CH</strong> · `+
-    `<strong>${x.f.toFixed(1)} g G</strong>.`;
+const el=document.getElementById('customFoodPreview');
+if(!el) return;
+const x=getCustomPer100();
+if(!x){
+el.innerHTML='Completa los <strong>gramos de la porción</strong> y los valores de la etiqueta para calcular la equivalencia por 100 g.';
+return;
+}
+el.innerHTML=
+`Equivalencia estimada por <strong>100 g</strong>: `+
+`<strong>${Math.round(x.kcal)} kcal</strong> · `+
+`<strong>${x.p.toFixed(1)} g P</strong> · `+
+`<strong>${x.c.toFixed(1)} g CH</strong> · `+
+`<strong>${x.f.toFixed(1)} g G</strong>.`;
 }
 async function useCustomFood(){
-  const name=(document.getElementById('customFoodName')?.value||'').trim();
-  const brand=(document.getElementById('customFoodBrand')?.value||'').trim();
-  const serving=(document.getElementById('customFoodServing')?.value||'').trim();
-  const per100=getCustomPer100();
-  const grams=customNum('customFoodGrams');
-  const kcalPortion=customNum('customFoodKcal');
-  const pPortion=customNum('customFoodP');
-  const cPortion=customNum('customFoodC');
-  const fPortion=customNum('customFoodF');
-  if(!name){
-    alert('Escribe el nombre del producto.');
-    return;
-  }
-  if(!per100 || grams<=0){
-    alert('Indica cuántos gramos tiene la porción de la etiqueta.');
-    return;
-  }
-  if(!(kcalPortion||pPortion||cPortion||fPortion)){
-    alert('Ingresa los valores nutricionales de la etiqueta.');
-    return;
-  }
-  const fullName=brand && !normalizeText(name).includes(normalizeText(brand))
-    ? `${brand} · ${name}`
-    : name;
-  const product={
-    name:fullName,
-    brand,
-    aliases:[name,fullName,brand].filter(Boolean),
-    kcal:per100.kcal,
-    p:per100.p,
-    c:per100.c,
-    f:per100.f,
-    custom:true,
-    serving_grams:grams,
-    serving_label:serving
-  };
-  const saveShared=document.getElementById('customFoodSave')?.checked;
-  let sharedSaved=false;
-  if(saveShared){
-    const status=document.getElementById('searchStatus');
-    status.textContent='Guardando producto en la Base MoveSmart compartida…';
-    try{
-      if(typeof window.msSaveSharedFood!=='function'){
-        throw new Error('Firebase todavía no está disponible.');
-      }
-      await window.msSaveSharedFood({
-        nombre:name,
-        marca:brand,
-        porcion:grams,
-        calorias:kcalPortion,
-        proteinas:pPortion,
-        carbohidratos:cPortion,
-        grasas:fPortion
-      });
-      sharedSaved=true;
-      product.shared=true;
-    }catch(err){
-      console.error('Error al guardar en Firestore:',err);
-      // Conservamos copia local como respaldo si Firebase falla.
-      const list=getCustomFoods();
-      const key=normalizeText(fullName);
-      const idx=list.findIndex(x=>normalizeText(x.name)===key);
-      if(idx>=0) list[idx]=product;
-      else list.unshift(product);
-      saveCustomFoods(list.slice(0,250));
-      alert('El producto se puede usar, pero no pude guardarlo en la base compartida. Quedó guardado en este dispositivo como respaldo.');
-    }
-  }
-  selectedLocalProduct=product;
-  selectedFatSecretProduct=null;
-  document.getElementById('foodName').value=fullName;
-  document.getElementById('foodBarcode').value='';
-  document.getElementById('foodKcal').value=per100.kcal.toFixed(1);
-  document.getElementById('foodP').value=per100.p.toFixed(2);
-  document.getElementById('foodC').value=per100.c.toFixed(2);
-  document.getElementById('foodF').value=per100.f.toFixed(2);
-  const selected=document.getElementById('selectedProduct');
-  selected.className='selected-product show';
-  selected.innerHTML=
-    `<b>Seleccionado:</b> ${escapeHtml(fullName)}<br>`+
-    `${Math.round(per100.kcal)} kcal · ${per100.p.toFixed(1)} P · `+
-    `${per100.c.toFixed(1)} CH · ${per100.f.toFixed(1)} G por 100 g · `+
-    `${sharedSaved?'Base MoveSmart compartida':'Producto manual'}`;
-  document.getElementById('searchStatus').textContent=
-    sharedSaved
-      ? 'Producto cargado y guardado en la Base MoveSmart compartida. Ya podrá aparecerle a otras personas.'
-      : 'Producto cargado para esta ocasión.';
-  document.getElementById('offResults').innerHTML='';
-  toggleCustomFood(false);
-  previewFood();
-  updatePortionPreview();
-  document.getElementById('foodQty').focus();
+const name=(document.getElementById('customFoodName')?.value||'').trim();
+const brand=(document.getElementById('customFoodBrand')?.value||'').trim();
+const serving=(document.getElementById('customFoodServing')?.value||'').trim();
+const per100=getCustomPer100();
+const grams=customNum('customFoodGrams');
+const kcalPortion=customNum('customFoodKcal');
+const pPortion=customNum('customFoodP');
+const cPortion=customNum('customFoodC');
+const fPortion=customNum('customFoodF');
+if(!name){
+alert('Escribe el nombre del producto.');
+return;
+}
+if(!per100 || grams<=0){
+alert('Indica cuántos gramos tiene la porción de la etiqueta.');
+return;
+}
+if(!(kcalPortion||pPortion||cPortion||fPortion)){
+alert('Ingresa los valores nutricionales de la etiqueta.');
+return;
+}
+const fullName=brand && !normalizeText(name).includes(normalizeText(brand))
+? `${brand} · ${name}`
+: name;
+const product={
+name:fullName,
+brand,
+aliases:[name,fullName,brand].filter(Boolean),
+kcal:per100.kcal,
+p:per100.p,
+c:per100.c,
+f:per100.f,
+custom:true,
+serving_grams:grams,
+serving_label:serving
+};
+const saveShared=document.getElementById('customFoodSave')?.checked;
+let sharedSaved=false;
+if(saveShared){
+const status=document.getElementById('searchStatus');
+status.textContent='Guardando producto en la Base MoveSmart compartida…';
+try{
+if(typeof window.msSaveSharedFood!=='function'){
+throw new Error('Firebase todavía no está disponible.');
+}
+await window.msSaveSharedFood({
+nombre:name,
+marca:brand,
+porcion:grams,
+calorias:kcalPortion,
+proteinas:pPortion,
+carbohidratos:cPortion,
+grasas:fPortion
+});
+sharedSaved=true;
+product.shared=true;
+}catch(err){
+console.error('Error al guardar en Firestore:',err);
+// Conservamos copia local como respaldo si Firebase falla.
+const list=getCustomFoods();
+const key=normalizeText(fullName);
+const idx=list.findIndex(x=>normalizeText(x.name)===key);
+if(idx>=0) list[idx]=product;
+else list.unshift(product);
+saveCustomFoods(list.slice(0,250));
+alert('El producto se puede usar, pero no pude guardarlo en la base compartida. Quedó guardado en este dispositivo como respaldo.');
+}
+}
+selectedLocalProduct=product;
+selectedFatSecretProduct=null;
+document.getElementById('foodName').value=fullName;
+document.getElementById('foodBarcode').value='';
+document.getElementById('foodKcal').value=per100.kcal.toFixed(1);
+document.getElementById('foodP').value=per100.p.toFixed(2);
+document.getElementById('foodC').value=per100.c.toFixed(2);
+document.getElementById('foodF').value=per100.f.toFixed(2);
+const selected=document.getElementById('selectedProduct');
+selected.className='selected-product show';
+selected.innerHTML=
+`<b>Seleccionado:</b> ${escapeHtml(fullName)}<br>`+
+`${Math.round(per100.kcal)} kcal · ${per100.p.toFixed(1)} P · `+
+`${per100.c.toFixed(1)} CH · ${per100.f.toFixed(1)} G por 100 g · `+
+`${sharedSaved?'Base MoveSmart compartida':'Producto manual'}`;
+document.getElementById('searchStatus').textContent=
+sharedSaved
+? 'Producto cargado y guardado en la Base MoveSmart compartida. Ya podrá aparecerle a otras personas.'
+: 'Producto cargado para esta ocasión.';
+document.getElementById('offResults').innerHTML='';
+toggleCustomFood(false);
+previewFood();
+updatePortionPreview();
+document.getElementById('foodQty').focus();
 }
 const MOVESMART_FOODS = [
-  {name:"Arroz blanco crudo", aliases:["arroz blanco crudo","arroz crudo","arroz blanco"], kcal:365, p:7.1, c:80.0, f:0.7},
-  {name:"Arroz blanco cocido", aliases:["arroz blanco cocido","arroz cocido"], kcal:130, p:2.7, c:28.2, f:0.3},
-  {name:"Pechuga de pollo cocida", aliases:["pechuga de pollo","pollo cocido","pollo"], kcal:165, p:31.0, c:0.0, f:3.6},
-  {name:"Huevo entero", aliases:["huevo","huevo entero","huevo cocido"], kcal:143, p:12.6, c:0.7, f:9.5},
-  {name:"Papa cocida", aliases:["papa cocida","papas cocidas","papa"], kcal:87, p:1.9, c:20.1, f:0.1},
-  {name:"Avena cruda", aliases:["avena","avena cruda"], kcal:389, p:16.9, c:66.3, f:6.9},
-  {name:"Lentejas cocidas", aliases:["lentejas","lentejas cocidas"], kcal:116, p:9.0, c:20.1, f:0.4},
-  {name:"Garbanzos cocidos", aliases:["garbanzos","garbanzos cocidos"], kcal:164, p:8.9, c:27.4, f:2.6},
-  {name:"Porotos cocidos", aliases:["porotos","frijoles","porotos cocidos"], kcal:127, p:8.7, c:22.8, f:0.5},
-  {name:"Pasta cocida", aliases:["pasta","fideos","pasta cocida","fideos cocidos"], kcal:157, p:5.8, c:30.9, f:0.9},
-  {name:"Pan blanco", aliases:["pan blanco","pan"], kcal:266, p:8.9, c:49.4, f:3.2},
-  {name:"Pan integral", aliases:["pan integral"], kcal:247, p:13.0, c:41.0, f:4.2},
-  {name:"Leche descremada", aliases:["leche descremada","leche baja en grasa"], kcal:34, p:3.4, c:5.0, f:0.1},
-  {name:"Yogur natural", aliases:["yogur natural","yoghurt natural","yogurt natural"], kcal:61, p:3.5, c:4.7, f:3.3},
-  {name:"Quesillo", aliases:["quesillo","queso fresco"], kcal:145, p:18.0, c:3.0, f:7.0},
-  {name:"Atún al agua", aliases:["atun","atún","atun al agua","atún al agua"], kcal:116, p:25.5, c:0.0, f:0.8},
-  {name:"Salmón cocido", aliases:["salmon","salmón","salmon cocido","salmón cocido"], kcal:206, p:22.0, c:0.0, f:12.0},
-  {name:"Manzana", aliases:["manzana"], kcal:52, p:0.3, c:13.8, f:0.2},
-  {name:"Naranja", aliases:["naranja"], kcal:47, p:0.9, c:11.8, f:0.1},
-  {name:"Frutilla", aliases:["frutilla","fresa"], kcal:32, p:0.7, c:7.7, f:0.3},
-  {name:"Uvas", aliases:["uvas","uva"], kcal:69, p:0.7, c:18.1, f:0.2},
-  {name:"Palta", aliases:["palta","aguacate"], kcal:160, p:2.0, c:8.5, f:14.7},
-  {name:"Tomate", aliases:["tomate"], kcal:18, p:0.9, c:3.9, f:0.2},
-  {name:"Zanahoria", aliases:["zanahoria"], kcal:41, p:0.9, c:9.6, f:0.2},
-  {name:"Brócoli cocido", aliases:["brocoli","brócoli","brocoli cocido","brócoli cocido"], kcal:35, p:2.4, c:7.2, f:0.4},
-  {name:"Aceite de oliva", aliases:["aceite de oliva","aceite oliva"], kcal:884, p:0.0, c:0.0, f:100.0},
-  {name:"Miel", aliases:["miel"], kcal:304, p:0.3, c:82.4, f:0.0},
-  {name:"Azúcar", aliases:["azucar","azúcar"], kcal:387, p:0.0, c:100.0, f:0.0},
-  {name:"Whey protein", aliases:["whey","whey protein","proteina whey","proteína whey"], kcal:400, p:80.0, c:8.0, f:6.0}
+{name:"Arroz blanco crudo", aliases:["arroz blanco crudo","arroz crudo","arroz blanco"], kcal:365, p:7.1, c:80.0, f:0.7},
+{name:"Arroz blanco cocido", aliases:["arroz blanco cocido","arroz cocido"], kcal:130, p:2.7, c:28.2, f:0.3},
+{name:"Pechuga de pollo cocida", aliases:["pechuga de pollo","pollo cocido","pollo"], kcal:165, p:31.0, c:0.0, f:3.6},
+{name:"Huevo entero", aliases:["huevo","huevo entero","huevo cocido"], kcal:143, p:12.6, c:0.7, f:9.5},
+{name:"Papa cocida", aliases:["papa cocida","papas cocidas","papa"], kcal:87, p:1.9, c:20.1, f:0.1},
+{name:"Avena cruda", aliases:["avena","avena cruda"], kcal:389, p:16.9, c:66.3, f:6.9},
+{name:"Lentejas cocidas", aliases:["lentejas","lentejas cocidas"], kcal:116, p:9.0, c:20.1, f:0.4},
+{name:"Garbanzos cocidos", aliases:["garbanzos","garbanzos cocidos"], kcal:164, p:8.9, c:27.4, f:2.6},
+{name:"Porotos cocidos", aliases:["porotos","frijoles","porotos cocidos"], kcal:127, p:8.7, c:22.8, f:0.5},
+{name:"Pasta cocida", aliases:["pasta","fideos","pasta cocida","fideos cocidos"], kcal:157, p:5.8, c:30.9, f:0.9},
+{name:"Pan blanco", aliases:["pan blanco","pan"], kcal:266, p:8.9, c:49.4, f:3.2},
+{name:"Pan integral", aliases:["pan integral"], kcal:247, p:13.0, c:41.0, f:4.2},
+{name:"Leche descremada", aliases:["leche descremada","leche baja en grasa"], kcal:34, p:3.4, c:5.0, f:0.1},
+{name:"Yogur natural", aliases:["yogur natural","yoghurt natural","yogurt natural"], kcal:61, p:3.5, c:4.7, f:3.3},
+{name:"Quesillo", aliases:["quesillo","queso fresco"], kcal:145, p:18.0, c:3.0, f:7.0},
+{name:"Atún al agua", aliases:["atun","atún","atun al agua","atún al agua"], kcal:116, p:25.5, c:0.0, f:0.8},
+{name:"Salmón cocido", aliases:["salmon","salmón","salmon cocido","salmón cocido"], kcal:206, p:22.0, c:0.0, f:12.0},
+{name:"Manzana", aliases:["manzana"], kcal:52, p:0.3, c:13.8, f:0.2},
+{name:"Naranja", aliases:["naranja"], kcal:47, p:0.9, c:11.8, f:0.1},
+{name:"Frutilla", aliases:["frutilla","fresa"], kcal:32, p:0.7, c:7.7, f:0.3},
+{name:"Uvas", aliases:["uvas","uva"], kcal:69, p:0.7, c:18.1, f:0.2},
+{name:"Palta", aliases:["palta","aguacate"], kcal:160, p:2.0, c:8.5, f:14.7},
+{name:"Tomate", aliases:["tomate"], kcal:18, p:0.9, c:3.9, f:0.2},
+{name:"Zanahoria", aliases:["zanahoria"], kcal:41, p:0.9, c:9.6, f:0.2},
+{name:"Brócoli cocido", aliases:["brocoli","brócoli","brocoli cocido","brócoli cocido"], kcal:35, p:2.4, c:7.2, f:0.4},
+{name:"Aceite de oliva", aliases:["aceite de oliva","aceite oliva"], kcal:884, p:0.0, c:0.0, f:100.0},
+{name:"Miel", aliases:["miel"], kcal:304, p:0.3, c:82.4, f:0.0},
+{name:"Azúcar", aliases:["azucar","azúcar"], kcal:387, p:0.0, c:100.0, f:0.0},
+{name:"Whey protein", aliases:["whey","whey protein","proteina whey","proteína whey"], kcal:400, p:80.0, c:8.0, f:6.0}
 ];
 function normalizeText(s){
-  return String(s||"")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")
-    .trim();
+return String(s||"")
+.toLowerCase()
+.normalize("NFD")
+.replace(/[\u0300-\u036f]/g,"")
+.trim();
 }
 function buscarLocalFood(query){
-  const q = normalizeText(query);
-  if(!q) return [];
-  const custom=getCustomFoods().map(x=>({...x,_customPriority:true}));
-  const all=[...custom,...MOVESMART_FOODS];
-  return all
-    .map(food=>{
-      const candidates = [food.name, ...(food.aliases||[])].filter(Boolean).map(normalizeText);
-      let score = food._customPriority ? 8 : 0;
-      for(const cand of candidates){
-        if(cand === q) score = Math.max(score, 120 + (food._customPriority?10:0));
-        else if(cand.startsWith(q) || q.startsWith(cand)) score = Math.max(score, 90 + (food._customPriority?10:0));
-        else if(cand.includes(q) || q.includes(cand)) score = Math.max(score, 70 + (food._customPriority?10:0));
-        else {
-          const parts = q.split(/\s+/).filter(Boolean);
-          const hits = parts.filter(p=>cand.includes(p)).length;
-          if(hits) score = Math.max(score, hits*18 + (food._customPriority?10:0));
-        }
-      }
-      return {food, score};
-    })
-    .filter(x=>x.score>10)
-    .sort((a,b)=>b.score-a.score)
-    .slice(0,10)
-    .map(x=>x.food);
+const q = normalizeText(query);
+if(!q) return [];
+const custom=getCustomFoods().map(x=>({...x,_customPriority:true}));
+const all=[...custom,...MOVESMART_FOODS];
+return all
+.map(food=>{
+const candidates = [food.name, ...(food.aliases||[])].filter(Boolean).map(normalizeText);
+let score = food._customPriority ? 8 : 0;
+for(const cand of candidates){
+if(cand === q) score = Math.max(score, 120 + (food._customPriority?10:0));
+else if(cand.startsWith(q) || q.startsWith(cand)) score = Math.max(score, 90 + (food._customPriority?10:0));
+else if(cand.includes(q) || q.includes(cand)) score = Math.max(score, 70 + (food._customPriority?10:0));
+else {
+const parts = q.split(/\s+/).filter(Boolean);
+const hits = parts.filter(p=>cand.includes(p)).length;
+if(hits) score = Math.max(score, hits*18 + (food._customPriority?10:0));
+}
+}
+return {food, score};
+})
+.filter(x=>x.score>10)
+.sort((a,b)=>b.score-a.score)
+.slice(0,10)
+.map(x=>x.food);
 }
 function applyFoodToForm(food, source="MoveSmart"){
-  const nameEl = document.getElementById("foodName");
-  const kcalEl = document.getElementById("foodKcal");
-  const pEl = document.getElementById("foodP");
-  const cEl = document.getElementById("foodC");
-  const fEl = document.getElementById("foodF");
-  const barcodeEl = document.getElementById("foodBarcode");
-  if(nameEl) nameEl.value = food.name || "";
-  if(kcalEl) kcalEl.value = food.kcal ?? "";
-  if(pEl) pEl.value = food.p ?? "";
-  if(cEl) cEl.value = food.c ?? "";
-  if(fEl) fEl.value = food.f ?? "";
-  if(barcodeEl) barcodeEl.value = food.code || "";
-  const sourceEl = document.getElementById("foodSource");
-  if(sourceEl) sourceEl.textContent = `Fuente: ${source}`;
-  if(typeof actualizarPreviewAlimento === "function") actualizarPreviewAlimento();
+const nameEl = document.getElementById("foodName");
+const kcalEl = document.getElementById("foodKcal");
+const pEl = document.getElementById("foodP");
+const cEl = document.getElementById("foodC");
+const fEl = document.getElementById("foodF");
+const barcodeEl = document.getElementById("foodBarcode");
+if(nameEl) nameEl.value = food.name || "";
+if(kcalEl) kcalEl.value = food.kcal ?? "";
+if(pEl) pEl.value = food.p ?? "";
+if(cEl) cEl.value = food.c ?? "";
+if(fEl) fEl.value = food.f ?? "";
+if(barcodeEl) barcodeEl.value = food.code || "";
+const sourceEl = document.getElementById("foodSource");
+if(sourceEl) sourceEl.textContent = `Fuente: ${source}`;
+if(typeof actualizarPreviewAlimento === "function") actualizarPreviewAlimento();
 }
 function updatePortionPreview(){
-  const qty = parseFloat(document.getElementById('foodQty')?.value || 0);
-  const kcal100 = parseFloat(document.getElementById('foodKcal')?.value || 0);
-  const p100 = parseFloat(document.getElementById('foodP')?.value || 0);
-  const c100 = parseFloat(document.getElementById('foodC')?.value || 0);
-  const f100 = parseFloat(document.getElementById('foodF')?.value || 0);
-  const title = document.getElementById('portionPreviewTitle');
-  const kcalEl = document.getElementById('portionKcal');
-  const pEl = document.getElementById('portionP');
-  const cEl = document.getElementById('portionC');
-  const fEl = document.getElementById('portionF');
-  if(!title || !kcalEl || !pEl || !cEl || !fEl) return;
-  if(!qty || (!kcal100 && !p100 && !c100 && !f100)){
-    title.textContent = 'Indica la cantidad que vas a consumir';
-    kcalEl.textContent = '—';
-    pEl.textContent = '—';
-    cEl.textContent = '—';
-    fEl.textContent = '—';
-    return;
-  }
-  const factor = qty / 100;
-  const kcal = kcal100 * factor;
-  const p = p100 * factor;
-  const c = c100 * factor;
-  const f = f100 * factor;
-  title.textContent = `Aporte de ${qty} g`;
-  kcalEl.textContent = `${Math.round(kcal)}`;
-  pEl.textContent = `${p.toFixed(1)} g`;
-  cEl.textContent = `${c.toFixed(1)} g`;
-  fEl.textContent = `${f.toFixed(1)} g`;
+const qty = parseFloat(document.getElementById('foodQty')?.value || 0);
+const kcal100 = parseFloat(document.getElementById('foodKcal')?.value || 0);
+const p100 = parseFloat(document.getElementById('foodP')?.value || 0);
+const c100 = parseFloat(document.getElementById('foodC')?.value || 0);
+const f100 = parseFloat(document.getElementById('foodF')?.value || 0);
+const title = document.getElementById('portionPreviewTitle');
+const kcalEl = document.getElementById('portionKcal');
+const pEl = document.getElementById('portionP');
+const cEl = document.getElementById('portionC');
+const fEl = document.getElementById('portionF');
+if(!title || !kcalEl || !pEl || !cEl || !fEl) return;
+if(!qty || (!kcal100 && !p100 && !c100 && !f100)){
+title.textContent = 'Indica la cantidad que vas a consumir';
+kcalEl.textContent = '—';
+pEl.textContent = '—';
+cEl.textContent = '—';
+fEl.textContent = '—';
+return;
+}
+const factor = qty / 100;
+const kcal = kcal100 * factor;
+const p = p100 * factor;
+const c = c100 * factor;
+const f = f100 * factor;
+title.textContent = `Aporte de ${qty} g`;
+kcalEl.textContent = `${Math.round(kcal)}`;
+pEl.textContent = `${p.toFixed(1)} g`;
+cEl.textContent = `${c.toFixed(1)} g`;
+fEl.textContent = `${f.toFixed(1)} g`;
 }
 // Mantener sincronizada la vista previa con cantidad y macros.
 ['foodQty','foodKcal','foodP','foodC','foodF'].forEach(id=>{
-  const el=document.getElementById(id);
-  if(el){
-    el.addEventListener('input',()=>{
-      if(typeof previewFood==='function') previewFood();
-      updatePortionPreview();
-    });
-    el.addEventListener('change',updatePortionPreview);
-  }
+const el=document.getElementById(id);
+if(el){
+el.addEventListener('input',()=>{
+if(typeof previewFood==='function') previewFood();
+updatePortionPreview();
+});
+el.addEventListener('change',updatePortionPreview);
+}
 });
 // Refrescar también después de elegir un producto.
 const _oldSelectLocalProduct = typeof selectLocalProduct === 'function' ? selectLocalProduct : null;
 if(_oldSelectLocalProduct){
-  selectLocalProduct = function(i){
-    _oldSelectLocalProduct(i);
-    updatePortionPreview();
-  };
+selectLocalProduct = function(i){
+_oldSelectLocalProduct(i);
+updatePortionPreview();
+};
 }
 const _oldSelectOffProduct = typeof selectOffProduct === 'function' ? selectOffProduct : null;
 if(_oldSelectOffProduct){
-  selectOffProduct = function(i){
-    _oldSelectOffProduct(i);
-    updatePortionPreview();
-  };
+selectOffProduct = function(i){
+_oldSelectOffProduct(i);
+updatePortionPreview();
+};
 }
 updatePortionPreview();
 </script>
 <script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js';
-  import { getFirestore, collection, getDocs, addDoc } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
-  const firebaseConfig = {
-    apiKey: "AIzaSyDhbiXajp-1oRJAK9YSjmD75DQ1VHPJJPQ",
-    authDomain: "movesmart-contenido.firebaseapp.com",
-    projectId: "movesmart-contenido",
-    storageBucket: "movesmart-contenido.firebasestorage.app",
-    messagingSenderId: "633222851467",
-    appId: "1:633222851467:web:990cac1c1a91c0ffded8e",
-    measurementId: "G-65EVM1NCPQ"
-  };
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  let sharedCache = [];
-  let sharedCacheAt = 0;
-  const CACHE_MS = 5 * 60 * 1000;
-  function norm(s){
-    return String(s || "")
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g,"")
-      .trim();
-  }
-  function convertSharedDoc(docSnap){
-    const d = docSnap.data() || {};
-    const grams = Number(d.porcion || 0);
-    const kcal = Number(d.calorias || 0);
-    const p = Number(d.proteinas || 0);
-    const c = Number(d.carbohidratos || 0);
-    const f = Number(d.grasas || 0);
-    // Ignora documentos incompletos (por ejemplo, un documento de prueba).
-    if(!d.nombre || !grams || grams <= 0) return null;
-    if(!Number.isFinite(kcal) || !Number.isFinite(p) || !Number.isFinite(c) || !Number.isFinite(f)) return null;
-    const factor = 100 / grams;
-    const brand = String(d.marca || "").trim();
-    const baseName = String(d.nombre || "").trim();
-    const fullName = brand && !norm(baseName).includes(norm(brand))
-      ? `${brand} · ${baseName}`
-      : baseName;
-    return {
-      firestoreId: docSnap.id,
-      name: fullName,
-      brand,
-      aliases: [baseName, brand, fullName].filter(Boolean),
-      kcal: kcal * factor,
-      p: p * factor,
-      c: c * factor,
-      f: f * factor,
-      shared: true,
-      serving_grams: grams
-    };
-  }
-  async function loadSharedFoods(force=false){
-    const now = Date.now();
-    if(!force && sharedCache.length && (now - sharedCacheAt) < CACHE_MS){
-      return sharedCache;
-    }
-    const snap = await getDocs(collection(db, "productos"));
-    sharedCache = snap.docs.map(convertSharedDoc).filter(Boolean);
-    sharedCacheAt = now;
-    return sharedCache;
-  }
-  window.msSearchSharedFoods = async function(queryText){
-    const foods = await loadSharedFoods(false);
-    const q = norm(queryText);
-    if(!q) return [];
-    const parts = q.split(/\s+/).filter(Boolean);
-    return foods
-      .map(food=>{
-        const candidates=[food.name,...(food.aliases||[])].map(norm);
-        let score=0;
-        for(const cand of candidates){
-          if(cand===q) score=Math.max(score,150);
-          else if(cand.startsWith(q)||q.startsWith(cand)) score=Math.max(score,115);
-          else if(cand.includes(q)||q.includes(cand)) score=Math.max(score,90);
-          else{
-            const hits=parts.filter(part=>cand.includes(part)).length;
-            if(hits) score=Math.max(score,hits*25);
-          }
-        }
-        return {food,score};
-      })
-      .filter(x=>x.score>0)
-      .sort((a,b)=>b.score-a.score)
-      .slice(0,12)
-      .map(x=>x.food);
-  };
-  window.msSaveSharedFood = async function(food){
-    const payload = {
-      nombre: String(food.nombre || "").trim(),
-      marca: String(food.marca || "").trim(),
-      porcion: Number(food.porcion),
-      calorias: Number(food.calorias),
-      proteinas: Number(food.proteinas),
-      carbohidratos: Number(food.carbohidratos),
-      grasas: Number(food.grasas)
-    };
-    if(!payload.nombre) throw new Error("Falta el nombre.");
-    if(!Number.isFinite(payload.porcion) || payload.porcion <= 0) throw new Error("Porción inválida.");
-    for(const key of ["calorias","proteinas","carbohidratos","grasas"]){
-      if(!Number.isFinite(payload[key]) || payload[key] < 0){
-        throw new Error(`Valor inválido: ${key}`);
-      }
-    }
-    const ref = await addDoc(collection(db, "productos"), payload);
-    // Forzar refresco para que el producto aparezca en la siguiente búsqueda.
-    sharedCache = [];
-    sharedCacheAt = 0;
-    return ref.id;
-  };
-  // Precarga silenciosa.
-  loadSharedFoods().catch(err=>console.warn("Firestore no pudo precargarse:", err));
-</script>
-
-
-</div>
-
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged,
-  setPersistence,
-  browserLocalPersistence
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  onSnapshot,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js';
+import { getFirestore, collection, getDocs, addDoc } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js';
 const firebaseConfig = {
-  apiKey: "AIzaSyDhbiXajp-1oRJAK9YSjmD75DQ1vHPJJPQ",
-  authDomain: "movesmart-contenido.firebaseapp.com",
-  projectId: "movesmart-contenido",
-  storageBucket: "movesmart-contenido.firebasestorage.app",
-  messagingSenderId: "633222851467",
-  appId: "1:633222851467:web:990cac1c1a91c0ffdedd8e",
-  measurementId: "G-65EVM1NCPQ"
+apiKey: "AIzaSyDhbiXajp-1oRJAK9YSjmD75DQ1VHPJJPQ",
+authDomain: "movesmart-contenido.firebaseapp.com",
+projectId: "movesmart-contenido",
+storageBucket: "movesmart-contenido.firebasestorage.app",
+messagingSenderId: "633222851467",
+appId: "1:633222851467:web:990cac1c1a91c0ffded8e",
+measurementId: "G-65EVM1NCPQ"
 };
-
-const firebaseApp = initializeApp(firebaseConfig);
-const auth = getAuth(firebaseApp);
-const db = getFirestore(firebaseApp);
-const provider = new GoogleAuthProvider();
-
-const dot = document.getElementById("firebaseDot");
-const text = document.getElementById("firebaseSyncText");
-const authBtn = document.getElementById("firebaseAuthBtn");
-
-let currentUser = null;
-let unsubscribeDay = null;
-let remoteApply = false;
-let syncTimer = null;
-
-function setSyncStatus(message, state=""){
-  if(text) text.textContent = message;
-  if(dot){
-    dot.className = "firebase-dot";
-    if(state) dot.classList.add(state);
-  }
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+let sharedCache = [];
+let sharedCacheAt = 0;
+const CACHE_MS = 5 * 60 * 1000;
+function norm(s){
+return String(s || "")
+.toLowerCase()
+.normalize("NFD")
+.replace(/[\u0300-\u036f]/g,"")
+.trim();
 }
-
-function isoDateForSelectedDay(){
-  const now = new Date();
-  const monday = new Date(now);
-  const dow = (now.getDay()+6)%7;
-  monday.setDate(now.getDate()-dow);
-  const d = new Date(monday);
-  d.setDate(monday.getDate() + window.msNutritionBridge.getSelected());
-  const y=d.getFullYear();
-  const m=String(d.getMonth()+1).padStart(2,"0");
-  const day=String(d.getDate()).padStart(2,"0");
-  return `${y}-${m}-${day}`;
+function convertSharedDoc(docSnap){
+const d = docSnap.data() || {};
+const grams = Number(d.porcion || 0);
+const kcal = Number(d.calorias || 0);
+const p = Number(d.proteinas || 0);
+const c = Number(d.carbohidratos || 0);
+const f = Number(d.grasas || 0);
+// Ignora documentos incompletos (por ejemplo, un documento de prueba).
+if(!d.nombre || !grams || grams <= 0) return null;
+if(!Number.isFinite(kcal) || !Number.isFinite(p) || !Number.isFinite(c) || !Number.isFinite(f)) return null;
+const factor = 100 / grams;
+const brand = String(d.marca || "").trim();
+const baseName = String(d.nombre || "").trim();
+const fullName = brand && !norm(baseName).includes(norm(brand))
+? `${brand} · ${baseName}`
+: baseName;
+return {
+firestoreId: docSnap.id,
+name: fullName,
+brand,
+aliases: [baseName, brand, fullName].filter(Boolean),
+kcal: kcal * factor,
+p: p * factor,
+c: c * factor,
+f: f * factor,
+shared: true,
+serving_grams: grams
+};
 }
-
-function recordRef(){
-  if(!currentUser) return null;
-  return doc(db,"usuarios",currentUser.uid,"registros_nutricion",isoDateForSelectedDay());
+async function loadSharedFoods(force=false){
+const now = Date.now();
+if(!force && sharedCache.length && (now - sharedCacheAt) < CACHE_MS){
+return sharedCache;
 }
-
-async function pushCurrentDayToFirestore(){
-  if(!currentUser || remoteApply) return;
-  const ref = recordRef();
-  if(!ref) return;
-
-  const foods = window.msNutritionBridge?.getFoods?.() || [];
-
-  const target = window.msNutritionBridge.getResults()?.[window.msNutritionBridge.getSelected()] || null;
-
-  setSyncStatus("Guardando…","warn");
-
-  try{
-    await setDoc(ref,{
-      fecha: isoDateForSelectedDay(),
-      dia: window.msNutritionBridge.getDays()?.[window.msNutritionBridge.getSelected()] || "",
-      alimentos: foods,
-      objetivo: target ? {
-        kcal: Number(target.kcal)||0,
-        proteina: Number(target.p)||0,
-        carbohidratos: Number(target.c)||0,
-        grasas: Number(target.f)||0
-      } : null,
-      actualizadoEn: serverTimestamp()
-    }, { merge:true });
-
-    setSyncStatus("Sincronizado con Firebase","ok");
-  }catch(err){
-    console.error("Error guardando en Firestore:", err);
-    setSyncStatus("No se pudo sincronizar","err");
-  }
+const snap = await getDocs(collection(db, "productos"));
+sharedCache = snap.docs.map(convertSharedDoc).filter(Boolean);
+sharedCacheAt = now;
+return sharedCache;
 }
-
-function scheduleSync(){
-  clearTimeout(syncTimer);
-  syncTimer = setTimeout(pushCurrentDayToFirestore, 250);
+window.msSearchSharedFoods = async function(queryText){
+const foods = await loadSharedFoods(false);
+const q = norm(queryText);
+if(!q) return [];
+const parts = q.split(/\s+/).filter(Boolean);
+return foods
+.map(food=>{
+const candidates=[food.name,...(food.aliases||[])].map(norm);
+let score=0;
+for(const cand of candidates){
+if(cand===q) score=Math.max(score,150);
+else if(cand.startsWith(q)||q.startsWith(cand)) score=Math.max(score,115);
+else if(cand.includes(q)||q.includes(cand)) score=Math.max(score,90);
+else{
+const hits=parts.filter(part=>cand.includes(part)).length;
+if(hits) score=Math.max(score,hits*25);
 }
-
-function subscribeSelectedDay(){
-  if(unsubscribeDay){
-    unsubscribeDay();
-    unsubscribeDay = null;
-  }
-  if(!currentUser) return;
-
-  const ref = recordRef();
-  if(!ref) return;
-
-  unsubscribeDay = onSnapshot(ref, snap=>{
-    if(!snap.exists()){
-      setSyncStatus("Firebase listo · sin registros en este día","ok");
-      return;
-    }
-
-    const data = snap.data();
-    if(!Array.isArray(data.alimentos)) return;
-
-    const localFoods = window.msNutritionBridge?.getFoods?.() || [];
-    if(JSON.stringify(data.alimentos) === JSON.stringify(localFoods)){
-      setSyncStatus("Sincronizado con Firebase","ok");
-      return;
-    }
-
-    remoteApply = true;
-    window.msNutritionBridge?.replaceFoods?.(data.alimentos);
-
-    remoteApply = false;
-    setSyncStatus("Actualizado desde Firebase","ok");
-  }, err=>{
-    console.error("Error leyendo Firestore:", err);
-    setSyncStatus("Error leyendo Firebase","err");
-  });
 }
-
-window.movesmartFirebaseSync = { scheduleSync, subscribeSelectedDay };
-
-await setPersistence(auth, browserLocalPersistence);
-
-authBtn?.addEventListener("click", async ()=>{
-  try{
-    if(currentUser){
-      await signOut(auth);
-    }else{
-      await signInWithPopup(auth, provider);
-    }
-  }catch(err){
-    console.error("Error de autenticación:", err);
-    setSyncStatus("No se pudo iniciar sesión","err");
-  }
-});
-
-onAuthStateChanged(auth, user=>{
-  currentUser = user || null;
-
-  if(currentUser){
-    authBtn.textContent = "Cerrar sesión";
-    setSyncStatus(`Conectado como ${currentUser.email || "usuario"}`,"ok");
-    subscribeSelectedDay();
-  }else{
-    authBtn.textContent = "Entrar con Google";
-    setSyncStatus("Inicia sesión para sincronizar entre dispositivos","warn");
-    if(unsubscribeDay){
-      unsubscribeDay();
-      unsubscribeDay = null;
-    }
-  }
-});
+return {food,score};
+})
+.filter(x=>x.score>0)
+.sort((a,b)=>b.score-a.score)
+.slice(0,12)
+.map(x=>x.food);
+};
+window.msSaveSharedFood = async function(food){
+const payload = {
+nombre: String(food.nombre || "").trim(),
+marca: String(food.marca || "").trim(),
+porcion: Number(food.porcion),
+calorias: Number(food.calorias),
+proteinas: Number(food.proteinas),
+carbohidratos: Number(food.carbohidratos),
+grasas: Number(food.grasas)
+};
+if(!payload.nombre) throw new Error("Falta el nombre.");
+if(!Number.isFinite(payload.porcion) || payload.porcion <= 0) throw new Error("Porción inválida.");
+for(const key of ["calorias","proteinas","carbohidratos","grasas"]){
+if(!Number.isFinite(payload[key]) || payload[key] < 0){
+throw new Error(`Valor inválido: ${key}`);
+}
+}
+const ref = await addDoc(collection(db, "productos"), payload);
+// Forzar refresco para que el producto aparezca en la siguiente búsqueda.
+sharedCache = [];
+sharedCacheAt = 0;
+return ref.id;
+};
+// Precarga silenciosa.
+loadSharedFoods().catch(err=>console.warn("Firestore no pudo precargarse:", err));
 </script>
-
 </body></html>
