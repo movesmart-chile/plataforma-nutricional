@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -269,6 +270,40 @@ margin-top:5px;
 .custom-food-panel{display:none;}
 .custom-food-panel.show{display:block;}
 </style>
+
+<style>
+/* ============ MoveSmart · Registro rápido con IA ============ */
+.quicklog-box{
+  margin:0 0 20px;padding:20px;border-radius:18px;
+  border:1px solid rgba(243,107,42,.30);
+  background:linear-gradient(155deg,rgba(243,107,42,.14),rgba(201,155,215,.06) 60%,rgba(255,255,255,.02));
+}
+.quicklog-head{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.quicklog-title{font-size:1.02rem;font-weight:900;color:#fff}
+.quicklog-sub{font-size:.8rem;color:var(--dim);line-height:1.5}
+.quicklog-textarea{
+  width:100%;min-height:78px;resize:vertical;color:var(--text);
+  background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;padding:12px 14px;outline:none;font-family:inherit;font-size:.88rem;line-height:1.5;
+}
+.quicklog-textarea:focus{border-color:rgba(243,107,42,.65);box-shadow:0 0 0 4px rgba(243,107,42,.09)}
+.quicklog-btn{
+  margin-top:10px;min-height:46px;padding:0 20px;border:0;border-radius:12px;
+  background:linear-gradient(180deg,var(--accent2),var(--accent));color:#fff;font-weight:900;cursor:pointer;
+  box-shadow:0 10px 24px rgba(243,107,42,.20);
+}
+.quicklog-btn:disabled{opacity:.55;cursor:wait}
+.quicklog-status{margin-top:9px;color:var(--dim);font-size:.78rem;line-height:1.45;min-height:16px}
+.quicklog-preview{display:grid;gap:8px;margin-top:12px}
+.quicklog-item{
+  display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;
+  padding:11px 13px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.04);border-radius:13px;
+}
+.quicklog-item b{display:block;font-size:.85rem}
+.quicklog-item small{display:block;color:var(--dim);margin-top:4px;line-height:1.4}
+.quicklog-hint{margin-top:8px;color:var(--faint);font-size:.68rem;line-height:1.45}
+</style>
+
 </head>
 <body>
 <div class="site-glow"></div>
@@ -303,6 +338,19 @@ margin-top:5px;
 <section class="card" id="foodSection"><h2><span class="n">05</span> Registra lo que comiste</h2>
 <p class="note" style="margin:0 0 14px">Elige desayuno, almuerzo, cena o snack; luego busca el alimento, indica cuánto consumiste y MoveSmart calculará la porción y la sumará al total del día.</p>
 <span class="day-food-label" id="foodDayLabel">—</span>
+
+<div class="quicklog-box">
+  <div class="quicklog-head">
+    <div class="quicklog-title">⚡ Registro rápido con IA</div>
+    <div class="quicklog-sub">Cuéntame qué comiste con tus palabras. MoveSmart separa los alimentos, estima porciones y macros y tú confirmas antes de agregarlos.</div>
+  </div>
+  <textarea id="quickLogInput" class="quicklog-textarea" placeholder="Ej: almorcé arroz con pollo y palta. De postre una manzana."></textarea>
+  <button type="button" class="quicklog-btn" id="quickLogBtn" onclick="runQuickLog()">Registrar con IA</button>
+  <div class="quicklog-status" id="quickLogStatus"></div>
+  <div class="quicklog-preview" id="quickLogPreview"></div>
+  <div class="quicklog-hint">La estimación rápida es orientativa. Para productos envasados, usa el buscador o la etiqueta cuando quieras máxima precisión.</div>
+</div>
+
 <div class="food-layout">
 <div class="food-form">
 <div class="meal-selector-wrap">
@@ -1128,6 +1176,134 @@ updatePortionPreview();
 };
 }
 updatePortionPreview();
+
+
+/* ============ REGISTRO RÁPIDO: lenguaje natural ============ */
+function ensureQuickLogWeekReady(){
+  if(Array.isArray(results) && results.length===7) return true;
+  try{
+    results=week.map((k,i)=>({...types[k],key:k,day:days[i],kcal:kcal(types[k])}));
+    if(results.length===7){
+      try{ renderTabs(); renderTable(); showDay(selected); }catch(e){ console.warn('QuickLog: render parcial',e); }
+      return true;
+    }
+  }catch(e){ console.error('QuickLog: no se pudo reconstruir la semana',e); }
+  return false;
+}
+
+function quickNorm(s){
+  return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+}
+
+const QUICK_PORTIONS={
+  'arroz blanco cocido':180,'pechuga de pollo cocida':150,'pollo':150,'huevo entero':100,
+  'papa cocida':250,'avena cruda':50,'lentejas cocidas':200,'garbanzos cocidos':180,
+  'porotos cocidos':200,'pasta cocida':200,'pan blanco':60,'pan integral':60,
+  'leche descremada':250,'yogur natural':170,'quesillo':60,'atun al agua':120,
+  'salmon cocido':150,'manzana':150,'naranja':180,'frutilla':150,'uvas':120,
+  'palta':50,'tomate':120,'zanahoria':100,'brocoli cocido':150,
+  'aceite de oliva':10,'miel':20,'azucar':10,'whey protein':30
+};
+
+function guessQtyFromText(text, food){
+  const n=quickNorm(text);
+  const g=n.match(/(\d+(?:[.,]\d+)?)\s*(?:g|gr|gramos?)\b/);
+  if(g) return Number(g[1].replace(',','.'));
+  const key=quickNorm(food.name);
+  if(key.includes('arroz')) return 180;
+  if(key.includes('pollo')) return 150;
+  if(key.includes('palta')) return 50;
+  if(key.includes('manzana')) return 150;
+  if(key.includes('papa')) return 250;
+  if(key.includes('huevo')) return 100;
+  if(key.includes('yogur')) return 170;
+  if(key.includes('avena')) return 50;
+  return QUICK_PORTIONS[key] || 100;
+}
+
+function localQuickEstimate(text){
+  if(typeof MOVESMART_FOODS==='undefined') return [];
+  const n=quickNorm(text);
+  const matches=[];
+  const seen=new Set();
+  const synonyms={
+    'pollo':['pollo','pechuga'], 'arroz':['arroz'], 'palta':['palta','aguacate'],
+    'manzana':['manzana'], 'papa':['papa','papas'], 'huevo':['huevo','huevos'],
+    'avena':['avena'], 'atun':['atun','atún'], 'salmon':['salmon','salmón'],
+    'pan':['pan'], 'yogur':['yogur','yoghurt','yogurt'], 'lentejas':['lentejas'],
+    'garbanzos':['garbanzos'], 'pasta':['pasta','fideos'], 'miel':['miel'],
+    'tomate':['tomate'], 'brocoli':['brocoli','brócoli'], 'naranja':['naranja'],
+    'uvas':['uvas','uva'], 'frutilla':['frutilla','frutillas','fresa']
+  };
+  const foods=[...MOVESMART_FOODS, ...getCustomFoods()];
+  for(const food of foods){
+    const candidates=[food.name,...(food.aliases||[])].map(quickNorm);
+    let hit=candidates.some(c=>c && (n.includes(c) || c.split(/\s+/).some(w=>w.length>3 && n.includes(w))));
+    if(!hit){
+      for(const vals of Object.values(synonyms)){
+        if(vals.some(v=>n.includes(quickNorm(v))) && candidates.some(c=>vals.some(v=>c.includes(quickNorm(v))))){hit=true;break;}
+      }
+    }
+    if(!hit) continue;
+    const key=quickNorm(food.name);
+    if(seen.has(key)) continue;
+    seen.add(key);
+    const qty=guessQtyFromText(text,food), factor=qty/100;
+    matches.push({name:food.name,meal:selectedMeal,qty_g:qty,kcal:Number(food.kcal||0)*factor,p:Number(food.p||0)*factor,c:Number(food.c||0)*factor,f:Number(food.f||0)*factor});
+  }
+  return matches.slice(0,8);
+}
+
+async function runQuickLog(){
+  const input=document.getElementById('quickLogInput');
+  const status=document.getElementById('quickLogStatus');
+  const previewBox=document.getElementById('quickLogPreview');
+  const btn=document.getElementById('quickLogBtn');
+  const text=(input?.value||'').trim();
+  if(!text){ status.textContent='Cuéntame qué comiste antes de registrar.'; return; }
+  if(!ensureQuickLogWeekReady()){ status.textContent='No pude cargar la semana. Recarga la página e inténtalo nuevamente.'; return; }
+  btn.disabled=true; btn.textContent='Calculando…'; status.textContent='MoveSmart está interpretando tu comida…'; previewBox.innerHTML='';
+  try{
+    /* Si más adelante conectamos un Worker de IA, basta con definir window.MOVESMART_AI_ENDPOINT. */
+    let items=[];
+    if(window.MOVESMART_AI_ENDPOINT){
+      const r=await fetch(window.MOVESMART_AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,meal:selectedMeal})});
+      if(!r.ok) throw new Error('IA HTTP '+r.status);
+      const d=await r.json(); items=Array.isArray(d)?d:(d.items||[]);
+    }else{
+      items=localQuickEstimate(text);
+    }
+    if(!Array.isArray(items)||!items.length) throw new Error('No identifiqué alimentos');
+    window._quickLogItems=items.map(it=>({name:String(it.name||'Alimento'),meal:MEALS[it.meal]?it.meal:selectedMeal,qty_g:Number(it.qty_g)||0,kcal:Number(it.kcal)||0,p:Number(it.p)||0,c:Number(it.c)||0,f:Number(it.f)||0}));
+    renderQuickLogPreview(window._quickLogItems);
+    status.textContent=window.MOVESMART_AI_ENDPOINT
+      ? `Encontré ${items.length} alimento${items.length===1?'':'s'} con IA. Revisa y confirma.`
+      : `Modo de prueba: encontré ${items.length} alimento${items.length===1?'':'s'} usando la base MoveSmart. Revisa y confirma.`;
+  }catch(err){
+    console.error(err); status.textContent='No pude interpretar esa comida. Prueba escribiendo los alimentos por separado o usa el buscador de abajo.';
+  }finally{btn.disabled=false;btn.textContent='Registrar con IA';}
+}
+
+function renderQuickLogPreview(items){
+  const box=document.getElementById('quickLogPreview'); if(!box)return;
+  box.innerHTML=items.map((it,i)=>`<div class="quicklog-item"><div><b>${escapeHtml(it.name)}</b><small>${Math.round(it.qty_g)} g · ${Math.round(it.kcal)} kcal · ${it.p.toFixed(1)} P · ${it.c.toFixed(1)} CH · ${it.f.toFixed(1)} G</small><span class="meal-badge">${MEALS[it.meal]?.icon||'🍽️'} ${MEALS[it.meal]?.label||it.meal}</span></div><button type="button" class="delete-food" onclick="removeQuickLogItem(${i})" aria-label="Quitar">×</button></div>`).join('')+
+  `<button type="button" class="add-food" onclick="confirmQuickLog()">✓ Agregar todo a mi día</button>`;
+}
+function removeQuickLogItem(i){
+  if(!window._quickLogItems)return; window._quickLogItems.splice(i,1);
+  if(window._quickLogItems.length) renderQuickLogPreview(window._quickLogItems);
+  else {document.getElementById('quickLogPreview').innerHTML='';document.getElementById('quickLogStatus').textContent='Se quitaron todos los alimentos de la vista previa.';}
+}
+function confirmQuickLog(){
+  const items=window._quickLogItems||[]; if(!items.length||!ensureQuickLogWeekReady())return;
+  if(!foodLog[selected])foodLog[selected]=[];
+  items.forEach(it=>foodLog[selected].push({id:Date.now()+Math.random(),name:it.name,meal:it.meal,qty:it.qty_g,kcal:it.kcal,p:it.p,c:it.c,f:it.f,barcode:'',source:window.MOVESMART_AI_ENDPOINT?'Registro rápido IA':'Registro rápido MoveSmart'}));
+  saveFoodLog(); window._quickLogItems=[];
+  document.getElementById('quickLogPreview').innerHTML=''; document.getElementById('quickLogInput').value='';
+  document.getElementById('quickLogStatus').textContent=`✓ Se agregaron ${items.length} alimento${items.length===1?'':'s'} a ${days[selected]}.`;
+  renderFood();
+}
+
 </script>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js';
