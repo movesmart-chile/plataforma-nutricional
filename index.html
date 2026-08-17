@@ -1295,8 +1295,18 @@ const previewBox=document.getElementById('quickLogPreview');
 const btn=document.getElementById('quickLogBtn');
 const text=(input?.value||'').trim();
 if(!results.length){
-status.textContent='Espera a que se calcule tu semana antes de registrar.';
-return;
+  try{
+    results=week.map((k,i)=>({...types[k],key:k,day:days[i],kcal:kcal(types[k])}));
+    if(typeof renderTabs==='function') renderTabs();
+    if(typeof renderTable==='function') renderTable();
+    if(typeof showDay==='function') showDay(selected);
+  }catch(e){
+    console.error('No se pudo reconstruir la semana:',e);
+  }
+}
+if(!results.length){
+  status.textContent='No pude cargar la semana. Recarga la página e inténtalo nuevamente.';
+  return;
 }
 if(!text){
 status.textContent='Cuéntame qué comiste antes de registrar.';
