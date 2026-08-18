@@ -346,7 +346,18 @@ margin-top:5px;
     <div class="quicklog-title">⚡ Registro rápido con IA</div>
     <div class="quicklog-sub">Cuéntame qué comiste con tus palabras. La IA separa los alimentos y estima las porciones; MoveSmart busca sus valores nutricionales y tú confirmas antes de agregarlos.</div>
   </div>
-  <textarea id="quickLogInput" class="quicklog-textarea" placeholder="Ej: almorcé arroz con pollo y palta. De postre una manzana."></textarea>
+  <textarea id="quickLogInput" class="quicklog-textarea" placeholder="Ej: arroz con pollo y palta."></textarea>
+
+  <div class="meal-selector-wrap" style="margin-top:14px">
+    <span class="meal-selector-label">¿En qué comida lo agregamos?</span>
+    <div class="meal-selector">
+      <button type="button" class="meal-choice active" data-meal="desayuno">☕ Desayuno</button>
+      <button type="button" class="meal-choice" data-meal="almuerzo">🍽️ Almuerzo</button>
+      <button type="button" class="meal-choice" data-meal="cena">🌙 Cena</button>
+      <button type="button" class="meal-choice" data-meal="snack">🍎 Snack</button>
+    </div>
+  </div>
+
   <button type="button" class="quicklog-btn" id="quickLogBtn" onclick="runQuickLog()">Registrar con IA</button>
   <div class="quicklog-status" id="quickLogStatus"></div>
   <div class="quicklog-preview" id="quickLogPreview"></div>
@@ -1358,7 +1369,7 @@ async function quickLogFromFatSecret(item){
 async function enrichQuickLogItem(item){
   const normalized={
     name:String(item.name||'Alimento').trim(),
-    meal:MEALS[item.meal]?item.meal:selectedMeal,
+    meal:selectedMeal,
     qty_g:Math.max(1,Number(item.qty_g)||100)
   };
 
