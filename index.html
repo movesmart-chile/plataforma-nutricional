@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -343,7 +344,7 @@ margin-top:5px;
 <div class="quicklog-box">
   <div class="quicklog-head">
     <div class="quicklog-title">⚡ Registro rápido con IA</div>
-    <div class="quicklog-sub">Cuéntame qué comiste con tus palabras. MoveSmart separa los alimentos, estima porciones y macros y tú confirmas antes de agregarlos.</div>
+    <div class="quicklog-sub">Cuéntame qué comiste con tus palabras. La IA separa los alimentos y estima las porciones; MoveSmart busca sus valores nutricionales y tú confirmas antes de agregarlos.</div>
   </div>
   <textarea id="quickLogInput" class="quicklog-textarea" placeholder="Ej: almorcé arroz con pollo y palta. De postre una manzana."></textarea>
   <button type="button" class="quicklog-btn" id="quickLogBtn" onclick="runQuickLog()">Registrar con IA</button>
@@ -1258,6 +1259,126 @@ function localQuickEstimate(text){
   return matches.slice(0,8);
 }
 
+async function quickLogFromLocalOrShared(item){
+  const q=String(item.name||'').trim();
+  if(!q) return null;
+
+  // 1) Base local MoveSmart (rápida y prioritaria)
+  const local=typeof buscarLocalFood==='function' ? buscarLocalFood(q) : [];
+  if(local.length){
+    const food=local[0];
+    const factor=Number(item.qty_g||0)/100;
+    return {
+      name:food.name || item.name,
+      meal:item.meal,
+      qty_g:Number(item.qty_g)||0,
+      kcal:Number(food.kcal||0)*factor,
+      p:Number(food.p||0)*factor,
+      c:Number(food.c||0)*factor,
+      f:Number(food.f||0)*factor,
+      nutrition_source:food.custom?'Mi Base MoveSmart':'Base MoveSmart'
+    };
+  }
+
+  // 2) Base MoveSmart compartida (Firestore)
+  try{
+    if(typeof window.msSearchSharedFoods==='function'){
+      const shared=await window.msSearchSharedFoods(q);
+      if(Array.isArray(shared) && shared.length){
+        const food=shared[0];
+        const factor=Number(item.qty_g||0)/100;
+        return {
+          name:food.name || item.name,
+          meal:item.meal,
+          qty_g:Number(item.qty_g)||0,
+          kcal:Number(food.kcal||0)*factor,
+          p:Number(food.p||0)*factor,
+          c:Number(food.c||0)*factor,
+          f:Number(food.f||0)*factor,
+          nutrition_source:'Base MoveSmart compartida'
+        };
+      }
+    }
+  }catch(err){
+    console.warn('Registro IA: no pude consultar la Base MoveSmart compartida',err);
+  }
+
+  return null;
+}
+
+async function quickLogFromFatSecret(item){
+  const q=String(item.name||'').trim();
+  if(!q) return null;
+  try{
+    const searchRes=await fetch(`${FATSECRET_API}/?q=${encodeURIComponent(q)}`,{headers:{'Accept':'application/json'}});
+    if(!searchRes.ok) throw new Error(`FatSecret búsqueda HTTP ${searchRes.status}`);
+    const searchData=await searchRes.json();
+    const foods=normalizeFatSecretFoods(searchData);
+    if(!foods.length) return null;
+
+    // Usamos el primer resultado, ya ordenado por relevancia por FatSecret.
+    const food=foods[0];
+    const detailRes=await fetch(`${FATSECRET_API}/?food_id=${encodeURIComponent(food.food_id)}`,{headers:{'Accept':'application/json'}});
+    if(!detailRes.ok) throw new Error(`FatSecret detalle HTTP ${detailRes.status}`);
+    const detail=await detailRes.json();
+    if(!detail?.ok) throw new Error(detail?.error || 'FatSecret sin detalle');
+
+    let base=detail.per_100g || null;
+    if(!base){
+      const serving=(detail.servings||[]).find(s=>Number(s.grams)>0);
+      if(serving){
+        const factor100=100/Number(serving.grams);
+        base={
+          kcal:Number(serving.kcal||0)*factor100,
+          protein:Number(serving.protein||0)*factor100,
+          carbs:Number(serving.carbs||0)*factor100,
+          fat:Number(serving.fat||0)*factor100
+        };
+      }
+    }
+    if(!base) return null;
+
+    const factor=Number(item.qty_g||0)/100;
+    return {
+      name:detail.name || food.food_name || item.name,
+      meal:item.meal,
+      qty_g:Number(item.qty_g)||0,
+      kcal:Number(base.kcal||0)*factor,
+      p:Number(base.protein||0)*factor,
+      c:Number(base.carbs||0)*factor,
+      f:Number(base.fat||0)*factor,
+      nutrition_source:'FatSecret'
+    };
+  }catch(err){
+    console.warn(`Registro IA: no pude resolver "${q}" en FatSecret`,err);
+    return null;
+  }
+}
+
+async function enrichQuickLogItem(item){
+  const normalized={
+    name:String(item.name||'Alimento').trim(),
+    meal:MEALS[item.meal]?item.meal:selectedMeal,
+    qty_g:Math.max(1,Number(item.qty_g)||100)
+  };
+
+  // Primero intentamos con las bases MoveSmart; si no aparece, FatSecret.
+  const ms=await quickLogFromLocalOrShared(normalized);
+  if(ms) return ms;
+
+  const fs=await quickLogFromFatSecret(normalized);
+  if(fs) return fs;
+
+  // Si no encontramos información nutricional, lo dejamos visible como pendiente
+  // y NO inventamos macros.
+  return {
+    ...normalized,
+    kcal:0,p:0,c:0,f:0,
+    nutrition_source:'Sin coincidencia',
+    unresolved:true
+  };
+}
+
 async function runQuickLog(){
   const input=document.getElementById('quickLogInput');
   const status=document.getElementById('quickLogStatus');
@@ -1266,31 +1387,64 @@ async function runQuickLog(){
   const text=(input?.value||'').trim();
   if(!text){ status.textContent='Cuéntame qué comiste antes de registrar.'; return; }
   if(!ensureQuickLogWeekReady()){ status.textContent='No pude cargar la semana. Recarga la página e inténtalo nuevamente.'; return; }
-  btn.disabled=true; btn.textContent='Calculando…'; status.textContent='MoveSmart está interpretando tu comida…'; previewBox.innerHTML='';
+
+  btn.disabled=true;
+  btn.textContent='Calculando…';
+  status.textContent='La IA está identificando los alimentos y MoveSmart está buscando sus valores nutricionales…';
+  previewBox.innerHTML='';
+
   try{
-    /* Si más adelante conectamos un Worker de IA, basta con definir window.MOVESMART_AI_ENDPOINT. */
-    let items=[];
+    let rawItems=[];
     if(window.MOVESMART_AI_ENDPOINT){
-      const r=await fetch(window.MOVESMART_AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,meal:selectedMeal})});
-      if(!r.ok) throw new Error('IA HTTP '+r.status);
-      const d=await r.json(); items=Array.isArray(d)?d:(d.items||[]);
+      const r=await fetch(window.MOVESMART_AI_ENDPOINT,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({text,meal:selectedMeal})
+      });
+      if(!r.ok){
+        let detail='';
+        try{detail=(await r.json())?.detail||''}catch(e){}
+        throw new Error(`IA HTTP ${r.status}${detail?' · '+detail:''}`);
+      }
+      const d=await r.json();
+      rawItems=Array.isArray(d)?d:(d.items||[]);
     }else{
-      items=localQuickEstimate(text);
+      // Fallback local si el Worker no está disponible.
+      rawItems=localQuickEstimate(text).map(it=>({name:it.name,meal:it.meal,qty_g:it.qty_g}));
     }
-    if(!Array.isArray(items)||!items.length) throw new Error('No identifiqué alimentos');
-    window._quickLogItems=items.map(it=>({name:String(it.name||'Alimento'),meal:MEALS[it.meal]?it.meal:selectedMeal,qty_g:Number(it.qty_g)||0,kcal:Number(it.kcal)||0,p:Number(it.p)||0,c:Number(it.c)||0,f:Number(it.f)||0}));
-    renderQuickLogPreview(window._quickLogItems);
-    status.textContent=window.MOVESMART_AI_ENDPOINT
-      ? `Encontré ${items.length} alimento${items.length===1?'':'s'} con IA. Revisa y confirma.`
-      : `Modo de prueba: encontré ${items.length} alimento${items.length===1?'':'s'} usando la base MoveSmart. Revisa y confirma.`;
+
+    if(!Array.isArray(rawItems)||!rawItems.length) throw new Error('No identifiqué alimentos');
+
+    const enriched=[];
+    for(const item of rawItems){
+      enriched.push(await enrichQuickLogItem(item));
+    }
+
+    window._quickLogItems=enriched;
+    renderQuickLogPreview(enriched);
+
+    const unresolved=enriched.filter(x=>x.unresolved).length;
+    status.textContent=unresolved
+      ? `Identifiqué ${enriched.length} alimento${enriched.length===1?'':'s'}. ${unresolved} quedó sin coincidencia nutricional; puedes quitarlo y usar el buscador manual.`
+      : `Encontré ${enriched.length} alimento${enriched.length===1?'':'s'} con IA y calculé sus macros desde MoveSmart/FatSecret. Revisa y confirma.`;
   }catch(err){
-    console.error(err); status.textContent='No pude interpretar esa comida. Prueba escribiendo los alimentos por separado o usa el buscador de abajo.';
-  }finally{btn.disabled=false;btn.textContent='Registrar con IA';}
+    console.error(err);
+    status.textContent='No pude completar el registro. Prueba nuevamente o usa el buscador de abajo.';
+  }finally{
+    btn.disabled=false;
+    btn.textContent='Registrar con IA';
+  }
 }
 
 function renderQuickLogPreview(items){
   const box=document.getElementById('quickLogPreview'); if(!box)return;
-  box.innerHTML=items.map((it,i)=>`<div class="quicklog-item"><div><b>${escapeHtml(it.name)}</b><small>${Math.round(it.qty_g)} g · ${Math.round(it.kcal)} kcal · ${it.p.toFixed(1)} P · ${it.c.toFixed(1)} CH · ${it.f.toFixed(1)} G</small><span class="meal-badge">${MEALS[it.meal]?.icon||'🍽️'} ${MEALS[it.meal]?.label||it.meal}</span></div><button type="button" class="delete-food" onclick="removeQuickLogItem(${i})" aria-label="Quitar">×</button></div>`).join('')+
+  box.innerHTML=items.map((it,i)=>{
+    const macros=it.unresolved
+      ? `${Math.round(it.qty_g)} g · <span style="color:#ffb36b">sin macros: revisa con el buscador</span>`
+      : `${Math.round(it.qty_g)} g · ${Math.round(it.kcal)} kcal · ${Number(it.p).toFixed(1)} P · ${Number(it.c).toFixed(1)} CH · ${Number(it.f).toFixed(1)} G`;
+    const source=it.nutrition_source?`<small style="margin-top:3px;color:var(--faint)">Fuente: ${escapeHtml(it.nutrition_source)}</small>`:'';
+    return `<div class="quicklog-item"><div><b>${escapeHtml(it.name)}</b><small>${macros}</small>${source}<span class="meal-badge">${MEALS[it.meal]?.icon||'🍽️'} ${MEALS[it.meal]?.label||it.meal}</span></div><button type="button" class="delete-food" onclick="removeQuickLogItem(${i})" aria-label="Quitar">×</button></div>`;
+  }).join('')+
   `<button type="button" class="add-food" onclick="confirmQuickLog()">✓ Agregar todo a mi día</button>`;
 }
 function removeQuickLogItem(i){
@@ -1300,11 +1454,17 @@ function removeQuickLogItem(i){
 }
 function confirmQuickLog(){
   const items=window._quickLogItems||[]; if(!items.length||!ensureQuickLogWeekReady())return;
+  const resolved=items.filter(it=>!it.unresolved);
+  const skipped=items.length-resolved.length;
+  if(!resolved.length){
+    document.getElementById('quickLogStatus').textContent='No hay alimentos con macros confirmables. Usa el buscador de abajo para resolverlos.';
+    return;
+  }
   if(!foodLog[selected])foodLog[selected]=[];
-  items.forEach(it=>foodLog[selected].push({id:Date.now()+Math.random(),name:it.name,meal:it.meal,qty:it.qty_g,kcal:it.kcal,p:it.p,c:it.c,f:it.f,barcode:'',source:window.MOVESMART_AI_ENDPOINT?'Registro rápido IA':'Registro rápido MoveSmart'}));
+  resolved.forEach(it=>foodLog[selected].push({id:Date.now()+Math.random(),name:it.name,meal:it.meal,qty:it.qty_g,kcal:it.kcal,p:it.p,c:it.c,f:it.f,barcode:'',source:`Registro rápido IA · ${it.nutrition_source||'MoveSmart'}`}));
   saveFoodLog(); window._quickLogItems=[];
   document.getElementById('quickLogPreview').innerHTML=''; document.getElementById('quickLogInput').value='';
-  document.getElementById('quickLogStatus').textContent=`✓ Se agregaron ${items.length} alimento${items.length===1?'':'s'} a ${days[selected]}.`;
+  document.getElementById('quickLogStatus').textContent=`✓ Se agregaron ${resolved.length} alimento${resolved.length===1?'':'s'} a ${days[selected]}${skipped?`. ${skipped} quedó sin agregar porque faltaban macros.`:''}`;
   renderFood();
 }
 
